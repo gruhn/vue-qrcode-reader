@@ -1,14 +1,14 @@
-import Test from './components/Test.vue'
+import QrCodeReader from './components/QrCodeReader.vue'
 
 // Install the components
 export function install (Vue) {
-  Vue.component('test', Test)
+  Vue.component('qrcode-reader', QrCodeReader)
   /* -- Add more components here -- */
 }
 
 // Expose the components
 export {
-  Test,
+  QrCodeReader,
   /* -- Add more components here -- */
 }
 
