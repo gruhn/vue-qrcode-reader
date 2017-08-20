@@ -1,15 +1,15 @@
 import 'webrtc-adapter'
-import QrCodeReader from './components/QrCodeReader.vue'
+import QrcodeReader from './components/QrcodeReader.vue'
 
 // Install the components
 export function install (Vue) {
-  Vue.component('qrcode-reader', QrCodeReader)
+  Vue.component('qrcode-reader', QrcodeReader)
   /* -- Add more components here -- */
 }
 
 // Expose the components
 export {
-  QrCodeReader,
+  QrcodeReader,
   /* -- Add more components here -- */
 }
 
