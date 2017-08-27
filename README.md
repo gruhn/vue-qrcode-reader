@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/vue-qrcode-reader.svg) ![npm](https://img.shields.io/npm/dm/vue-qrcode-reader.svg)](https://www.npmjs.com/package/vue-qrcode-reader)
 [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
 
-A Vue.js component, accessing the device camera and allowing users to read QR-Codes, within the browser. Sadly [Browser support](http://caniuse.com/#search=getUserMedia) is not so good yet. Also make sure to use this component in with **HTTPS**. 
+A Vue.js component, accessing the device camera and allowing users to read QR-Codes, within the browser. Sadly, [browser support](http://caniuse.com/#search=getUserMedia) is not so good yet. Also make sure to use this component with **HTTPS**. 
 
 ## Table of contents
 
