@@ -1,7 +1,17 @@
 <template lang="html">
   <div class="qrcode-reader">
-    <video class="qrcode-reader__camera" ref="video" autoplay></video>
-    <canvas class="qrcode-reader__snapshot" ref="canvas"></canvas>
+    <video
+      class="qrcode-reader__camera"
+      ref="video"
+      autoplay
+    ></video>
+
+    <canvas
+      class="qrcode-reader__snapshot"
+      :class="{ 'qrcode-reader__snapshot--hidden': !paused }"
+      ref="canvas"
+    ></canvas>
+
     <div class="qrcode-reader__overlay">
       <slot></slot>
     </div>
@@ -9,45 +19,41 @@
 </template>
 
 <script>
-import QRCode from 'qrcode-reader'
+import Reader from 'qrcode-reader'
 
 export default {
   props: {
-    active: {
+    paused: {
       type: Boolean,
-      default: true,
+      default: false,
     },
-
-    scanInterval: {
-      type: Number,
-      default: 100, // milliseconds
-    },
-
-    constraints: {
-      type: Object,
-      default: () => ({
-        video: { facingMode: 'environment' }, // back camera
-        audio: false,
-      }),
-    },
-
   },
 
   data () {
     return {
-      reader: new QRCode(),
+      reader: new Reader(),
       isDestroyed: false,
+      lastCapture: null,
+      scanInterval: 42, // ~24fps
+      constraints: {
+        video: { facingMode: 'environment' }, // back camera
+        audio: false,
+      },
     }
   },
 
   watch: {
-    active (newValue) {
-      if (newValue === false) {
+    paused (newValue) {
+      if (newValue === true) {
         this.$refs.video.pause()
       } else {
         this.$refs.video.play()
         this.loopScan()
       }
+    },
+
+    lastCapture (newValue) {
+      this.$emit('capture', newValue)
     },
   },
 
@@ -62,7 +68,7 @@ export default {
         this.loopScan()
       } catch (e) {
         if (e.name === 'PermissionDeniedError' || e.name === 'NotAllowedError') {
-          this.$emit('permission-deny')
+          this.$emit('permission-deny', 'User denied camera access permission.')
         } else {
           this.$emit('error', e)
         }
@@ -94,7 +100,7 @@ export default {
     },
 
     loopScan () {
-      if (this.active && !this.isDestroyed) {
+      if (!this.paused && !this.isDestroyed) {
         try {
           this.reader.decode(this.scan())
         } catch (e) {
@@ -104,22 +110,33 @@ export default {
         window.setTimeout(this.loopScan, this.scanInterval)
       }
     },
+
+    checkBrowserSupport () {
+      const canvas = this.$refs.canvas
+
+      if (canvas.getContext === undefined || canvas.getContext('2d') === undefined) {
+        this.$emit('no-support', 'HTML5 Canvas not supported in this browser.')
+      } else if (navigator.mediaDevices.getUserMedia === undefined) {
+        this.$emit('no-support', 'WebRTC API not supported in this browser')
+      } else {
+        return true
+      }
+
+      return false
+    },
+
+    onCapture (_error, payload) {
+      if (payload !== undefined && payload.result !== undefined) {
+        this.lastCapture = payload
+      } else {
+        this.lastCapture = null
+      }
+    },
   },
 
   mounted () {
-    const canvas = this.$refs.canvas
-
-    if (canvas.getContext === undefined || canvas.getContext('2d') === undefined) {
-      this.$emit('no-support', 'HTML5 Canvas not supported in this browser.')
-    } else if (navigator.mediaDevices.getUserMedia === undefined) {
-      this.$emit('no-support', 'WebRTC API not supported in this browser')
-    } else {
-      this.reader.callback = (_error, payload) => {
-        if (payload !== undefined && payload.result !== undefined) {
-          this.$emit('capture', payload)
-        }
-      }
-
+    if (this.checkBrowserSupport()) {
+      this.reader.callback = this.onCapture
       this.startCamera()
     }
   },
@@ -138,17 +155,20 @@ export default {
   overflow: hidden;
 
   .qrcode-reader__camera {
-    z-index: 20;
+    z-index: 10;
     max-width: 100%;
     max-height: 100%;
   }
 
   .qrcode-reader__snapshot {
-    z-index: 10;
+    z-index: 20;
     position: absolute;
     top: 0;
     left: 0;
-    visibility: hidden;
+
+    .qrcode-reader__snapshot--hidden {
+      visibility: hidden;
+    }
   }
 
   .qrcode-reader__overlay {
