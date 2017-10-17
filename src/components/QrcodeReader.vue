@@ -2,6 +2,7 @@
   <div class="qrcode-reader">
     <video
       class="qrcode-reader__camera"
+      @loadeddata="onStreamLoaded"
       ref="video"
       autoplay
     ></video>
@@ -33,6 +34,7 @@ export default {
     return {
       reader: new Reader(),
       isDestroyed: false,
+      streamReady: false,
       lastCapture: null,
       scanInterval: 42, // ~24fps
       constraints: {
@@ -64,13 +66,11 @@ export default {
         const video = this.$refs.video
 
         video.srcObject = stream
-
-        this.loopScan()
       } catch (e) {
         if (e.name === 'PermissionDeniedError' || e.name === 'NotAllowedError') {
           this.$emit('permission-deny', 'User denied camera access permission.')
         } else {
-          this.$emit('error', e)
+          throw e
         }
       }
     },
@@ -101,11 +101,7 @@ export default {
 
     loopScan () {
       if (!this.paused && !this.isDestroyed) {
-        try {
-          this.reader.decode(this.scan())
-        } catch (e) {
-          // video probably not initilized yet: trying again
-        }
+        this.reader.decode(this.scan())
 
         window.setTimeout(this.loopScan, this.scanInterval)
       }
@@ -131,6 +127,11 @@ export default {
       } else {
         this.lastCapture = null
       }
+    },
+
+    onStreamLoaded () { // first frame finished loading
+      this.$emit('stream-loaded')
+      this.loopScan()
     },
   },
 

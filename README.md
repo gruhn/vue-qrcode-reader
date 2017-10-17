@@ -3,11 +3,13 @@
 [![npm](https://img.shields.io/npm/v/vue-qrcode-reader.svg) ![npm](https://img.shields.io/npm/dm/vue-qrcode-reader.svg)](https://www.npmjs.com/package/vue-qrcode-reader)
 [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
 
-A Vue.js component, accessing the device camera and allowing users to read QR-Codes, within the browser. It utilizes WebRTC, which only works in secure context (i.e. **HTTPS**). 
+A Vue.js component, accessing the device camera and allowing users to read QR-Codes, within the browser. It utilizes WebRTC, which only works in secure context (i.e. **HTTPS**).
 
 # Usage
 
-As soon as it's mounted, this component will ask the user for permisson to access his device camera (back camera if available). The video stream is displayed and continuously scanned for QR-Codes. Results are indicated by the `capture` event.
+As soon as it's mounted, this component will ask the user for permisson to access his device camera (back camera if available). Even if the user granted permission earlier, some time might pass between mounting and the moment the camera stream is loaded. Until then you might want to show a preloader. Just listen to the `stream-loaded` event.
+
+Once the stream is loaded, it is displayed and continuously scanned for QR-Codes. Results are indicated by the `capture` event.
 
 ```html
 <qrcode-reader @capture="onCapture"></qrcode-reader>
@@ -18,19 +20,19 @@ methods: {
     if (event === null) {
       // no QR-Code dected since last capture
     } else {
-      event.result // string of read data 
-      event.points // array of QR-Code module positions 
+      event.result // string of read data
+      event.points // array of QR-Code module positions
     }
   }
 }
 ```
-If the user denies camera access, the `permission-deny` event is fired. This permisson can't be requested a second time (at least in Chrome), so you should visually make clear why you are asking for it.
+If the user denies camera access, the `permission-deny` event is fired. You can't really ask for permissons twice so you should tell the user why you need it.
 
-Distributed content will overlay the camera stream, wrapped in a `position: absolute;` container. You can use this for example to highlight the detected position of QR-Code modules. 
+Distributed content will overlay the camera stream, wrapped in a `position: absolute` container. You can use this for example to highlight the detected position of QR-Code modules.
 
 ```html
 <qrcode-reader>
-  <b>stuff here is above the camera stream</b>
+  <b>stuff here overlays the camera stream</b>
 </qrcode-reader>
 ```
 
@@ -45,7 +47,7 @@ data () {
   }
 },
 
-methods: { 
+methods: {
   onCapture (event) {
     this.paused = true
     // ...
@@ -53,10 +55,6 @@ methods: {
 }
 ```
 There is also a `no-support` event which is fired when the users browser lacks features, this component depends on (Canvas, WebRTC). Since iOS 11 release, all major browsers support WebRTC. However, you probably want to install a shim like [webrtc-adapter](https://github.com/webrtc/adapter) anyway.
-
-Furthermore, there is an `error` event. If you catch it, something probably went wrong during camera initilization. 
-
-`permission-deny`, `no-support` and `error` only carry static string error messages.
 
 
 # Installation
