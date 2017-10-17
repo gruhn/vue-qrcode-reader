@@ -3,17 +3,67 @@
 [![npm](https://img.shields.io/npm/v/vue-qrcode-reader.svg) ![npm](https://img.shields.io/npm/dm/vue-qrcode-reader.svg)](https://www.npmjs.com/package/vue-qrcode-reader)
 [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
 
-A Vue.js component, accessing the device camera and allowing users to read QR-Codes, within the browser. Sadly, [browser support](http://caniuse.com/#search=getUserMedia) is not so good yet. Also make sure to use this component with **HTTPS**. 
+A Vue.js component, accessing the device camera and allowing users to read QR-Codes, within the browser. It utilizes WebRTC, which only works in secure context (i.e. **HTTPS**). 
 
-## Table of contents
+# Usage
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Example](#example)
+As soon as it's mounted, this component will ask the user for permisson to access his device camera (back camera if available). The video stream is displayed and continuously scanned for QR-Codes. Results are indicated by the `capture` event.
+
+```html
+<qrcode-reader @capture="onCapture"></qrcode-reader>
+```
+```javascript
+methods: {
+  onCapture (event) {
+    if (event === null) {
+      // no QR-Code dected since last capture
+    } else {
+      event.result // string of read data 
+      event.points // array of QR-Code module positions 
+    }
+  }
+}
+```
+If the user denies camera access, the `permission-deny` event is fired. This permisson can't be requested a second time (at least in Chrome), so you should visually make clear why you are asking for it.
+
+Distributed content will overlay the camera stream, wrapped in a `position: absolute;` container. You can use this for example to highlight the detected position of QR-Code modules. 
+
+```html
+<qrcode-reader>
+  <b>stuff here is above the camera stream</b>
+</qrcode-reader>
+```
+
+With the `paused` prop you can prevent further `capture` propagation. Useful for exampe if you're only interested in the first result.
+```html
+<qrcode-reader @capture="onCapture" :paused="paused"></qrcode-reader>
+```
+```javascript
+data () {
+  return {
+    paused: false
+  }
+},
+
+methods: { 
+  onCapture (event) {
+    this.paused = true
+    // ...
+  }
+}
+```
+There is also a `no-support` event which is fired when the users browser lacks features, this component depends on (Canvas, WebRTC). Since iOS 11 release, all major browsers support WebRTC. However, you probably want to install a shim like [webrtc-adapter](https://github.com/webrtc/adapter) anyway.
+
+Furthermore, there is an `error` event. If you catch it, something probably went wrong during camera initilization. 
+
+`permission-deny`, `no-support` and `error` only carry static string error messages.
+
 
 # Installation
 
 ```
+yarn add vue-qrcode-reader
+# or
 npm install --save vue-qrcode-reader
 ```
 
@@ -133,59 +183,6 @@ Vue.component('my-component', {
 ```
 
 **⚠️ You need to configure your bundler to compile `.vue` files.** More info [in the official documentation](https://vuejs.org/v2/guide/single-file-components.html).
-
-# Usage
-
-### Props
-
-Name | Type | Default | Description
----- | ---- | ------- | -----------
-active | `Boolean` | `true` | Whether or not the componet shall scan frames for QR-Codes or not. If false, no `capture` events will be fired.
-scan-interval | `Number` | `100` | Number of milliseconds to wait before scanning the next frame. 
-constraints | `Object` | `{ video: { facingMode: 'environment' }, audio: false }` | Additional options, which will be passed as is to a [getUserMedia](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia) call.
-
-### Events
-
-Name | Arguments | Description
----- | --------- | -----------
-capture | `payload` | Fired when a QR-Code is found. `payload.result` contains the data, `payload.points` the module coordinates.
-no-support | `reason` | This is event is fired, when the users browsers doesn't support one of the required features (WebRTC, Canvas).
-permission-deny | - | Users are asked for permission to access their devices camera. This event is fired, when the user denys this permission.
-error | `error` | Fired during camera stream initilization, if any exceptions occur.
-
-### Slot
-
-Distributed content is displayed as overlay.
-
-```html
-<qrcode-reader>I'M ABOVE</qrcode-reader>
-```
-
-# Example
-
-Template: 
-```html
-<qrcode-reader :active="stillActive" @capture="onCapture">
-  {{ readData }}
-</qrcode-reader>
-```
-
-Script:
-```javascript
-data () {
-  return {
-    stillActive: true,
-    readData: ""
-  }
-},
-
-methods: {
-  onCapture (payload) {
-    this.readData = payload.result  
-    this.stillActive = false
-  }
-},
-```
 
 ---
 
