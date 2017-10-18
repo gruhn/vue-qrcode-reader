@@ -54,7 +54,7 @@ methods: {
   }
 }
 ```
-There is also a `no-support` event which is fired when the users browser lacks features, this component depends on (Canvas, WebRTC). Since iOS 11 release, all major browsers support WebRTC. However, you probably want to install a shim like [webrtc-adapter](https://github.com/webrtc/adapter) anyway.
+There is also a `no-support` event which is fired when the users browser lacks support for Canvas, WebRTC or if the page is not served over HTTPS. Since iOS 11 release, all major browsers support WebRTC. However, you probably want to install a shim like [webrtc-adapter](https://github.com/webrtc/adapter) anyway.
 
 
 # Installation

@@ -69,6 +69,8 @@ export default {
       } catch (e) {
         if (e.name === 'PermissionDeniedError' || e.name === 'NotAllowedError') {
           this.$emit('permission-deny', 'User denied camera access permission.')
+        } else if (e.name === 'NotSupportedError') {
+          this.$emit('no-support', e.message)
         } else {
           throw e
         }
