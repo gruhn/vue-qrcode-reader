@@ -5,24 +5,22 @@
 
 A Vue.js component, accessing the device camera and allowing users to read QR-Codes, within the browser. It utilizes WebRTC, which only works in secure context (i.e. **HTTPS**).
 
+[Demo](https://gruhn.github.io/vue-qrcode-reader-demo) | [Source](https://github.com/gruhn/vue-qrcode-reader-demo/blob/master/src/components/TheQrcodeReaderDemo.vue)
+
 # Usage
 
 As soon as it's mounted, this component will ask the user for permisson to access his device camera (back camera if available). Even if the user granted permission earlier, some time might pass between mounting and the moment the camera stream is loaded. Until then you might want to show a preloader. Just listen to the `stream-loaded` event.
 
-Once the stream is loaded, it is displayed and continuously scanned for QR-Codes. Results are indicated by the `capture` event.
+Once the stream is loaded, it is displayed and continuously scanned for QR-Codes. Results are indicated by the `decode` event.
 
 ```html
-<qrcode-reader @capture="onCapture"></qrcode-reader>
+<qrcode-reader @decode="onDecode"></qrcode-reader>
 ```
 ```javascript
 methods: {
-  onCapture (event) {
-    if (event === null) {
-      // no QR-Code dected since last capture
-    } else {
-      event.result // string of read data
-      event.points // array of QR-Code module positions
-    }
+  onDecode (event) {
+    event.content // string of read data or null
+    event.location // set of QR-Code module positions or null
   }
 }
 ```
@@ -36,9 +34,9 @@ Distributed content will overlay the camera stream, wrapped in a `position: abso
 </qrcode-reader>
 ```
 
-With the `paused` prop you can prevent further `capture` propagation. Useful for exampe if you're only interested in the first result.
+With the `paused` prop you can prevent further `decode` propagation. Useful for example if you're only interested in the first result.
 ```html
-<qrcode-reader @capture="onCapture" :paused="paused"></qrcode-reader>
+<qrcode-reader @decode="onDecode" :paused="paused"></qrcode-reader>
 ```
 ```javascript
 data () {
@@ -48,7 +46,7 @@ data () {
 },
 
 methods: {
-  onCapture (event) {
+  onDecode (event) {
     this.paused = true
     // ...
   }

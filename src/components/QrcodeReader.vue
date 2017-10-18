@@ -20,7 +20,13 @@
 </template>
 
 <script>
-import Reader from 'qrcode-reader'
+import { decode } from '../decode.js'
+
+const DECODE_INTERVAL = 42 // ~24fps
+const CONSTRAINTS = {
+  video: { facingMode: 'environment' }, // back camera
+  audio: false,
+}
 
 export default {
   props: {
@@ -32,15 +38,8 @@ export default {
 
   data () {
     return {
-      reader: new Reader(),
       isDestroyed: false,
       streamReady: false,
-      lastCapture: null,
-      scanInterval: 42, // ~24fps
-      constraints: {
-        video: { facingMode: 'environment' }, // back camera
-        audio: false,
-      },
     }
   },
 
@@ -50,19 +49,15 @@ export default {
         this.$refs.video.pause()
       } else {
         this.$refs.video.play()
-        this.loopScan()
+        this.loopDecode()
       }
-    },
-
-    lastCapture (newValue) {
-      this.$emit('capture', newValue)
     },
   },
 
   methods: {
     startCamera: async function () {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia(this.constraints)
+        const stream = await navigator.mediaDevices.getUserMedia(CONSTRAINTS)
         const video = this.$refs.video
 
         video.srcObject = stream
@@ -85,7 +80,7 @@ export default {
       }
     },
 
-    scan () {
+    captureFrame () {
       const video = this.$refs.video
       const canvas = this.$refs.canvas
 
@@ -101,12 +96,19 @@ export default {
       return ctx.getImageData(...bounds)
     },
 
-    loopScan () {
-      if (!this.paused && !this.isDestroyed) {
-        this.reader.decode(this.scan())
-
-        window.setTimeout(this.loopScan, this.scanInterval)
+    loopDecode () {
+      if (this.paused || this.isDestroyed) {
+        return
       }
+
+      requestAnimationFrame(() => {
+        const imageData = this.captureFrame()
+        const decoded = decode(imageData)
+
+        this.$emit('decode', decoded)
+      })
+
+      setTimeout(this.loopDecode, DECODE_INTERVAL)
     },
 
     checkBrowserSupport () {
@@ -116,6 +118,8 @@ export default {
         this.$emit('no-support', 'HTML5 Canvas not supported in this browser.')
       } else if (navigator.mediaDevices.getUserMedia === undefined) {
         this.$emit('no-support', 'WebRTC API not supported in this browser')
+      } else if (window.Worker === undefined) {
+        this.$emit('no-support', 'Web Workers not supported in this browser')
       } else {
         return true
       }
@@ -123,23 +127,14 @@ export default {
       return false
     },
 
-    onCapture (_error, payload) {
-      if (payload !== undefined && payload.result !== undefined) {
-        this.lastCapture = payload
-      } else {
-        this.lastCapture = null
-      }
-    },
-
     onStreamLoaded () { // first frame finished loading
       this.$emit('stream-loaded')
-      this.loopScan()
+      this.loopDecode()
     },
   },
 
   mounted () {
     if (this.checkBrowserSupport()) {
-      this.reader.callback = this.onCapture
       this.startCamera()
     }
   },

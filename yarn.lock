@@ -3121,6 +3121,10 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
+jsqr@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/jsqr/-/jsqr-0.2.2.tgz#8c1f0279fb7c94542aaa9e8aeb7c722d523ea092"
+
 karma-coverage@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/karma-coverage/-/karma-coverage-1.1.1.tgz#5aff8b39cf6994dc22de4c84362c76001b637cf6"
@@ -4451,10 +4455,6 @@ q@1.4.1, q@^1.1.2:
 qjobs@^1.1.4:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/qjobs/-/qjobs-1.1.5.tgz#659de9f2cf8dcc27a1481276f205377272382e73"
-
-qrcode-reader@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/qrcode-reader/-/qrcode-reader-1.0.2.tgz#28b6a5fa1dae5854fff291268af1b5dfa4b77aae"
 
 qs@6.5.1, qs@~6.5.1:
   version "6.5.1"
