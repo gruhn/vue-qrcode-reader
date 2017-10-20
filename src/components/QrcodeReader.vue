@@ -20,9 +20,9 @@
 </template>
 
 <script>
-import { decode } from '../decode.js'
+import { scan } from '../scanner.js'
 
-const DECODE_INTERVAL = 42 // ~24fps
+const SCAN_INTERVAL = 40 // 1000ms / 40ms = 25fps
 const CONSTRAINTS = {
   video: { facingMode: 'environment' }, // back camera
   audio: false,
@@ -40,6 +40,9 @@ export default {
     return {
       isDestroyed: false,
       streamReady: false,
+
+      content: null,
+      location: null,
     }
   },
 
@@ -49,8 +52,16 @@ export default {
         this.$refs.video.pause()
       } else {
         this.$refs.video.play()
-        this.loopDecode()
+        this.loopScan()
       }
+    },
+
+    content (newValue) {
+      this.$emit('decode', newValue)
+    },
+
+    location (newValue) {
+      this.$emit('locate', newValue)
     },
   },
 
@@ -96,19 +107,23 @@ export default {
       return ctx.getImageData(...bounds)
     },
 
-    loopDecode () {
+    loopScan () {
       if (this.paused || this.isDestroyed) {
         return
       }
 
       requestAnimationFrame(() => {
         const imageData = this.captureFrame()
-        const decoded = decode(imageData)
+        const { content, location } = scan(imageData)
 
-        this.$emit('decode', decoded)
+        if (content !== null) {
+          this.content = content
+        }
+
+        this.location = location
       })
 
-      setTimeout(this.loopDecode, DECODE_INTERVAL)
+      setTimeout(this.loopScan, SCAN_INTERVAL)
     },
 
     checkBrowserSupport () {
@@ -118,8 +133,6 @@ export default {
         this.$emit('no-support', 'HTML5 Canvas not supported in this browser.')
       } else if (navigator.mediaDevices.getUserMedia === undefined) {
         this.$emit('no-support', 'WebRTC API not supported in this browser')
-      } else if (window.Worker === undefined) {
-        this.$emit('no-support', 'Web Workers not supported in this browser')
       } else {
         return true
       }
@@ -129,7 +142,7 @@ export default {
 
     onStreamLoaded () { // first frame finished loading
       this.$emit('stream-loaded')
-      this.loopDecode()
+      this.loopScan()
     },
   },
 

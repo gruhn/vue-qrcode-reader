@@ -1,6 +1,6 @@
 import jsQR from 'jsqr'
 
-export function decode (imageData) {
+export function scan (imageData) {
   let location = null
   let content = null
 
