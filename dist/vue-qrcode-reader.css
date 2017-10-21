@@ -1,25 +1,18 @@
 
 .qrcode-reader[data-v-678404ed] {
   position: relative;
-  display: inline-block;
-  overflow: hidden;
+  display: block;
 }
 .qrcode-reader .qrcode-reader__camera[data-v-678404ed] {
-    z-index: 10;
+    display: block;
+    object-fit: contain;
     max-width: 100%;
     max-height: 100%;
 }
 .qrcode-reader .qrcode-reader__snapshot[data-v-678404ed] {
-    z-index: 20;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-.qrcode-reader .qrcode-reader__snapshot .qrcode-reader__snapshot--hidden[data-v-678404ed] {
-      visibility: hidden;
+    display: none;
 }
 .qrcode-reader .qrcode-reader__overlay[data-v-678404ed] {
-    z-index: 30;
     position: absolute;
     top: 0;
     bottom: 0;
