@@ -184,7 +184,12 @@ Vue.component('my-component', {
 
 # Contributing
 
-All contributions are welcome. If you wish to contribution code, make sure your editor has editorconfig installed.
+All contributions are welcome. If you wish to contribution code:
+
+ * Make sure you have editorconfig installed.
+ * Please follow [Vues official style guide](https://vuejs.org/v2/style-guide/).
+ * Use [BEM](http://getbem.com/) naming convention for CSS classes.
+
 
 # License
 

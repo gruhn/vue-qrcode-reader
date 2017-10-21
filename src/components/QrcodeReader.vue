@@ -1,15 +1,15 @@
 <template lang="html">
   <div class="qrcode-reader">
     <video
-      class="qrcode-reader__camera"
-      @loadeddata="onStreamLoaded"
       ref="video"
+      class="qrcode-reader__camera"
       autoplay
+      @loadeddata="onStreamLoaded"
     ></video>
 
     <canvas
-      class="qrcode-reader__snapshot"
       ref="canvas"
+      class="qrcode-reader__snapshot"
     ></canvas>
 
     <div class="qrcode-reader__overlay">
@@ -90,6 +90,17 @@ export default {
     points (newValue) {
       this.$emit('locate', newValue)
     },
+  },
+
+  mounted () {
+    if (this.checkBrowserSupport()) {
+      this.startCamera()
+    }
+  },
+
+  beforeDestroy () {
+    this.stopCamera()
+    this.isDestroyed = true
   },
 
   methods: {
@@ -182,21 +193,10 @@ export default {
       this.loopScan()
     },
   },
-
-  mounted () {
-    if (this.checkBrowserSupport()) {
-      this.startCamera()
-    }
-  },
-
-  beforeDestroy () {
-    this.stopCamera()
-    this.isDestroyed = true
-  },
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .qrcode-reader {
   position: relative;
   display: block;
