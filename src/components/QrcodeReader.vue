@@ -9,7 +9,6 @@
 
     <canvas
       class="qrcode-reader__snapshot"
-      :class="{ 'qrcode-reader__snapshot--hidden': !paused }"
       ref="canvas"
     ></canvas>
 
@@ -24,8 +23,12 @@ import { scan } from '../scanner.js'
 
 const SCAN_INTERVAL = 40 // 1000ms / 40ms = 25fps
 const CONSTRAINTS = {
-  video: { facingMode: 'environment' }, // back camera
   audio: false,
+  video: {
+    facingMode: 'environment', // back camera
+    width: { min: 360, ideal: 1280, max: 1920 },
+    height: { min: 240, ideal: 720, max: 1080 },
+  },
 }
 
 export default {
@@ -162,28 +165,20 @@ export default {
 <style lang="scss" scoped>
 .qrcode-reader {
   position: relative;
-  display: inline-block;
-  overflow: hidden;
+  display: block;
 
   .qrcode-reader__camera {
-    z-index: 10;
+    display: block;
+    object-fit: contain;
     max-width: 100%;
     max-height: 100%;
   }
 
   .qrcode-reader__snapshot {
-    z-index: 20;
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    .qrcode-reader__snapshot--hidden {
-      visibility: hidden;
-    }
+    display: none;
   }
 
   .qrcode-reader__overlay {
-    z-index: 30;
     position: absolute;
     top: 0;
     bottom: 0;
