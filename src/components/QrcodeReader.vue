@@ -49,6 +49,30 @@ export default {
     }
   },
 
+  computed: {
+    points () {
+      if (this.location === null) {
+        return []
+      } else {
+        const video = this.$refs.video
+
+        const widthRatio = video.offsetWidth / video.videoWidth
+        const heightRatio = video.offsetHeight / video.videoHeight
+
+        const points = [
+          this.location.bottomLeft,
+          this.location.topLeft,
+          this.location.topRight,
+        ]
+
+        return points.map(({ x, y }) => ({
+          x: x * widthRatio,
+          y: y * heightRatio,
+        }))
+      }
+    },
+  },
+
   watch: {
     paused (newValue) {
       if (newValue === true) {
@@ -63,7 +87,7 @@ export default {
       this.$emit('decode', newValue)
     },
 
-    location (newValue) {
+    points (newValue) {
       this.$emit('locate', newValue)
     },
   },
@@ -74,7 +98,17 @@ export default {
         const stream = await navigator.mediaDevices.getUserMedia(CONSTRAINTS)
         const video = this.$refs.video
 
-        video.srcObject = stream
+        if (video.srcObject !== undefined) {
+          video.srcObject = stream
+        } else if (video.mozSrcObject !== undefined) {
+          video.mozSrcObject = stream
+        } else if (window.URL.createObjectURL) {
+          video.src = window.URL.createObjectURL(stream)
+        } else if (window.webkitURL) {
+          video.src = window.webkitURL.createObjectURL(stream)
+        } else {
+          video.src = stream
+        }
       } catch (e) {
         if (e.name === 'PermissionDeniedError' || e.name === 'NotAllowedError') {
           this.$emit('permission-deny', 'User denied camera access permission.')
@@ -115,7 +149,7 @@ export default {
         return
       }
 
-      requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
         const imageData = this.captureFrame()
         const { content, location } = scan(imageData)
 
@@ -126,7 +160,7 @@ export default {
         this.location = location
       })
 
-      setTimeout(this.loopScan, SCAN_INTERVAL)
+      window.setTimeout(this.loopScan, SCAN_INTERVAL)
     },
 
     checkBrowserSupport () {
