@@ -182,7 +182,7 @@ Vue.component('my-component', {
 
 ---
 
-# Contribution
+# Contributing
 
 All contributions are welcome. If you wish to contribution code, make sure your editor has editorconfig installed.
 
