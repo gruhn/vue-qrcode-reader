@@ -42,7 +42,11 @@ export default {
   data () {
     return {
       isDestroyed: false,
-      streamReady: false,
+
+      initReject: null,
+      initResolve: null,
+
+      stream: null,
 
       content: null,
       location: null,
@@ -93,7 +97,23 @@ export default {
   },
 
   mounted () {
-    if (this.checkBrowserSupport()) {
+    const initPromise = new Promise(
+      (resolve, reject) => {
+        this.initResolve = resolve
+        this.initReject = reject
+      }
+    )
+
+    this.$emit('init', initPromise)
+
+    // check browser support
+    const canvas = this.$refs.canvas
+
+    if (canvas.getContext === undefined || canvas.getContext('2d') === undefined) {
+      this.initReject(new Error('HTML5 Canvas not supported in this browser.'))
+    } else if (navigator.mediaDevices.getUserMedia === undefined) {
+      this.initReject(new Error('WebRTC API not supported in this browser'))
+    } else {
       this.startCamera()
     }
   },
@@ -104,36 +124,31 @@ export default {
   },
 
   methods: {
-    startCamera: async function () {
+    async startCamera () {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia(CONSTRAINTS)
+        this.stream = await navigator.mediaDevices.getUserMedia(CONSTRAINTS)
         const video = this.$refs.video
 
         if (video.srcObject !== undefined) {
-          video.srcObject = stream
+          video.srcObject = this.stream
         } else if (video.mozSrcObject !== undefined) {
-          video.mozSrcObject = stream
+          video.mozSrcObject = this.stream
         } else if (window.URL.createObjectURL) {
-          video.src = window.URL.createObjectURL(stream)
+          video.src = window.URL.createObjectURL(this.stream)
         } else if (window.webkitURL) {
-          video.src = window.webkitURL.createObjectURL(stream)
+          video.src = window.webkitURL.createObjectURL(this.stream)
         } else {
-          video.src = stream
+          video.src = this.stream
         }
       } catch (e) {
-        if (e.name === 'PermissionDeniedError' || e.name === 'NotAllowedError') {
-          this.$emit('permission-deny', 'User denied camera access permission.')
-        } else if (e.name === 'NotSupportedError') {
-          this.$emit('no-support', e.message)
-        } else {
-          throw e
-        }
+        // NotAllowedError, NotSupportedError, NotFoundError
+        this.initReject(e)
       }
     },
 
     stopCamera () {
-      if (this.$refs.video.srcObject !== null) {
-        this.$refs.video.srcObject.getTracks().forEach(
+      if (this.stream !== null) {
+        this.stream.getTracks().forEach(
           track => track.stop()
         )
       }
@@ -149,7 +164,6 @@ export default {
       const ctx = canvas.getContext('2d')
       const bounds = [0, 0, canvas.width, canvas.height]
 
-      ctx.clearRect(...bounds)
       ctx.drawImage(video, ...bounds)
 
       return ctx.getImageData(...bounds)
@@ -174,22 +188,8 @@ export default {
       window.setTimeout(this.loopScan, SCAN_INTERVAL)
     },
 
-    checkBrowserSupport () {
-      const canvas = this.$refs.canvas
-
-      if (canvas.getContext === undefined || canvas.getContext('2d') === undefined) {
-        this.$emit('no-support', 'HTML5 Canvas not supported in this browser.')
-      } else if (navigator.mediaDevices.getUserMedia === undefined) {
-        this.$emit('no-support', 'WebRTC API not supported in this browser')
-      } else {
-        return true
-      }
-
-      return false
-    },
-
     onStreamLoaded () { // first frame finished loading
-      this.$emit('stream-loaded')
+      this.initResolve()
       this.loopScan()
     },
   },

@@ -9,7 +9,8 @@
   "keywords": [
     "vue",
     "vuejs",
-    "plugin"
+    "vue-component",
+    "qrcode-reader"
   ],
   "license": "MIT",
   "main": "dist/vue-qrcode-reader.common.js",

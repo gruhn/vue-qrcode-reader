@@ -8,25 +8,59 @@ A Vue.js component, accessing the device camera and allowing users to read QR co
 [Demo](https://gruhn.github.io/vue-qrcode-reader-demo) | [Source](https://github.com/gruhn/vue-qrcode-reader-demo/blob/master/src/components/TheQrcodeReaderDemo.vue)
 
 # Usage
+Once a stream from the users camera is loaded, it is displayed and continuously scanned for QR codes. Results are indicated by the `decode` event.
 
-As soon as it's mounted, this component will ask the user for permisson to access his device camera (back camera if available). If the user denies camera access, the `permission-deny` event is fired. You can't really ask for permissons twice so you should tell the user why you need it.
-
-Even if the user granted permission earlier, some time might pass between mounting and the moment the camera stream is loaded. Until then you might want to show a preloader. Just listen to the `stream-loaded` event.
-
-Once the stream is loaded, it is displayed and continuously scanned for QR codes. Results are indicated by the `decode` event.
+`decode` only carries the string, encoded by the QR code. If you also want to track the QR codes position, listen for the `locate` event. Its payload is an array of coordinates (for example `{ x: 278, y: 346 }`) of the QR codes corners, relative to the components position and size. The event is emitted whenever the coordinates change or no QR code is detected anymore, resulting in an empty array payload.
 
 ```html
-<qrcode-reader @decode="onDecode"></qrcode-reader>
+<qrcode-reader @decode="onDecode" @locate="onLocate"></qrcode-reader>
 ```
 ```javascript
 methods: {
   onDecode (content) {
     // ...
+  },
+
+  onLocate (points) {
+    // ...
   }
 }
 ```
-`decode` only carries the string, encoded by the QR code. If you also want to track the QR codes position, listen for the `locate` event. It is fired whenever QR code modules are detected at certain positions and when those positions change. It's payload contains an array of coordinates (in the form of `{ x: 278, y: 346 }`) for each detected module. Or an empty array if nothing is detected anymore.
+It might take a while before the component is ready and the scanning process starts. The user will be asked for camera access permission and the camera stream has to be loaded.
 
+If you want to show a loading indicator, you can listen for the `init` event. It's emitted as soon as the component is
+mounted and carries a promise which resolves when the stream loaded successfully. There are also some cases in which initialization fails, leading to rejection of said promise.
+
+:point_right: Camera access permission can't really be requested a second time. Once denied, this decision can only be revoked in the browser settings. So to avoid panic and frustration, make sure your users understand why you need this permisson.
+
+```html
+<qrcode-reader @init="onInit"></qrcode-reader>
+```
+```javascript
+methods: {
+  async onInit (promise) {
+    // show loading indicator
+
+    try {
+      await promise
+
+      // successfully initialized
+    } catch (error) {
+      if (error.name === 'NotAllowedError') {
+        // user denied camera access permisson
+      } else if (error.name === 'NotFoundError') {
+        // no suitable camera device installed
+      } else if (error.name === 'NotSupportedError') {
+        // page is not served over HTTPS (or localhost)
+      } else {
+        // browser is probably lacking features (WebRTC, Canvas)
+      }
+    } finally {
+      // hide loading indicator
+    }
+  }
+}
+```
 Distributed content will overlay the camera stream, wrapped in a `position: absolute` container. You can use this for example to highlight the detected position of QR codes.
 
 ```html
@@ -36,6 +70,7 @@ Distributed content will overlay the camera stream, wrapped in a `position: abso
 ```
 
 With the `paused` prop you can prevent further `decode` and `locate` propagation. Useful for example if you're only interested in the first result. This will also freeze the camera stream.
+
 ```html
 <qrcode-reader @decode="onDecode" :paused="paused"></qrcode-reader>
 ```
@@ -53,14 +88,20 @@ methods: {
   }
 }
 ```
-There is also a `no-support` event which is fired when the users browser lacks support for Canvas, WebRTC or if the page is not served over HTTPS. Since iOS 11 release, WebRTC is finally even supported in Safari. However, to optimize browser support you should install the [webrtc-adapter](https://github.com/webrtc/adapter) shim.
 
 # Installation
 
 ```
-yarn add vue-qrcode-reader webrtc-adapter
+yarn add vue-qrcode-reader
 # or
-npm install --save vue-qrcode-reader webrtc-adapter
+npm install --save vue-qrcode-reader
+```
+
+It's highly recommended to install the [webrtc-adapter](https://github.com/webrtc/adapter `webrtc-adapter` shim too.
+```
+yarn add webrtc-adapter
+# or
+npm install --save webrtc-adapter
 ```
 
 ## Default import
