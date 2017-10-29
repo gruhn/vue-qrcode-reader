@@ -41,7 +41,7 @@ export default {
 
   data () {
     return {
-      isDestroyed: false,
+      scanLoop: -1,
 
       initReject: null,
       initResolve: null,
@@ -81,9 +81,10 @@ export default {
     paused (newValue) {
       if (newValue === true) {
         this.$refs.video.pause()
+        this.stopScanning()
       } else {
         this.$refs.video.play()
-        this.loopScan()
+        this.startScanning()
       }
     },
 
@@ -120,7 +121,7 @@ export default {
 
   beforeDestroy () {
     this.stopCamera()
-    this.isDestroyed = true
+    this.stopScanning()
   },
 
   methods: {
@@ -169,28 +170,30 @@ export default {
       return ctx.getImageData(...bounds)
     },
 
-    loopScan () {
-      if (this.paused || this.isDestroyed) {
-        return
-      }
+    startScanning () {
+      this.stopScanning()
 
-      window.requestAnimationFrame(() => {
-        const imageData = this.captureFrame()
-        const { content, location } = scan(imageData)
+      this.scanLoop = window.setInterval(() => {
+        window.requestAnimationFrame(() => {
+          const imageData = this.captureFrame()
+          const { content, location } = scan(imageData)
 
-        if (content !== null) {
-          this.content = content
-        }
+          if (content !== null) {
+            this.content = content
+          }
 
-        this.location = location
-      })
+          this.location = location
+        })
+      }, SCAN_INTERVAL)
+    },
 
-      window.setTimeout(this.loopScan, SCAN_INTERVAL)
+    stopScanning () {
+      window.clearInterval(this.scanLoop)
     },
 
     onStreamLoaded () { // first frame finished loading
       this.initResolve()
-      this.loopScan()
+      this.startScanning()
     },
   },
 }
