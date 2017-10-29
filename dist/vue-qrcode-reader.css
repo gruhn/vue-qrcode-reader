@@ -1,18 +1,18 @@
 
-.qrcode-reader[data-v-678404ed] {
+.qrcode-reader {
   position: relative;
   display: block;
 }
-.qrcode-reader .qrcode-reader__camera[data-v-678404ed] {
+.qrcode-reader .qrcode-reader__camera {
     display: block;
     object-fit: contain;
     max-width: 100%;
     max-height: 100%;
 }
-.qrcode-reader .qrcode-reader__snapshot[data-v-678404ed] {
+.qrcode-reader .qrcode-reader__snapshot {
     display: none;
 }
-.qrcode-reader .qrcode-reader__overlay[data-v-678404ed] {
+.qrcode-reader .qrcode-reader__overlay {
     position: absolute;
     top: 0;
     bottom: 0;
