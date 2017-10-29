@@ -26,12 +26,11 @@ methods: {
   }
 }
 ```
-It might take a while before the component is ready and the scanning process starts. The user will be asked for camera access permission and the camera stream has to be loaded.
+It might take a while before the component is ready and the scanning process starts. The user has to be asked for camera access permission first and the camera stream has to be loaded.
 
-If you want to show a loading indicator, you can listen for the `init` event. It's emitted as soon as the component is
-mounted and carries a promise which resolves when the stream loaded successfully. There are also some cases in which initialization fails, leading to rejection of said promise.
+If you want to show a loading indicator, you can listen for the `init` event. It's emitted as soon as the component is mounted and carries a promise which resolves when the everything is ready. There are also some cases in which initialization fails, leading to rejection of said promise.
 
-:point_right: Camera access permission can't really be requested a second time. Once denied, this decision can only be revoked in the browser settings. So to avoid panic and frustration, make sure your users understand why you need this permisson.
+:point_right: Camera access permission can't really be requested a second time. Once denied, it can only be re-granted in the browser settings. So to avoid panic and frustration, make sure your users understand why you need this permisson.
 
 ```html
 <qrcode-reader @init="onInit"></qrcode-reader>
