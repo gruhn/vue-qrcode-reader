@@ -3,7 +3,6 @@
     <video
       ref="video"
       class="qrcode-reader__camera"
-      autoplay
       @loadeddata="onStreamLoaded"
     ></video>
 
@@ -141,6 +140,7 @@ export default {
         } else {
           video.src = this.stream
         }
+
         video.playsInline = true
         video.play()
       } catch (e) {
