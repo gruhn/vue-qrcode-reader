@@ -141,6 +141,8 @@ export default {
         } else {
           video.src = this.stream
         }
+        video.playsInline = true
+        video.play()
       } catch (e) {
         // NotAllowedError, NotSupportedError, NotFoundError
         this.initReject(e)
