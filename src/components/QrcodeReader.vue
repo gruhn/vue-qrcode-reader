@@ -40,7 +40,7 @@ export default {
 
   data () {
     return {
-      scanLoop: -1,
+      scanLoop: -1, // ID returned by setInterval
 
       initReject: null,
       initResolve: null,
@@ -109,9 +109,9 @@ export default {
     // check browser support
     const canvas = this.$refs.canvas
 
-    if (canvas.getContext === undefined || canvas.getContext('2d') === undefined) {
+    if (!(canvas.getContext && canvas.getContext('2d'))) {
       this.initReject(new Error('HTML5 Canvas not supported in this browser.'))
-    } else if (navigator.mediaDevices.getUserMedia === undefined) {
+    } else if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
       this.initReject(new Error('WebRTC API not supported in this browser'))
     } else {
       this.startCamera()
