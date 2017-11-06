@@ -176,8 +176,9 @@ export default {
       this.stopScanning()
 
       this.scanLoop = window.setInterval(() => {
+        const imageData = this.captureFrame()
+
         window.requestAnimationFrame(() => {
-          const imageData = this.captureFrame()
           const { content, location } = scan(imageData)
 
           if (content !== null) {
