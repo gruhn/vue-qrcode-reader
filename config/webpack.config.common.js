@@ -17,6 +17,8 @@ module.exports = merge(base, {
     // Put external libraries like lodash here
     // With their package name
     // Example: 'lodash': 'lodash'
+    'jsqr': 'jsqr',
+    'babel-runtime': 'babel-runtime'
   },
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
