@@ -7,7 +7,7 @@ A Vue.js component, accessing the device camera and allowing users to read QR co
 
 :point_right: In Chrome this component [only works with HTTPS](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins) (or localhost)
 
-[Demo](https://gruhn.github.io/vue-qrcode-reader-demo) | [Source](https://github.com/gruhn/vue-qrcode-reader-demo/blob/master/src/components/TheQrcodeReaderDemo.vue)
+[Demo](https://gruhn.github.io/vue-qrcode-reader/) | [Source](https://github.com/gruhn/vue-qrcode-reader/blob/ae25aa475bca61a0ca37c7f668c2a8c4587b2720/dev/src/components/TheQrcodeReaderDemo.vue)
 
 # Usage
 Once a stream from the users camera is loaded, it is displayed and continuously scanned for QR codes. Results are indicated by the `decode` event.
@@ -30,7 +30,7 @@ methods: {
 ```
 It might take a while before the component is ready and the scanning process starts. The user has to be asked for camera access permission first and the camera stream has to be loaded.
 
-If you want to show a loading indicator, you can listen for the `init` event. It's emitted as soon as the component is mounted and carries a promise which resolves when everything is ready. The promise is rejected if initialization fails. This can have a couple of reasons. 
+If you want to show a loading indicator, you can listen for the `init` event. It's emitted as soon as the component is mounted and carries a promise which resolves when everything is ready. The promise is rejected if initialization fails. This can have a couple of reasons.
 
 :point_right: Camera access permission can't really be requested a second time. Once denied, it can only be re-granted in the browser settings. So to avoid panic and frustration, make sure your users understand why you need this permisson.
 
