@@ -9,6 +9,8 @@
     <canvas
       ref="canvas"
       class="qrcode-reader__snapshot"
+      :width="streamWidth"
+      :height="streamHeight"
     ></canvas>
 
     <div class="qrcode-reader__overlay">
@@ -48,6 +50,8 @@ export default {
       initResolve: null,
 
       stream: null,
+      streamWidth: null,
+      streamHeight: null,
 
       content: null,
       location: null,
@@ -61,8 +65,8 @@ export default {
       } else {
         const video = this.$refs.video
 
-        const widthRatio = video.offsetWidth / video.videoWidth
-        const heightRatio = video.offsetHeight / video.videoHeight
+        const widthRatio = video.offsetWidth / this.streamWidth
+        const heightRatio = video.offsetHeight / this.streamHeight
 
         const points = [
           this.location.bottomLeft,
@@ -163,11 +167,8 @@ export default {
       const video = this.$refs.video
       const canvas = this.$refs.canvas
 
-      canvas.width = video.videoWidth
-      canvas.height = video.videoHeight
-
       const ctx = canvas.getContext('2d')
-      const bounds = [0, 0, canvas.width, canvas.height]
+      const bounds = [0, 0, this.streamWidth, this.streamHeight]
 
       ctx.drawImage(video, ...bounds)
 
@@ -202,7 +203,12 @@ export default {
       this.locateIntervalID = -1
     },
 
-    onStreamLoaded () { // first frame finished loading
+    onStreamLoaded (event) { // first frame finished loading
+      const video = event.target
+
+      this.streamWidth = video.videoWidth
+      this.streamHeight = video.videoHeight
+
       this.initResolve()
       this.startScanning()
     },
