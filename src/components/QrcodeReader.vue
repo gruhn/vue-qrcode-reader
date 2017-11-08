@@ -18,9 +18,10 @@
 </template>
 
 <script>
-import { scan } from '../scanner.js'
+import { decode, locate } from '../scanner.js'
 
-const SCAN_INTERVAL = 40 // 1000ms / 40ms = 25fps
+const LOCATE_INTERVAL = 40 // 1000ms / 40ms = 25fps
+const DECODE_INTERVAL = 400
 const CONSTRAINTS = {
   audio: false,
   video: {
@@ -40,7 +41,8 @@ export default {
 
   data () {
     return {
-      scanLoop: -1, // ID returned by setInterval
+      decodeIntervalID: -1,
+      locateIntervalID: -1,
 
       initReject: null,
       initResolve: null,
@@ -175,23 +177,29 @@ export default {
     startScanning () {
       this.stopScanning()
 
-      this.scanLoop = window.setInterval(() => {
+      this.decodeIntervalID = window.setInterval(() => {
         const imageData = this.captureFrame()
 
         window.requestAnimationFrame(() => {
-          const { content, location } = scan(imageData)
-
-          if (content !== null) {
-            this.content = content
-          }
-
-          this.location = location
+          this.content = decode(imageData) || this.content
         })
-      }, SCAN_INTERVAL)
+      }, DECODE_INTERVAL)
+
+      this.locateIntervalID = window.setInterval(() => {
+        const imageData = this.captureFrame()
+
+        window.requestAnimationFrame(() => {
+          this.location = locate(imageData)
+        })
+      }, LOCATE_INTERVAL)
     },
 
     stopScanning () {
-      window.clearInterval(this.scanLoop)
+      window.clearInterval(this.decodeIntervalID)
+      window.clearInterval(this.locateIntervalID)
+
+      this.decodeIntervalID = -1
+      this.locateIntervalID = -1
     },
 
     onStreamLoaded () { // first frame finished loading

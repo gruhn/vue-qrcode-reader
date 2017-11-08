@@ -1,6 +1,6 @@
 import jsQR from 'jsqr'
 
-export function scan (imageData) {
+export function scan (imageData, locateOnly) {
   let location = null
   let content = null
 
@@ -12,11 +12,19 @@ export function scan (imageData) {
 
   location = jsQR.locateQRInBinaryImage(binaryImage)
 
-  if (location !== null) {
+  if (location !== null && !locateOnly) {
     const qrcode = jsQR.extractQRFromBinaryImage(binaryImage, location)
 
     content = jsQR.decodeQR(qrcode)
   }
 
   return { location, content }
+}
+
+export function decode (imageData) {
+  return scan(imageData, false).content
+}
+
+export function locate (imageData) {
+  return scan(imageData, true).location
 }
