@@ -183,19 +183,23 @@ export default {
       this.$refs.video.play()
 
       this.decodeIntervalID = window.setInterval(() => {
-        const imageData = this.captureFrame()
+        if (this.$listeners.decode) {
+          const imageData = this.captureFrame()
 
-        window.requestAnimationFrame(() => {
-          this.content = decode(imageData) || this.content
-        })
+          window.requestAnimationFrame(() => {
+            this.content = decode(imageData) || this.content
+          })
+        }
       }, DECODE_INTERVAL)
 
       this.locateIntervalID = window.setInterval(() => {
-        const imageData = this.captureFrame()
+        if (this.$listeners.locate) {
+          const imageData = this.captureFrame()
 
-        window.requestAnimationFrame(() => {
-          this.location = locate(imageData)
-        })
+          window.requestAnimationFrame(() => {
+            this.location = locate(imageData)
+          })
+        }
       }, LOCATE_INTERVAL)
     },
 
