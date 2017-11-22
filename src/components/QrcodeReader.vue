@@ -27,7 +27,7 @@ const DECODE_INTERVAL = 400
 const CONSTRAINTS = {
   audio: false,
   video: {
-    facingMode: 'environment', // back camera
+    facingMode: { ideal: 'environment' },
     width: { min: 360, ideal: 1280, max: 1920 },
     height: { min: 240, ideal: 720, max: 1080 },
   },
@@ -138,6 +138,8 @@ export default {
       try {
         this.stream = await navigator.mediaDevices.getUserMedia(CONSTRAINTS)
         const video = this.$refs.video
+
+        console.log(this.stream)
 
         if (video.srcObject !== undefined) {
           video.srcObject = this.stream
