@@ -7,7 +7,7 @@ A Vue.js component, accessing the device camera and allowing users to read QR co
 
 :point_right: In Chrome this component [only works with HTTPS](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins) (or localhost)
 
-[Demo](https://gruhn.github.io/vue-qrcode-reader/) | [Source](https://github.com/gruhn/vue-qrcode-reader/blob/ae25aa475bca61a0ca37c7f668c2a8c4587b2720/dev/src/components/TheQrcodeReaderDemo.vue)
+### [Demos](https://gruhn.github.io/vue-qrcode-reader/)
 
 # Usage
 Once a stream from the users camera is loaded, it is displayed and continuously scanned for QR codes. Results are indicated by the `decode` event.
