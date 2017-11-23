@@ -22,6 +22,7 @@
 <script>
 import { decode, locate } from '../scanner.js'
 
+const NO_LOCATION = [] // use specific array instance to guarantee equality ([] !== [] but NO_LOCATION === NO_LOCATION)
 const LOCATE_INTERVAL = 40 // 1000ms / 40ms = 25fps
 const DECODE_INTERVAL = 400
 const CONSTRAINTS = {
@@ -43,9 +44,6 @@ export default {
 
   data () {
     return {
-      decodeIntervalID: -1,
-      locateIntervalID: -1,
-
       initReject: null,
       initResolve: null,
 
@@ -54,55 +52,54 @@ export default {
       streamHeight: null,
 
       content: null,
-      location: null,
+      location: NO_LOCATION,
+
+      destroyed: false,
+      streamLoaded: false,
     }
   },
 
   computed: {
-    /*
-     * If stream resolution is greater than available space
-     * the video is scaled down. Detected QR code location is
-     * based on the original resolution though. This difference
-     * is compansated here.
-     */
-    locationArray () {
-      if (this.location === null) {
-        return []
-      } else {
-        const video = this.$refs.video
+    shouldScan () {
+      return !this.paused && !this.destroyed && this.streamLoaded
+    },
 
-        const widthRatio = video.offsetWidth / this.streamWidth
-        const heightRatio = video.offsetHeight / this.streamHeight
+    shouldDecode () {
+      return this.shouldScan && this.$listeners.decode !== undefined
+    },
 
-        const locationArray = [
-          this.location.bottomLeft,
-          this.location.topLeft,
-          this.location.topRight,
-        ]
-
-        return locationArray.map(({ x, y }) => ({
-          x: x * widthRatio,
-          y: y * heightRatio,
-        }))
-      }
+    shouldLocate () {
+      return this.shouldScan && this.$listeners.locate !== undefined
     },
   },
 
   watch: {
-    paused (newValue) {
-      if (newValue === true) {
-        this.stopScanning()
-      } else {
-        this.startScanning()
-      }
-    },
-
     content (newValue) {
       this.$emit('decode', newValue)
     },
 
-    locationArray (newValue) {
+    location (newValue) {
       this.$emit('locate', newValue)
+    },
+
+    shouldScan (shouldScan) {
+      if (shouldScan) {
+        this.$refs.video.play()
+      } else {
+        this.$refs.video.pause()
+      }
+    },
+
+    shouldDecode (shouldDecode) {
+      if (shouldDecode) {
+        this.keepDecoding()
+      }
+    },
+
+    shouldLocate (shouldLocate) {
+      if (shouldLocate) {
+        this.keepLocating()
+      }
     },
   },
 
@@ -129,8 +126,8 @@ export default {
   },
 
   beforeDestroy () {
+    this.destroyed = true
     this.stopCamera()
-    this.stopScanning()
   },
 
   methods: {
@@ -178,39 +175,54 @@ export default {
       return ctx.getImageData(...bounds)
     },
 
-    startScanning () {
-      this.stopScanning()
-      this.$refs.video.play()
+    keepDecoding () {
+      if (this.shouldDecode) {
+        const imageData = this.captureFrame()
 
-      this.decodeIntervalID = window.setInterval(() => {
-        if (this.$listeners.decode) {
-          const imageData = this.captureFrame()
-
-          window.requestAnimationFrame(() => {
-            this.content = decode(imageData) || this.content
-          })
-        }
-      }, DECODE_INTERVAL)
-
-      this.locateIntervalID = window.setInterval(() => {
-        if (this.$listeners.locate) {
-          const imageData = this.captureFrame()
-
-          window.requestAnimationFrame(() => {
-            this.location = locate(imageData)
-          })
-        }
-      }, LOCATE_INTERVAL)
+        window.requestAnimationFrame(() => {
+          this.content = decode(imageData) || this.content
+          window.setTimeout(this.keepDecoding, DECODE_INTERVAL)
+        })
+      }
     },
 
-    stopScanning () {
-      this.$refs.video.pause()
+    keepLocating () {
+      if (this.shouldLocate) {
+        const imageData = this.captureFrame()
 
-      window.clearInterval(this.decodeIntervalID)
-      window.clearInterval(this.locateIntervalID)
+        window.requestAnimationFrame(() => {
+          const locationObject = locate(imageData)
 
-      this.decodeIntervalID = -1
-      this.locateIntervalID = -1
+          if (locationObject === null) {
+            this.location = NO_LOCATION
+          } else {
+            /*
+             * If stream resolution is greater than available space
+             * the video is scaled down. Detected QR code location is
+             * based on the original resolution though. This difference
+             * is compansated here.
+             */
+
+            const video = this.$refs.video
+
+            const widthRatio = video.offsetWidth / this.streamWidth
+            const heightRatio = video.offsetHeight / this.streamHeight
+
+            const locationArray = [
+              locationObject.bottomLeft,
+              locationObject.topLeft,
+              locationObject.topRight,
+            ]
+
+            this.location = locationArray.map(({ x, y }) => ({
+              x: x * widthRatio,
+              y: y * heightRatio,
+            }))
+          }
+
+          window.setTimeout(this.keepLocating, LOCATE_INTERVAL)
+        })
+      }
     },
 
     onStreamLoaded (event) { // first frame finished loading
@@ -220,7 +232,7 @@ export default {
       this.streamHeight = video.videoHeight
 
       this.initResolve()
-      this.startScanning()
+      this.streamLoaded = true
     },
   },
 }
