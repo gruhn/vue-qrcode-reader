@@ -18,7 +18,8 @@ module.exports = merge(base, {
     // With their global name
     // Example: 'lodash': '_'
     'jsqr': 'jsqr',
-    'babel-runtime': 'babel-runtime'
+    'babel-runtime': 'babel-runtime',
+    'webrtc-adapter': 'webrtc-adapter'
   },
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
