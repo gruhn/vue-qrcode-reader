@@ -98,13 +98,6 @@ yarn add vue-qrcode-reader
 npm install --save vue-qrcode-reader
 ```
 
-It's highly recommended to install [webrtc-adapter](https://github.com/webrtc/adapter) too (a shim for WebRTC).
-```
-yarn add webrtc-adapter
-# or
-npm install --save webrtc-adapter
-```
-
 ## Default import
 
 Register component globally:
