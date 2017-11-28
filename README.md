@@ -30,7 +30,7 @@ methods: {
 ```
 It might take a while before the component is ready and the scanning process starts. The user has to be asked for camera access permission first and the camera stream has to be loaded.
 
-If you want to show a loading indicator, you can listen for the `init` event. It's emitted as soon as the component is mounted and carries a promise which resolves when everything is ready. The promise is rejected if initialization fails. This can have a couple of reasons.
+If you want to show a loading indicator, you can listen for the `init` event. It's emitted as soon as the component is mounted and carries a promise which resolves when everything is ready. The promise is rejected if initialization fails. This can have [a couple of reasons](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Exceptions).
 
 :point_right: Camera access permission can't really be requested a second time. Once denied, it can only be re-granted in the browser settings. So to avoid panic and frustration, make sure your users understand why you need this permisson.
 
@@ -53,6 +53,8 @@ methods: {
         // no suitable camera device installed
       } else if (error.name === 'NotSupportedError') {
         // page is not served over HTTPS (or localhost)
+      } else if (error.name === 'NotReadableError') {
+        // maybe camera is already in use
       } else {
         // browser is probably lacking features (WebRTC, Canvas)
       }

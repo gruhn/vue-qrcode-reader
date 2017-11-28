@@ -28,7 +28,7 @@ const DECODE_INTERVAL = 400
 const CONSTRAINTS = {
   audio: false,
   video: {
-    facingMode: 'environment', // back camera
+    facingMode: { ideal: 'environment' }, // back camera
     width: { min: 360, ideal: 1280, max: 1920 },
     height: { min: 240, ideal: 720, max: 1080 },
   },
@@ -149,6 +149,7 @@ export default {
         }
 
         video.playsInline = true
+        video.play() // `loadeddata` event not emitted when video not playing in Firefox
       } catch (e) {
         // NotAllowedError, NotSupportedError, NotFoundError
         this.initReject(e)
