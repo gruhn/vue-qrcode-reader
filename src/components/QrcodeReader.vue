@@ -75,8 +75,9 @@ export default {
 
   watch: {
     content (newValue) {
-      if (newValue !== null)
+      if (newValue !== null) {
         this.$emit('decode', newValue)
+      }
     },
 
     location (newValue) {
@@ -104,9 +105,10 @@ export default {
     },
 
     paused (newValue) {
-      if (!newValue)
-        setTimeout(() => this.content = null, DECODE_INTERVAL) // if not timeout is set the first frame of the video will be scanned with the same code on unfreeze
-    }
+      if (!newValue) {
+        setTimeout(() => { this.content = null }, DECODE_INTERVAL)
+      }
+    },
   },
 
   mounted () {
