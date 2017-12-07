@@ -75,7 +75,9 @@ export default {
 
   watch: {
     content (newValue) {
-      this.$emit('decode', newValue)
+      if (newValue !== null) {
+        this.$emit('decode', newValue)
+      }
     },
 
     location (newValue) {
@@ -99,6 +101,12 @@ export default {
     shouldLocate (shouldLocate) {
       if (shouldLocate) {
         this.keepLocating()
+      }
+    },
+
+    paused (newValue) {
+      if (!newValue) {
+        setTimeout(() => { this.content = null }, DECODE_INTERVAL)
       }
     },
   },
