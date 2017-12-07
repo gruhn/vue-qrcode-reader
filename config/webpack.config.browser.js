@@ -19,7 +19,9 @@ module.exports = merge(base, {
     // Example: 'lodash': '_'
     'jsqr': 'jsqr',
     'babel-runtime': 'babel-runtime',
-    'webrtc-adapter': 'webrtc-adapter'
+    'webrtc-adapter': 'webrtc-adapter',
+    'lodash/isObject': 'lodash/isObject',
+    'lodash/isBoolean': 'lodash/isBoolean',
   },
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
