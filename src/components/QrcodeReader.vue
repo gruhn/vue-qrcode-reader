@@ -21,24 +21,23 @@
 
 <script>
 import { decode, locate } from '../scanner.js'
+import isObject from 'lodash/isObject'
+import isBoolean from 'lodash/isBoolean'
 
 const NO_LOCATION = [] // use specific array instance to guarantee equality ([] !== [] but NO_LOCATION === NO_LOCATION)
 const LOCATE_INTERVAL = 40 // 1000ms / 40ms = 25fps
 const DECODE_INTERVAL = 400
-const CONSTRAINTS = {
-  audio: false,
-  video: {
-    facingMode: { ideal: 'environment' }, // back camera
-    width: { min: 360, ideal: 1280, max: 1920 },
-    height: { min: 240, ideal: 720, max: 1080 },
-  },
-}
 
 export default {
   props: {
     paused: {
       type: Boolean,
       default: false,
+    },
+
+    constraints: {
+      type: Object,
+      default: () => ({}), // empty object
     },
   },
 
@@ -70,6 +69,32 @@ export default {
 
     shouldLocate () {
       return this.shouldScan && this.$listeners.locate !== undefined
+    },
+
+    constraintsNormalized () {
+      let defaultConstraints = {
+        audio: false,
+        video: {
+          facingMode: { ideal: 'environment' },
+          width: { min: 360, ideal: 1280, max: 1920 },
+          height: { min: 240, ideal: 720, max: 1080 },
+        },
+      }
+
+      if (this.constraints.audio !== undefined) {
+        defaultConstraints.audio = this.constraints.audio
+      }
+
+      if (isObject(this.constraints.video)) {
+        defaultConstraints.video = {
+          ...defaultConstraints.video,
+          ...this.constraints.video,
+        }
+      } else if (isBoolean(this.constraints.video)) {
+        defaultConstraints.video = this.constraints.video
+      }
+
+      return defaultConstraints
     },
   },
 
@@ -109,28 +134,19 @@ export default {
         setTimeout(() => { this.content = null }, DECODE_INTERVAL)
       }
     },
+
+    constraintsNormalized: {
+      deep: true,
+
+      handler () {
+        this.stopCamera()
+        this.init()
+      },
+    },
   },
 
   mounted () {
-    const initPromise = new Promise(
-      (resolve, reject) => {
-        this.initResolve = resolve
-        this.initReject = reject
-      }
-    )
-
-    this.$emit('init', initPromise)
-
-    // check browser support
-    const canvas = this.$refs.canvas
-
-    if (!(canvas.getContext && canvas.getContext('2d'))) {
-      this.initReject(new Error('HTML5 Canvas not supported in this browser.'))
-    } else if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
-      this.initReject(new Error('WebRTC API not supported in this browser'))
-    } else {
-      this.startCamera()
-    }
+    this.init()
   },
 
   beforeDestroy () {
@@ -139,9 +155,31 @@ export default {
   },
 
   methods: {
+    init () {
+      const initPromise = new Promise(
+        (resolve, reject) => {
+          this.initResolve = resolve
+          this.initReject = reject
+        }
+      )
+
+      this.$emit('init', initPromise)
+
+      // check browser support
+      const canvas = this.$refs.canvas
+
+      if (!(canvas.getContext && canvas.getContext('2d'))) {
+        this.initReject(new Error('HTML5 Canvas not supported in this browser.'))
+      } else if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
+        this.initReject(new Error('WebRTC API not supported in this browser'))
+      } else {
+        this.startCamera()
+      }
+    },
+
     async startCamera () {
       try {
-        this.stream = await navigator.mediaDevices.getUserMedia(CONSTRAINTS)
+        this.stream = await navigator.mediaDevices.getUserMedia(this.constraintsNormalized)
         const video = this.$refs.video
 
         if (video.srcObject !== undefined) {
