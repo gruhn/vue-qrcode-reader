@@ -70,10 +70,10 @@ methods: {
     }
   }
 }
+```
 
 ### Distributed content
 
-```
 Distributed content will overlay the camera stream, wrapped in a `position: absolute` container. You can use this for example to highlight the detected position of QR codes.
 
 ```html
