@@ -3,7 +3,6 @@
     <video
       ref="video"
       class="qrcode-reader__camera"
-      @loadeddata="onStreamLoaded"
     ></video>
 
     <canvas
@@ -43,24 +42,19 @@ export default {
 
   data () {
     return {
-      initReject: null,
-      initResolve: null,
-
       stream: null,
       streamWidth: null,
       streamHeight: null,
-
-      content: null,
-      location: NO_LOCATION,
-
-      destroyed: false,
       streamLoaded: false,
+
+      decodeResult: null,
+      locateResult: NO_LOCATION,
     }
   },
 
   computed: {
     shouldScan () {
-      return !this.paused && !this.destroyed && this.streamLoaded
+      return !this.paused && this.streamLoaded
     },
 
     shouldDecode () {
@@ -99,13 +93,13 @@ export default {
   },
 
   watch: {
-    content (newValue) {
+    decodeResult (newValue) {
       if (newValue !== null) {
         this.$emit('decode', newValue)
       }
     },
 
-    location (newValue) {
+    locateResult (newValue) {
       this.$emit('locate', newValue)
     },
 
@@ -131,7 +125,7 @@ export default {
 
     paused (newValue) {
       if (!newValue) {
-        setTimeout(() => { this.content = null }, DECODE_INTERVAL)
+        setTimeout(() => { this.decodeResult = null }, DECODE_INTERVAL)
       }
     },
 
@@ -139,74 +133,71 @@ export default {
       deep: true,
 
       handler () {
-        this.stopCamera()
-        this.init()
+        this.$emit('init', this.startCamera())
       },
     },
   },
 
   mounted () {
-    this.init()
+    this.$emit('init', this.startCamera())
   },
 
   beforeDestroy () {
-    this.destroyed = true
     this.stopCamera()
   },
 
   methods: {
-    init () {
-      const initPromise = new Promise(
-        (resolve, reject) => {
-          this.initResolve = resolve
-          this.initReject = reject
-        }
-      )
-
-      this.$emit('init', initPromise)
-
+    async startCamera () {
       // check browser support
       const canvas = this.$refs.canvas
-
       if (!(canvas.getContext && canvas.getContext('2d'))) {
-        this.initReject(new Error('HTML5 Canvas not supported in this browser.'))
+        throw new Error('HTML5 Canvas not supported in this browser.')
       } else if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
-        this.initReject(new Error('WebRTC API not supported in this browser'))
+        throw new Error('WebRTC API not supported in this browser')
+      }
+
+      this.stopCamera()
+
+      this.stream = await navigator.mediaDevices.getUserMedia(this.constraintsNormalized)
+
+      const video = this.$refs.video
+
+      const streamLoadedPromise = new Promise((resolve, reject) => {
+        video.addEventListener('loadeddata', resolve, { once: true })
+        video.addEventListener('error', reject, { once: true })
+      })
+
+      if (video.srcObject !== undefined) {
+        video.srcObject = this.stream
+      } else if (video.mozSrcObject !== undefined) {
+        video.mozSrcObject = this.stream
+      } else if (window.URL.createObjectURL) {
+        video.src = window.URL.createObjectURL(this.stream)
+      } else if (window.webkitURL) {
+        video.src = window.webkitURL.createObjectURL(this.stream)
       } else {
-        this.startCamera()
+        video.src = this.stream
       }
-    },
 
-    async startCamera () {
-      try {
-        this.stream = await navigator.mediaDevices.getUserMedia(this.constraintsNormalized)
-        const video = this.$refs.video
+      video.playsInline = true
+      video.play() // firefox does not emit `loadeddata` if video not playing
 
-        if (video.srcObject !== undefined) {
-          video.srcObject = this.stream
-        } else if (video.mozSrcObject !== undefined) {
-          video.mozSrcObject = this.stream
-        } else if (window.URL.createObjectURL) {
-          video.src = window.URL.createObjectURL(this.stream)
-        } else if (window.webkitURL) {
-          video.src = window.webkitURL.createObjectURL(this.stream)
-        } else {
-          video.src = this.stream
-        }
+      await streamLoadedPromise
 
-        video.playsInline = true
-        video.play() // `loadeddata` event not emitted when video not playing in Firefox
-      } catch (e) {
-        // NotAllowedError, NotSupportedError, NotFoundError
-        this.initReject(e)
-      }
+      this.streamWidth = video.videoWidth
+      this.streamHeight = video.videoHeight
+      this.streamLoaded = true
     },
 
     stopCamera () {
+      this.streamLoaded = false
+
       if (this.stream !== null) {
         this.stream.getTracks().forEach(
           track => track.stop()
         )
+
+        this.stream = null
       }
     },
 
@@ -227,7 +218,7 @@ export default {
         const imageData = this.captureFrame()
 
         window.requestAnimationFrame(() => {
-          this.content = decode(imageData) || this.content
+          this.decodeResult = decode(imageData) || this.decodeResult
           window.setTimeout(this.keepDecoding, DECODE_INTERVAL)
         })
       }
@@ -241,11 +232,11 @@ export default {
           const locationObject = locate(imageData)
 
           if (locationObject === null) {
-            this.location = NO_LOCATION
+            this.locateResult = NO_LOCATION
           } else {
             /*
              * If stream resolution is greater than available space
-             * the video is scaled down. Detected QR code location is
+             * the video is scaled down. Detected QR code locateResult is
              * based on the original resolution though. This difference
              * is compansated here.
              */
@@ -261,7 +252,7 @@ export default {
               locationObject.topRight,
             ]
 
-            this.location = locationArray.map(({ x, y }) => ({
+            this.locateResult = locationArray.map(({ x, y }) => ({
               x: x * widthRatio,
               y: y * heightRatio,
             }))
@@ -272,15 +263,6 @@ export default {
       }
     },
 
-    onStreamLoaded (event) { // first frame finished loading
-      const video = event.target
-
-      this.streamWidth = video.videoWidth
-      this.streamHeight = video.videoHeight
-
-      this.initResolve()
-      this.streamLoaded = true
-    },
   },
 }
 </script>
