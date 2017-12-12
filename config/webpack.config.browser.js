@@ -17,11 +17,6 @@ module.exports = merge(base, {
     // Put external libraries like lodash here
     // With their global name
     // Example: 'lodash': '_'
-    'jsqr': 'jsqr',
-    'babel-runtime': 'babel-runtime',
-    'webrtc-adapter': 'webrtc-adapter',
-    'lodash/isObject': 'lodash/isObject',
-    'lodash/isBoolean': 'lodash/isBoolean',
   },
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
