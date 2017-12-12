@@ -34,8 +34,8 @@ export default {
       default: false,
     },
 
-    constraints: {
-      type: Object,
+    videoConstraints: {
+      type: [Object, Boolean],
       default: () => ({}), // empty object
     },
   },
@@ -65,7 +65,7 @@ export default {
       return this.shouldScan && this.$listeners.locate !== undefined
     },
 
-    constraintsNormalized () {
+    constraints () {
       let defaultConstraints = {
         audio: false,
         video: {
@@ -75,17 +75,13 @@ export default {
         },
       }
 
-      if (this.constraints.audio !== undefined) {
-        defaultConstraints.audio = this.constraints.audio
-      }
-
-      if (isObject(this.constraints.video)) {
+      if (isBoolean(this.videoConstraints)) {
+        defaultConstraints.video = this.videoConstraints
+      } else if (isObject(this.videoConstraints)) {
         defaultConstraints.video = {
           ...defaultConstraints.video,
-          ...this.constraints.video,
+          ...this.videoConstraints,
         }
-      } else if (isBoolean(this.constraints.video)) {
-        defaultConstraints.video = this.constraints.video
       }
 
       return defaultConstraints
@@ -129,7 +125,7 @@ export default {
       }
     },
 
-    constraintsNormalized: {
+    constraints: {
       deep: true,
 
       handler () {
@@ -158,7 +154,7 @@ export default {
 
       this.stopCamera()
 
-      this.stream = await navigator.mediaDevices.getUserMedia(this.constraintsNormalized)
+      this.stream = await navigator.mediaDevices.getUserMedia(this.constraints)
 
       const video = this.$refs.video
 

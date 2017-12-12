@@ -61,15 +61,15 @@ methods: {
 
       // successfully initialized
     } catch (error) {
-      if (error.name === 'NotAllowedError') {
+      if (error instanceof NotAllowedError) {
         // user denied camera access permisson
-      } else if (error.name === 'NotFoundError') {
+      } else if (error instanceof NotFoundError) {
         // no suitable camera device installed
-      } else if (error.name === 'NotSupportedError') {
+      } else if (error instanceof NotSupportedError) {
         // page is not served over HTTPS (or localhost)
-      } else if (error.name === 'NotReadableError') {
+      } else if (error instanceof NotReadableError) {
         // maybe camera is already in use
-      } else if (error.name === 'OverconstrainedError') {
+      } else if (error instanceof OverconstrainedError) {
         // passed constraints don't match any camera. Did you requested the front camera although there is none?
       } else {
         // browser is probably lacking features (WebRTC, Canvas)
@@ -113,73 +113,38 @@ methods: {
 }
 ```
 
-### `:constraints`
+### `:video-constraints`
 
-This component uses [getUserMedia](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia) to request a camera stream. This method accepts a constraints object to configure for example if front or rear camera should be accessed. You can pass this object using the `constraints` prop. If you don't pass it, it will default to:
+This component uses [getUserMedia](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia) to request camera streams. This method accepts [a constraints object](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints#Properties_of_video_tracks) to configure for example if front or rear camera should be accessed. This is passed by default:
 
 ```javascript
 {
-  audio: false, // don't request audio stream
+  audio: false, // don't request microphone access
   video: {
     facingMode: { ideal: 'environment' }, // use rear camera if available
     width: { min: 360, ideal: 1280, max: 1920 }, // constrain video width resolution
     height: { min: 240, ideal: 720, max: 1080 } // constrain video height resolution
-  },
+  }
 }
 ```
-:point_right: If you change this property after initialization, a new camera stream will be requested and the `init` event will be emitted again.
 
-Note that your passed object and the default object are merged two levels deep. That means you only have to pass properties, you want to override. If you want to use the front camera for example, do it like this:
+You can change the `video` part using the `video-constraints` prop. Note that you only have to pass properties you want you override. If you want to use the front camera for example and change nothing else, pass this:
 
 ```html
-<qrcode-reader :constraints="constraints"></qrcode-reader>
-```
-```javascript
-data () {
-  return {
-    constraints: {
-      video: {
-        facingMode: { ideal: 'user' }
-      }
-    }
-  }
-}
+<qrcode-reader :video-constraints="{ facingMode: 'user' }"></qrcode-reader>
 ```
 
-**BUT** if you want to change a single property on the third depth level you have to pass the hole object. For example this:
-```javascript
-{
-  video: {
-    width: { max: 1440 }
-  }
-}
-```
-Would result in this:
-```javascript
-{
-  audio: false,
-  video: {
-    facingMode: { ideal: 'environment' },
-    width: { max: 1440 }, // width property full replaced
-    height: { min: 240, ideal: 720, max: 1080 }
-  }
-}
-```
-So if you want to keep the other properties, pass this:
-```javascript
-{
-  video: {
-    width: { min: 360, ideal: 1280, max: 1440 }
-  }
-}
-```
+:point_right: If you change this property after initialization, a new camera stream will be requested and the `init` event will be emitted again.
 
 
 # Installation
 
-```
+```bash
 yarn add vue-qrcode-reader
-# or
+```
+or using NPM:
+
+```bash
 npm install --save vue-qrcode-reader
 ```
 
@@ -201,11 +166,8 @@ import Vue from 'vue'
 import { QrcodeReader } from 'vue-qrcode-reader'
 
 Vue.component('my-component', {
-  // ...
-  components: {
-    // ...
-    'qrcode-reader': QrcodeReader
-  },
+  components: { QrcodeReader },
+
   // ...
 )
 ```
@@ -230,11 +192,8 @@ import 'vue-qrcode-reader/dist/vue-qrcode-reader.css'
 import { QrcodeReader } from 'vue-qrcode-reader/dist/vue-qrcode-reader.common'
 
 Vue.component('my-component', {
-  // ...
-  components: {
-    // ...
-    'qrcode-reader': QrcodeReader
-  },
+  components: { QrcodeReader },
+
   // ...
 )
 ```
@@ -262,11 +221,10 @@ Register locally in other components scope:
 
 ```javascript
 Vue.component('my-component', {
-  // ...
   components: {
-    // ...
     'qrcode-reader': VueQrcodeReader.QrcodeReader
   },
+
   // ...
 )
 ```
@@ -289,11 +247,8 @@ import Vue from 'vue'
 import { QrcodeReader } from 'vue-qrcode-reader/src'
 
 Vue.component('my-component', {
-  // ...
-  components: {
-    // ...
-    'qrcode-reader': QrcodeReader
-  },
+  components: { QrcodeReader },
+
   // ...
 )
 ```
