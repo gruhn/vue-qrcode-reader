@@ -5,9 +5,18 @@
 
 A Vue.js component, accessing the device camera and allowing users to read QR codes, within the browser.
 
-:point_right: In Chrome this component [only works with HTTPS](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins) (or localhost)
-
 ### [Demos](https://gruhn.github.io/vue-qrcode-reader/)
+
+# Browser support
+
+| IE  | Edge               | Firefox            | Chrome (for Android) ¹ | Safari (for iOS) |
+|:---:|:------------------:|:------------------:|:----------------------:|:----------------:|
+| :x: | :white_check_mark: | :white_check_mark: | :white_check_mark:     | 11+              |
+
+¹ only with [HTTPS or localhost](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins)
+
+
+[Details](https://caniuse.com/#feat=stream)
 
 # Usage
 
