@@ -263,28 +263,28 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="css">
 .qrcode-reader {
   position: relative;
   display: block;
+}
 
-  .qrcode-reader__camera {
-    display: block;
-    object-fit: contain;
-    max-width: 100%;
-    max-height: 100%;
-  }
+.qrcode-reader__camera {
+  display: block;
+  object-fit: contain;
+  max-width: 100%;
+  max-height: 100%;
+}
 
-  .qrcode-reader__snapshot {
-    display: none;
-  }
+.qrcode-reader__snapshot {
+  display: none;
+}
 
-  .qrcode-reader__overlay {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
+.qrcode-reader__overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 </style>
