@@ -61,15 +61,15 @@ methods: {
 
       // successfully initialized
     } catch (error) {
-      if (error instanceof NotAllowedError) {
+      if (error.name === 'NotAllowedError') {
         // user denied camera access permisson
-      } else if (error instanceof NotFoundError) {
+      } else if (error.name === 'NotFoundError') {
         // no suitable camera device installed
-      } else if (error instanceof NotSupportedError) {
+      } else if (error.name === 'NotSupportedError') {
         // page is not served over HTTPS (or localhost)
-      } else if (error instanceof NotReadableError) {
+      } else if (error.name === 'NotReadableError') {
         // maybe camera is already in use
-      } else if (error instanceof OverconstrainedError) {
+      } else if (error.name === 'OverconstrainedError') {
         // passed constraints don't match any camera. Did you requested the front camera although there is none?
       } else {
         // browser is probably lacking features (WebRTC, Canvas)
@@ -128,7 +128,7 @@ This component uses [getUserMedia](https://developer.mozilla.org/en-US/docs/Web/
 }
 ```
 
-You can change the `video` part using the `video-constraints` prop. Note that you only have to pass properties you want you override. If you want to use the front camera for example and change nothing else, pass this:
+You can change the `video` part using the `video-constraints` prop. Note that you only have to pass properties you want to override. If you want to use the front camera for example and change nothing else, pass this:
 
 ```html
 <qrcode-reader :video-constraints="{ facingMode: 'user' }"></qrcode-reader>
