@@ -23,7 +23,7 @@ module.exports = merge(base, {
       compress: {
         warnings: true,
       },
-      mangle: false,
+      mangle: true,
     }),
   ],
 })
