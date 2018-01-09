@@ -20,7 +20,6 @@
 
 <script>
 import { decode, locate } from '../scanner.js'
-import isObject from 'lodash/isObject'
 import isBoolean from 'lodash/isBoolean'
 
 const NO_LOCATION = [] // use specific array instance to guarantee equality ([] !== [] but NO_LOCATION === NO_LOCATION)
@@ -66,25 +65,23 @@ export default {
     },
 
     constraints () {
-      let defaultConstraints = {
-        audio: false,
-        video: {
+      let normalized
+
+      if (isBoolean(this.videoConstraints)) {
+        normalized = this.videoConstraints
+      } else {
+        normalized = {
           facingMode: { ideal: 'environment' },
           width: { min: 360, ideal: 1280, max: 1920 },
           height: { min: 240, ideal: 720, max: 1080 },
-        },
-      }
-
-      if (isBoolean(this.videoConstraints)) {
-        defaultConstraints.video = this.videoConstraints
-      } else if (isObject(this.videoConstraints)) {
-        defaultConstraints.video = {
-          ...defaultConstraints.video,
           ...this.videoConstraints,
         }
       }
 
-      return defaultConstraints
+      return {
+        audio: false,
+        video: normalized,
+      }
     },
   },
 
