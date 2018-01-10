@@ -174,13 +174,20 @@ export default {
 
     /**
      * Resets decodeResult when component is un-paused. This way one QR code
-     * can be decoded twice in a row (see #8). The timeout is required to wait
-     * for the video stream to un-freeze. Otherwise the last frame from before
+     * can be decoded twice in a row (see #8). Waits though until video is
+     * actually not frozen anymore. Otherwise the last frame from before
      * pausing would be rescanned.
      */
     paused (newValue) {
       if (newValue === false) {
-        setTimeout(() => { this.decodeResult = null }, DECODE_INTERVAL)
+        const resetDecodeResult = () => { this.decodeResult = null }
+        const video = this.$refs.video
+
+        video.addEventListener(
+          'timeupdate',
+          resetDecodeResult,
+          { once: true }
+        )
       }
     },
 
