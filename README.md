@@ -9,14 +9,11 @@ A Vue.js component, accessing the device camera and allowing users to read QR co
 
 # Browser support
 
-| IE  | Edge               | Firefox            | Chrome (for Android) ¹ | Safari (for iOS) |
+| ![Internet Explorer](http://iconshow.me/media/images/Application/mozilla-icons/png/32/internet_explorer.png) | ![Edge](https://github.com/alrra/browser-logos/blob/master/src/edge/edge_32x32.png?raw=true) | ![Firefox](https://github.com/alrra/browser-logos/blob/master/src/firefox/firefox_32x32.png?raw=true) | ![Chrome](https://github.com/alrra/browser-logos/blob/master/src/chrome/chrome_32x32.png?raw=true) | ![Safari](https://github.com/alrra/browser-logos/blob/master/src/safari/safari_32x32.png?raw=true) |
 |:---:|:------------------:|:------------------:|:----------------------:|:----------------:|
 | :x: | :white_check_mark: | :white_check_mark: | :white_check_mark:     | 11+              |
 
-¹ only with [HTTPS or localhost](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins)
-
-
-[Details](https://caniuse.com/#feat=stream)
+Note that Chrome requires [HTTPS or localhost](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins). More details [here](https://caniuse.com/#feat=stream).
 
 # Usage
 
@@ -46,7 +43,7 @@ It might take a while before the component is ready and the scanning process sta
 
 If you want to show a loading indicator, you can listen for the `init` event. It's emitted as soon as the component is mounted and carries a promise which resolves when everything is ready. The promise is rejected if initialization fails. This can have [a couple of reasons](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Exceptions).
 
-:point_right: Camera access permission can't really be requested a second time. Once denied, it can only be re-granted in the browser settings. So to avoid panic and frustration, make sure your users understand why you need this permisson.
+:point_right: In Chrome you can't prompt users for permissions a second time. Once denied, users can only manually grant them. Make sure your users understand why you need access to their camera **before** you mount this component. Otherwise they might panic and deny and then get frustrated because they don't know how to change their decision.
 
 ```html
 <qrcode-reader @init="onInit"></qrcode-reader>
