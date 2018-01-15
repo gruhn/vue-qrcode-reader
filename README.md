@@ -1,7 +1,6 @@
 # vue-qrcode-reader
 
-[![npm](https://img.shields.io/npm/v/vue-qrcode-reader.svg) ![npm](https://img.shields.io/npm/dm/vue-qrcode-reader.svg)](https://www.npmjs.com/package/vue-qrcode-reader)
-[![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
+[![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/) ![gzip-size](http://img.badgesize.io/gruhn/vue-qrcode-reader/master/dist/vue-qrcode-reader.common.js?compression=gzip)  [![npm](https://img.shields.io/npm/v/vue-qrcode-reader.svg) ![npm](https://img.shields.io/npm/dm/vue-qrcode-reader.svg)](https://www.npmjs.com/package/vue-qrcode-reader)
 
 A Vue.js component, accessing the device camera and allowing users to read QR codes, within the browser.
 
