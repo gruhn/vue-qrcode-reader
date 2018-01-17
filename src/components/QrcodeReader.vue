@@ -5,13 +5,6 @@
       class="qrcode-reader__camera"
     ></video>
 
-    <canvas
-      ref="canvas"
-      class="qrcode-reader__snapshot"
-      :width="streamWidth"
-      :height="streamHeight"
-    ></canvas>
-
     <div class="qrcode-reader__overlay">
       <slot></slot>
     </div>
@@ -57,6 +50,9 @@ export default {
 
       // array of most recent detected QR code corner coordinates
       locateResult: NO_LOCATION,
+
+      // canvas 2D rendering context to capture stream frames with
+      canvasContext: null,
     }
   },
 
@@ -108,6 +104,15 @@ export default {
         audio: false,
         video: withDefaults,
       }
+    },
+
+    /**
+     * Joins stream resolution information in a single array. Some canvas API
+     * methods expect parameters in this form and order. This is a nice little
+     * helper to pass those values with the spread operator.
+     */
+    streamBounds () {
+      return [0, 0, this.streamWidth, this.streamHeight]
     },
   },
 
@@ -231,10 +236,7 @@ export default {
      */
     async startCamera () {
       // check if browser is support first
-      const canvas = this.$refs.canvas
-      if (!(canvas.getContext && canvas.getContext('2d'))) {
-        throw new Error('HTML5 Canvas not supported in this browser.')
-      } else if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
+      if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
         throw new Error('WebRTC API not supported in this browser')
       }
 
@@ -266,9 +268,15 @@ export default {
 
       await streamLoadedPromise
 
+      this.streamLoaded = true
       this.streamWidth = video.videoWidth
       this.streamHeight = video.videoHeight
-      this.streamLoaded = true
+
+      const canvas = document.createElement('canvas')
+      canvas.width = this.streamWidth
+      canvas.height = this.streamHeight
+
+      this.canvasContext = canvas.getContext('2d')
     },
 
     /**
@@ -295,15 +303,9 @@ export default {
      * video element directly.
      */
     captureFrame () {
-      const video = this.$refs.video
-      const canvas = this.$refs.canvas
+      this.canvasContext.drawImage(this.$refs.video, ...this.streamBounds)
 
-      const ctx = canvas.getContext('2d')
-      const bounds = [0, 0, this.streamWidth, this.streamHeight]
-
-      ctx.drawImage(video, ...bounds)
-
-      return ctx.getImageData(...bounds)
+      return this.canvasContext.getImageData(...this.streamBounds)
     },
 
     /**
@@ -376,10 +378,6 @@ export default {
   object-fit: contain;
   max-width: 100%;
   max-height: 100%;
-}
-
-.qrcode-reader__snapshot {
-  display: none;
 }
 
 .qrcode-reader__overlay {
