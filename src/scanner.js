@@ -1,7 +1,7 @@
 import 'webrtc-adapter'
-import jsQR from 'jsqr'
 import noop from 'lodash/noop'
 import { normalizeConstraints, normalizeLocation } from './helpers.js'
+import { Module } from 'quirc-js'
 
 // use specific array instance to guarantee equality ([] !== [] but NO_LOCATION === NO_LOCATION)
 const NO_LOCATION = []
@@ -70,8 +70,31 @@ async function init (videoEl, cameraConstraints) {
     canvasBounds: [0, 0, streamWidth, streamHeight],
     lastDecodeResult: null,
     lastLocateResutl: NO_LOCATION,
+    pointer: Module._xsetup(streamWidth, streamHeight),
     scanning: false,
   }
+
+  Module.onDecoded((i, version, eccLevel, mask, dataType, payload, payloadLen, x0, y0, x1, y1, x2, y2, x3, y3) => {
+    const buffer = new Uint8Array(Module.HEAPU8.buffer, payload, payloadLen)
+    const content = String.fromCharCode.apply(null, buffer)
+
+    const location = normalizeLocation(state.videoEl, [
+      { x: x0, y: y0 },
+      { x: x1, y: y1 },
+      { x: x2, y: y2 },
+      { x: x3, y: y3 },
+    ])
+
+    updateDecodeResult(content)
+    updateLocateResult(location)
+  })
+
+  Module.onCounted(count => {
+    if (count === 0) {
+      updateDecodeResult(null)
+      updateLocateResult(NO_LOCATION)
+    }
+  })
 }
 
 function reset () {
@@ -81,6 +104,8 @@ function reset () {
     )
 
     state = null
+
+    Module._free()
   } else {
     throw NOT_READY_ERROR
   }
@@ -163,55 +188,23 @@ function captureFrame () {
 }
 
 function scanFrame () {
-  const result = {
-    locateResult: NO_LOCATION,
-    decodeResult: null,
+  const { data } = captureFrame()
+
+  // fill image buffer greyscaled
+  for (let i = 0, j = 0; i < data.length; i += 4, j++) {
+    Module.HEAPU8[state.pointer + j] = 0.2989 * data[i + 0] + 0.5870 * data[i + 1] + 0.1140 * data[i + 2]
   }
 
-  const imageData = captureFrame()
-
-  const binaryImage = jsQR.binarizeImage(
-    imageData.data,
-    imageData.width,
-    imageData.height
-  )
-
-  const locationRaw = jsQR.locateQRInBinaryImage(binaryImage)
-
-  if (locationRaw !== null) {
-    const videoDimensions = [
-      state.videoEl.videoWidth,
-      state.videoEl.videoHeight,
-      state.videoEl.offsetWidth,
-      state.videoEl.offsetHeight,
-    ]
-
-    result.locateResult = normalizeLocation([
-      locationRaw.bottomLeft,
-      locationRaw.topLeft,
-      locationRaw.topRight,
-    ], ...videoDimensions)
-
-    const qrcode = jsQR.extractQRFromBinaryImage(binaryImage, locationRaw)
-
-    result.decodeResult = jsQR.decodeQR(qrcode)
-  }
-
-  return result
+  Module._xprocess()
 }
 
 function keepScanning () {
   if (state !== null && state.scanning) {
-    let { locateResult, decodeResult } = scanFrame()
+    scanFrame()
 
-    updateDecodeResult(decodeResult)
-    updateLocateResult(locateResult)
-
-    window.setTimeout(() => {
-      window.requestAnimationFrame(() => {
-        keepScanning()
-      })
-    }, SCAN_INTERVAL)
+    window.requestAnimationFrame(() => {
+      keepScanning()
+    })
   }
 }
 

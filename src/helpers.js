@@ -31,9 +31,9 @@ export function normalizeConstraints (cameraConstraints) {
  * video element is responsive and scales with space available. Therefore
  * the coordinates are re-calculated to be relative to the video element.
  */
-export function normalizeLocation (points, absWidth, absHeight, viewWidth, viewHeight) {
-  const widthRatio = viewWidth / absWidth
-  const heightRatio = viewHeight / absHeight
+export function normalizeLocation (videoEl, points) {
+  const widthRatio = videoEl.offsetWidth / videoEl.videoWidth
+  const heightRatio = videoEl.offsetHeight / videoEl.videoHeight
 
   return points.map(({ x, y }) => ({
     x: x * widthRatio | 0,

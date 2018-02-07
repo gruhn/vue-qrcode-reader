@@ -17,7 +17,7 @@ module.exports = merge(base, {
     // Put external libraries like lodash here
     // With their package name
     // Example: 'lodash': 'lodash'
-    'jsqr': 'jsqr',
+    'quirc-js': 'quirc-js',
     'babel-runtime': 'babel-runtime',
     'webrtc-adapter': 'webrtc-adapter',
     'lodash/isBoolean': 'lodash/isBoolean',

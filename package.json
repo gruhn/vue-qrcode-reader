@@ -82,8 +82,8 @@
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
-    "jsqr": "^0.2.2",
     "lodash": "^4.17.4",
+    "quirc-js": "^1.1.2",
     "webrtc-adapter": "^6.0.2"
   }
 }
