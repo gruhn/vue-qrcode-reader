@@ -9,8 +9,8 @@ A Vue.js component, accessing the device camera and allowing users to read QR co
 # Browser support
 
 | ![Internet Explorer](http://iconshow.me/media/images/Application/mozilla-icons/png/32/internet_explorer.png) | ![Edge](https://github.com/alrra/browser-logos/blob/master/src/edge/edge_32x32.png?raw=true) | ![Firefox](https://github.com/alrra/browser-logos/blob/master/src/firefox/firefox_32x32.png?raw=true) | ![Chrome](https://github.com/alrra/browser-logos/blob/master/src/chrome/chrome_32x32.png?raw=true) | ![Safari](https://github.com/alrra/browser-logos/blob/master/src/safari/safari_32x32.png?raw=true) |
-|:---:|:------------------:|:------------------:|:----------------------:|:----------------:|
-| :x: | :white_check_mark: | :white_check_mark: | :white_check_mark:     | 11+              |
+|:--:|:---:|:---:|:---:|:---:|
+| No | Yes | Yes | Yes | 11+ |
 
 Note that Chrome requires [HTTPS or localhost](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins). More details [here](https://caniuse.com/#feat=stream).
 
