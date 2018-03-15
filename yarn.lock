@@ -3169,9 +3169,9 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-jsqr@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/jsqr/-/jsqr-0.2.2.tgz#8c1f0279fb7c94542aaa9e8aeb7c722d523ea092"
+jsqr@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/jsqr/-/jsqr-1.0.4.tgz#e2ea353fa81007708efab7d95b2652a7254c10dd"
 
 karma-coverage@^1.1.1:
   version "1.1.1"

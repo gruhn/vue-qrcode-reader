@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { decode, locate } from '../scanner.js'
+import jsQR from 'jsqr'
 import isBoolean from 'lodash/isBoolean'
 
 const NO_LOCATION = [] // use specific array instance to guarantee equality ([] !== [] but NO_LOCATION === NO_LOCATION)
@@ -317,7 +317,13 @@ export default {
         const imageData = this.captureFrame()
 
         window.requestAnimationFrame(() => {
-          this.decodeResult = decode(imageData) || this.decodeResult
+          const { data, width, height } = imageData
+          const result = jsQR(data, width, height)
+
+          if (result !== null) {
+            this.decodeResult = result.data
+          }
+
           window.setTimeout(this.keepDecoding, DECODE_INTERVAL)
         })
       }
@@ -336,9 +342,10 @@ export default {
         const imageData = this.captureFrame()
 
         window.requestAnimationFrame(() => {
-          const locationObject = locate(imageData)
+          const { data, width, height } = imageData
+          const result = jsQR(data, width, height)
 
-          if (locationObject === null) {
+          if (result === null) {
             this.locateResult = NO_LOCATION
           } else {
             const video = this.$refs.video
@@ -347,9 +354,10 @@ export default {
             const heightRatio = video.offsetHeight / this.streamHeight
 
             const locationArray = [
-              locationObject.bottomLeft,
-              locationObject.topLeft,
-              locationObject.topRight,
+              result.location.topLeftCorner,
+              result.location.topRightCorner,
+              result.location.bottomRightCorner,
+              result.location.bottomLeftCorner,
             ]
 
             this.locateResult = locationArray.map(({ x, y }) => ({
