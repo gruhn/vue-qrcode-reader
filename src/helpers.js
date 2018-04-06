@@ -46,6 +46,38 @@ export function imageDataFromVideo (video) {
   return ctx.getImageData(...bounds)
 }
 
+export async function imageDataFromFile (file) {
+  const reader = new FileReader()
+  const image = document.createElement('img')
+
+  const readerLoadedPromise = new Promise((resolve, reject) => {
+    reader.onload = event => resolve(event.target.result)
+  })
+
+  const imageLoadedPromise = new Promise((resolve, reject) => {
+    image.onload = resolve
+  })
+
+  reader.readAsDataURL(file)
+
+  const dataURL = await readerLoadedPromise
+
+  image.src = dataURL
+
+  await imageLoadedPromise
+
+  const canvas = document.createElement('canvas')
+  canvas.width = image.naturalWidth
+  canvas.height = image.naturalHeight
+
+  const ctx = canvas.getContext('2d')
+  const bounds = [0, 0, image.naturalWidth, image.naturalHeight]
+
+  ctx.drawImage(image, ...bounds)
+
+  return ctx.getImageData(...bounds)
+}
+
 export function scanImageData (imageData) {
   const { data, width, height } = imageData
 

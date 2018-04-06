@@ -5,7 +5,13 @@
       class="qrcode-reader__camera"
     ></video>
 
-    <div class="qrcode-reader__overlay">
+    <div
+      class="qrcode-reader__overlay"
+      @drop.prevent.stop="onDrop"
+      @dragover.prevent.stop
+      @dragenter.prevent.stop
+      @dragleave.prevent.stop
+    >
       <slot></slot>
     </div>
   </div>
@@ -15,6 +21,7 @@
 import isBoolean from 'lodash/isBoolean'
 import {
   streamTo,
+  imageDataFromFile,
   imageDataFromVideo,
   scanImageData,
 } from '../helpers'
@@ -213,7 +220,9 @@ export default {
       const video = this.$refs.video
       video.playsInline = true
 
-      this.stream = await streamTo(video, this.constraints)
+      if (this.constraints.video !== false) {
+        this.stream = await streamTo(video, this.constraints)
+      }
     },
 
     /**
@@ -276,6 +285,23 @@ export default {
           setTimeout(() => this.keepScanning(), SCAN_INTERVAL)
         })
       }
+    },
+
+    /**
+     * Handles drag-and-dropped image files and tries to decode potentially
+     * pictured QR codes. Can also handle multiple files at once. Non-image
+     * files are ignored.
+     */
+    async onDrop (event) {
+      const droppedFiles = [...event.dataTransfer.files]
+        .filter(file => /image.*/.test(file.type))
+        .map(imageDataFromFile)
+
+      const imageDataSets = await Promise.all(droppedFiles)
+
+      imageDataSets
+        .map(scanImageData)
+        .forEach(this.updateResults)
     },
 
   },
