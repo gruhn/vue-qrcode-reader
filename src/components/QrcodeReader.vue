@@ -5,19 +5,29 @@
       class="qrcode-reader__camera"
     ></video>
 
-    <div class="qrcode-reader__overlay">
+    <div
+      class="qrcode-reader__overlay"
+      @drop.prevent.stop="onDrop"
+      @dragover.prevent.stop
+      @dragenter.prevent.stop
+      @dragleave.prevent.stop
+    >
       <slot></slot>
     </div>
   </div>
 </template>
 
 <script>
-import jsQR from 'jsqr'
 import isBoolean from 'lodash/isBoolean'
+import {
+  streamTo,
+  imageDataFromFile,
+  imageDataFromVideo,
+  scanImageData,
+} from '../helpers'
 
 const NO_LOCATION = [] // use specific array instance to guarantee equality ([] !== [] but NO_LOCATION === NO_LOCATION)
-const LOCATE_INTERVAL = 40 // milliseconds
-const DECODE_INTERVAL = 400 // milliseconds
+const SCAN_INTERVAL = 100
 
 export default {
   props: {
@@ -37,22 +47,12 @@ export default {
       // current video stream instance returned by `getUserMedia`
       stream: null,
 
-      // absolute resolution of the current video stream
-      streamWidth: null,
-      streamHeight: null,
-
-      // whether or not first frame of current video stream has loaded yet
-      streamLoaded: false,
-
       // most recent decoded QR code content.
       // Is only null after unpause or before init, otherwise string.
       decodeResult: null,
 
       // array of most recent detected QR code corner coordinates
       locateResult: NO_LOCATION,
-
-      // canvas 2D rendering context to capture stream frames with
-      canvasContext: null,
     }
   },
 
@@ -62,24 +62,7 @@ export default {
      * computed property.
      */
     shouldScan () {
-      return !this.paused && this.streamLoaded
-    },
-
-    /**
-     * QR codes should only be actively decoded if the parent component has an
-     * event listener registered. Otherwise the rather expensive decoding
-     * operation is continuously executed for nothing.
-     */
-    shouldDecode () {
-      return this.shouldScan && this.$listeners.decode !== undefined
-    },
-
-    /**
-     * Just like with `this.shouldDecode`, locating is not allowed when the
-     * parent component has no event listener registered.
-     */
-    shouldLocate () {
-      return this.shouldScan && this.$listeners.locate !== undefined
+      return !this.paused && this.stream !== null
     },
 
     /**
@@ -104,15 +87,6 @@ export default {
         audio: false,
         video: withDefaults,
       }
-    },
-
-    /**
-     * Joins stream resolution information in a single array. Some canvas API
-     * methods expect parameters in this form and order. This is a nice little
-     * helper to pass those values with the spread operator.
-     */
-    streamBounds () {
-      return [0, 0, this.streamWidth, this.streamHeight]
     },
   },
 
@@ -150,6 +124,7 @@ export default {
     shouldScan (shouldScan) {
       if (shouldScan) {
         this.$refs.video.play()
+        this.keepScanning()
       } else {
         this.$refs.video.pause()
       }
@@ -242,133 +217,91 @@ export default {
 
       this.stopCamera()
 
-      this.stream = await navigator.mediaDevices.getUserMedia(this.constraints)
-
       const video = this.$refs.video
-
-      const streamLoadedPromise = new Promise((resolve, reject) => {
-        video.addEventListener('loadeddata', resolve, { once: true })
-        video.addEventListener('error', reject, { once: true })
-      })
-
-      if (video.srcObject !== undefined) {
-        video.srcObject = this.stream
-      } else if (video.mozSrcObject !== undefined) {
-        video.mozSrcObject = this.stream
-      } else if (window.URL.createObjectURL) {
-        video.src = window.URL.createObjectURL(this.stream)
-      } else if (window.webkitURL) {
-        video.src = window.webkitURL.createObjectURL(this.stream)
-      } else {
-        video.src = this.stream
-      }
-
       video.playsInline = true
-      video.play() // firefox does not emit `loadeddata` if video not playing
 
-      await streamLoadedPromise
-
-      this.streamLoaded = true
-      this.streamWidth = video.videoWidth
-      this.streamHeight = video.videoHeight
-
-      const canvas = document.createElement('canvas')
-      canvas.width = this.streamWidth
-      canvas.height = this.streamHeight
-
-      this.canvasContext = canvas.getContext('2d')
+      if (this.constraints.video !== false) {
+        this.stream = await streamTo(video, this.constraints)
+      }
     },
 
     /**
      * Releases the current camera stream and resets related instance properties.
      */
     stopCamera () {
-      this.streamLoaded = false
-
       if (this.stream !== null) {
         this.stream.getTracks().forEach(
           track => track.stop()
         )
 
         this.stream = null
-        this.streamWidth = null
-        this.streamHeight = null
       }
     },
 
     /**
-     * Captures a frame from video stream and draws it to canvas. Then reads
-     * image data from canvas and returns it for further analysis. This extra
-     * step is necessary because it's not possible to read image data from a
-     * video element directly.
-     */
-    captureFrame () {
-      this.canvasContext.drawImage(this.$refs.video, ...this.streamBounds)
-
-      return this.canvasContext.getImageData(...this.streamBounds)
-    },
-
-    /**
-     * Continuously extracts frames from camera stream and tries to decode
-     * potentially pictured QR codes.
-     */
-    keepDecoding () {
-      if (this.shouldDecode) {
-        const imageData = this.captureFrame()
-
-        window.requestAnimationFrame(() => {
-          const { data, width, height } = imageData
-          const result = jsQR(data, width, height)
-
-          if (result !== null) {
-            this.decodeResult = result.data
-          }
-
-          window.setTimeout(this.keepDecoding, DECODE_INTERVAL)
-        })
-      }
-    },
-
-    /**
-     * Continuously extracts frames from camera stream and tries to locate
-     * potentially pictured QR codes.
+     * Update `this.decodeResult` and `this.locateResult`.
      *
-     * The coordinates are based on the original camera resolution but the
+     * Location coordinates are based on the original camera resolution but the
      * video element is responsive and scales with space available. Therefore
      * the coordinates are re-calculated to be relative to the video element.
      */
-    keepLocating () {
-      if (this.shouldLocate) {
-        const imageData = this.captureFrame()
+    updateResults ({ data, location }) {
+      this.decodeResult = data || this.decodeResult
+
+      if (location === null) {
+        this.locateResult = NO_LOCATION
+      } else {
+        const video = this.$refs.video
+
+        const widthRatio = video.offsetWidth / video.videoWidth
+        const heightRatio = video.offsetHeight / video.videoHeight
+
+        const locationArray = [
+          location.topLeftCorner,
+          location.topRightCorner,
+          location.bottomRightCorner,
+          location.bottomLeftCorner,
+        ]
+
+        this.locateResult = locationArray.map(({ x, y }) => ({
+          x: x * widthRatio,
+          y: y * heightRatio,
+        }))
+      }
+    },
+
+    /**
+     * Continuously extracts and scans frames from camera stream.
+     */
+    keepScanning () {
+      if (this.shouldScan) {
+        const imageData = imageDataFromVideo(this.$refs.video)
 
         window.requestAnimationFrame(() => {
-          const { data, width, height } = imageData
-          const result = jsQR(data, width, height)
+          const results = scanImageData(imageData)
 
-          if (result === null) {
-            this.locateResult = NO_LOCATION
-          } else {
-            const video = this.$refs.video
+          this.updateResults(results)
 
-            const widthRatio = video.offsetWidth / this.streamWidth
-            const heightRatio = video.offsetHeight / this.streamHeight
-
-            const locationArray = [
-              result.location.topLeftCorner,
-              result.location.topRightCorner,
-              result.location.bottomRightCorner,
-              result.location.bottomLeftCorner,
-            ]
-
-            this.locateResult = locationArray.map(({ x, y }) => ({
-              x: x * widthRatio,
-              y: y * heightRatio,
-            }))
-          }
-
-          window.setTimeout(this.keepLocating, LOCATE_INTERVAL)
+          setTimeout(() => this.keepScanning(), SCAN_INTERVAL)
         })
       }
+    },
+
+    /**
+     * Handles drag-and-dropped image files and tries to decode potentially
+     * pictured QR codes. Can also handle multiple files at once. Non-image
+     * files are ignored.
+     */
+    async onDrop (event) {
+      const droppedFiles = [...event.dataTransfer.files]
+        .filter(file => /image.*/.test(file.type))
+        .map(imageDataFromFile)
+
+      const imageDataSets = await Promise.all(droppedFiles)
+
+      imageDataSets
+        .map(scanImageData)
+        .forEach(this.updateResults)
     },
 
   },
