@@ -1,5 +1,6 @@
 import 'webrtc-adapter'
 import QrcodeReader from './components/QrcodeReader.vue'
+import {imageDataFromVideo, imageDataFromFile, scanImageData} from './helpers'
 
 // Install the components
 export function install (Vue) {
@@ -7,7 +8,7 @@ export function install (Vue) {
 }
 
 // Expose the components
-export { QrcodeReader }
+export { QrcodeReader, imageDataFromVideo, imageDataFromFile, scanImageData }
 
 /* -- Plugin definition & Auto-install -- */
 /* You shouldn't have to modify the code below */
