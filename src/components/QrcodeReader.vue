@@ -1,12 +1,14 @@
 <template lang="html">
   <div class="qrcode-reader">
-    <video
-      ref="video"
-      class="qrcode-reader__camera"
-    ></video>
+    <div class="qrcode-reader__inner-wrapper">
+      <video
+        ref="video"
+        class="qrcode-reader__camera"
+      ></video>
 
-    <div class="qrcode-reader__overlay">
-      <slot></slot>
+      <div class="qrcode-reader__overlay">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -377,8 +379,15 @@ export default {
 
 <style lang="css">
 .qrcode-reader {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.qrcode-reader__inner-wrapper {
+  display: inline-block;
   position: relative;
-  display: block;
 }
 
 .qrcode-reader__camera {
