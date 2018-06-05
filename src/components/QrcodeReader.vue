@@ -170,8 +170,8 @@ export default {
       const heightRatio = this.camera.displayHeight / this.camera.resolutionHeight
 
       return locationArray.map(({ x, y }) => ({
-        x: x * widthRatio,
-        y: y * heightRatio,
+        x: Math.floor(x * widthRatio),
+        y: Math.floor(y * heightRatio),
       }))
     },
 
