@@ -19,7 +19,6 @@ import Camera from '../misc/Camera.js'
 import isBoolean from 'lodash/isBoolean'
 
 const NO_LOCATION = [] // use specific array instance to guarantee equality ([] !== [] but NO_LOCATION === NO_LOCATION)
-const SCAN_INTERVAL = 40 // milliseconds
 
 export default {
   props: {
@@ -36,15 +35,7 @@ export default {
 
   data () {
     return {
-      // most recent decoded QR code content.
-      // Is only null after unpause or before init, otherwise string.
-      decodeResult: null,
-
-      // array of most recent detected QR code corner coordinates
-      locateResult: NO_LOCATION,
-
       camera: null,
-
       destroyed: false,
     }
   },
@@ -67,10 +58,8 @@ export default {
       } else {
         withDefaults = {
           facingMode: { ideal: 'environment' },
-          // width: { min: 360, ideal: 1280, max: 1920 },
-          // height: { min: 240, ideal: 720, max: 1080 },
-          width: { ideal: 360 },
-          height: { ideal: 240 },
+          width: { min: 360, ideal: 680, max: 1920 },
+          height: { min: 240, ideal: 480, max: 1080 },
           ...this.videoConstraints,
         }
       }
@@ -85,32 +74,6 @@ export default {
 
   watch: {
     /**
-     * Propagate new decoding results to parent component. Since holding a
-     * camera for a few seconds over a QR code, produces the same result
-     * multiple times in a row, an event is only emitted when the result
-     * value actually changes. To allow re-scanning after the component is
-     * un-paused, decodeResult is set to null (see #8). Null values are never
-     * emitted though.
-     */
-    decodeResult (newValue) {
-      if (newValue !== null) {
-        this.$emit('decode', newValue)
-      }
-    },
-
-    /**
-     * Propagates location of QR code when it changes. Just like with decoding
-     * results, this event is only emitted when the detected location changes.
-     *
-     * While a QR code is actually in sight, position changes are detected
-     * nearly each scanned frame anyway. While no QR code is detected though,
-     * this makes sure that empty results are only emitted once.
-     */
-    locateResult (newValue) {
-      this.$emit('locate', newValue)
-    },
-
-    /**
      * Automatically freezes the video stream when conditions for the scanning
      * process are not fullfilled anymore.
      *
@@ -121,7 +84,7 @@ export default {
     shouldScan (shouldScan) {
       if (shouldScan) {
         this.$refs.video.play()
-        this.keepScanning()
+        this.startScanning()
       } else {
         this.$refs.video.pause()
       }
@@ -170,34 +133,30 @@ export default {
       this.camera = await Camera(this.constraints, this.$refs.video)
     },
 
-    /**
-     * Continuously extracts frames from camera stream and tries to decode
-     * potentially pictured QR codes.
-     */
-    keepScanning () {
-      if (this.shouldScan) {
-        const imageData = this.camera.captureFrame()
+    startScanning () {
+      Scanner.keepScanning(this.camera, {
+        decodeHandler: this.onDecode,
+        locateHandler: this.onLocate,
+        shouldContinue: () => this.shouldScan,
+      })
+    },
 
-        window.requestAnimationFrame(() => {
-          const result = Scanner.scan(imageData)
+    onDecode (content) {
+      this.$emit('decode', content)
+    },
 
-          if (result !== null) {
-            this.decodeResult = result.data
+    onLocate (location) {
+      if (location === null) {
+        this.$emit('locate', NO_LOCATION)
+      } else {
+        const locationArray = this.normalizeLocation([
+          location.topLeftCorner,
+          location.topRightCorner,
+          location.bottomRightCorner,
+          location.bottomLeftCorner,
+        ])
 
-            const locationArray = [
-              result.location.topLeftCorner,
-              result.location.topRightCorner,
-              result.location.bottomRightCorner,
-              result.location.bottomLeftCorner,
-            ]
-
-            this.locateResult = this.normalizeLocation(locationArray)
-          } else {
-            this.locateResult = NO_LOCATION
-          }
-
-          window.setTimeout(this.keepScanning, SCAN_INTERVAL)
-        })
+        this.$emit('locate', locationArray)
       }
     },
 
@@ -207,10 +166,8 @@ export default {
      * the coordinates are re-calculated to be relative to the video element.
      */
     normalizeLocation (locationArray) {
-      const video = this.$refs.video
-
-      const widthRatio = video.offsetWidth / video.videoWidth
-      const heightRatio = video.offsetHeight / video.videoHeight
+      const widthRatio = this.camera.displayWidth / this.camera.resolutionWidth
+      const heightRatio = this.camera.displayHeight / this.camera.resolutionHeight
 
       return locationArray.map(({ x, y }) => ({
         x: x * widthRatio,

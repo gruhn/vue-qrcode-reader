@@ -11,6 +11,22 @@ class Camera {
     this.stream = stream
   }
 
+  get resolutionWidth () {
+    return this.videoEl.videoWidth
+  }
+
+  get resolutionHeight () {
+    return this.videoEl.videoHeight
+  }
+
+  get displayWidth () {
+    return this.videoEl.offsetWidth
+  }
+
+  get displayHeight () {
+    return this.videoEl.offsetHeight
+  }
+
   stop () {
     this.stream.getTracks().forEach(
       track => track.stop()
@@ -18,12 +34,15 @@ class Camera {
   }
 
   captureFrame () {
-    const width = this.videoEl.videoWidth
-    const height = this.videoEl.videoHeight
+    this.canvasCtx.drawImage(
+      this.videoEl, 0, 0,
+      this.resolutionWidth,
+      this.resolutionHeight
+    )
 
-    this.canvasCtx.drawImage(this.videoEl, 0, 0, width, height)
-
-    return this.canvasCtx.getImageData(0, 0, width, height)
+    return this.canvasCtx.getImageData(
+      0, 0, this.resolutionWidth, this.resolutionHeight
+    )
   }
 
 }
