@@ -14,7 +14,8 @@
 </template>
 
 <script>
-import jsQR from 'jsqr'
+import * as Scanner from '../misc/Scanner.js'
+import Camera from '../misc/Camera.js'
 import isBoolean from 'lodash/isBoolean'
 
 const NO_LOCATION = [] // use specific array instance to guarantee equality ([] !== [] but NO_LOCATION === NO_LOCATION)
@@ -36,16 +37,6 @@ export default {
 
   data () {
     return {
-      // current video stream instance returned by `getUserMedia`
-      stream: null,
-
-      // absolute resolution of the current video stream
-      streamWidth: null,
-      streamHeight: null,
-
-      // whether or not first frame of current video stream has loaded yet
-      streamLoaded: false,
-
       // most recent decoded QR code content.
       // Is only null after unpause or before init, otherwise string.
       decodeResult: null,
@@ -53,8 +44,7 @@ export default {
       // array of most recent detected QR code corner coordinates
       locateResult: NO_LOCATION,
 
-      // canvas 2D rendering context to capture stream frames with
-      canvasContext: null,
+      camera: null,
     }
   },
 
@@ -64,7 +54,7 @@ export default {
      * computed property.
      */
     shouldScan () {
-      return !this.paused && this.streamLoaded
+      return !this.paused && this.camera !== null
     },
 
     /**
@@ -96,8 +86,10 @@ export default {
       } else {
         withDefaults = {
           facingMode: { ideal: 'environment' },
-          width: { min: 360, ideal: 1280, max: 1920 },
-          height: { min: 240, ideal: 720, max: 1080 },
+          // width: { min: 360, ideal: 1280, max: 1920 },
+          // height: { min: 240, ideal: 720, max: 1080 },
+          width: { ideal: 360 },
+          height: { ideal: 240 },
           ...this.videoConstraints,
         }
       }
@@ -108,14 +100,6 @@ export default {
       }
     },
 
-    /**
-     * Joins stream resolution information in a single array. Some canvas API
-     * methods expect parameters in this form and order. This is a nice little
-     * helper to pass those values with the spread operator.
-     */
-    streamBounds () {
-      return [0, 0, this.streamWidth, this.streamHeight]
-    },
   },
 
   watch: {
@@ -198,116 +182,27 @@ export default {
       }
     },
 
-    /**
-     * When constraints for the used camera change, a new stream has to be
-     * requested. This bootstraps the hole init process again.
-     */
     constraints: {
       deep: true,
 
       handler () {
-        this.$emit('init', this.startCamera())
+        this.$emit('init', this.init())
       },
     },
   },
 
-  /**
-   * Instanly requests a stream from the users camera as soon as the component
-   * is mounted. This can't be done in earlier livecycle hooks because it
-   * requires the video and canvas element to be rendered already.
-   */
   mounted () {
-    this.$emit('init', this.startCamera())
+    this.$emit('init', this.init())
   },
 
-  /**
-   * If the camera is not released before the component is destroyed, browsers
-   * will indicate that it's still in use and it might be blocked for other
-   * applications.
-   */
   beforeDestroy () {
-    this.stopCamera()
+    this.camera.stop()
   },
 
   methods: {
-    /**
-     * Requests a camera stream using the Stream API and based on
-     * `this.constraints`. Then connects the stream to the video element and
-     * waits for it to load. The promise returned here is the payload for the
-     * `init` event. Any error here leads to this promises rejection.
-     */
-    async startCamera () {
-      // check if browser is support first
-      if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
-        throw new Error('WebRTC API not supported in this browser')
-      }
 
-      this.stopCamera()
-
-      this.stream = await navigator.mediaDevices.getUserMedia(this.constraints)
-
-      const video = this.$refs.video
-
-      const streamLoadedPromise = new Promise((resolve, reject) => {
-        video.addEventListener('loadeddata', resolve, { once: true })
-        video.addEventListener('error', reject, { once: true })
-      })
-
-      if (video.srcObject !== undefined) {
-        video.srcObject = this.stream
-      } else if (video.mozSrcObject !== undefined) {
-        video.mozSrcObject = this.stream
-      } else if (window.URL.createObjectURL) {
-        video.src = window.URL.createObjectURL(this.stream)
-      } else if (window.webkitURL) {
-        video.src = window.webkitURL.createObjectURL(this.stream)
-      } else {
-        video.src = this.stream
-      }
-
-      video.playsInline = true
-      video.play() // firefox does not emit `loadeddata` if video not playing
-
-      await streamLoadedPromise
-
-      this.streamLoaded = true
-      this.streamWidth = video.videoWidth
-      this.streamHeight = video.videoHeight
-
-      const canvas = document.createElement('canvas')
-      canvas.width = this.streamWidth
-      canvas.height = this.streamHeight
-
-      this.canvasContext = canvas.getContext('2d')
-    },
-
-    /**
-     * Releases the current camera stream and resets related instance properties.
-     */
-    stopCamera () {
-      this.streamLoaded = false
-
-      if (this.stream !== null) {
-        this.stream.getTracks().forEach(
-          track => track.stop()
-        )
-
-        this.stream = null
-        this.streamWidth = null
-        this.streamHeight = null
-      }
-    },
-
-    /**
-     * Captures a frame from video stream and draws it to canvas. Then reads
-     * image data from canvas and returns it for further analysis. This extra
-     * step is necessary because it's not possible to read image data from a
-     * video element directly.
-     */
-    captureFrame () {
-      this.canvasContext.drawImage(this.$refs.video, ...this.streamBounds)
-
-      return this.canvasContext.getImageData(...this.streamBounds)
+    async init () {
+      this.camera = await Camera(this.constraints, this.$refs.video)
     },
 
     /**
@@ -316,11 +211,10 @@ export default {
      */
     keepDecoding () {
       if (this.shouldDecode) {
-        const imageData = this.captureFrame()
+        const imageData = this.camera.captureFrame()
 
         window.requestAnimationFrame(() => {
-          const { data, width, height } = imageData
-          const result = jsQR(data, width, height)
+          const result = Scanner.scan(imageData)
 
           if (result !== null) {
             this.decodeResult = result.data
@@ -341,19 +235,18 @@ export default {
      */
     keepLocating () {
       if (this.shouldLocate) {
-        const imageData = this.captureFrame()
+        const imageData = this.camera.captureFrame()
 
         window.requestAnimationFrame(() => {
-          const { data, width, height } = imageData
-          const result = jsQR(data, width, height)
+          const result = Scanner.scan(imageData)
 
           if (result === null) {
             this.locateResult = NO_LOCATION
           } else {
             const video = this.$refs.video
 
-            const widthRatio = video.offsetWidth / this.streamWidth
-            const heightRatio = video.offsetHeight / this.streamHeight
+            const widthRatio = video.offsetWidth / video.videoWidth
+            const heightRatio = video.offsetHeight / video.videoHeight
 
             const locationArray = [
               result.location.topLeftCorner,
