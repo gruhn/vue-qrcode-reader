@@ -31,18 +31,18 @@ export function keepScanning (camera, options) {
 
   const recur = (contentBefore, locationBefore) => {
     return () => {
-      const imageData = camera.captureFrame()
-      const { content, location } = scan(imageData)
-
-      if (content !== null && content !== contentBefore) {
-        decodeHandler(content)
-      }
-
-      if (location !== locationBefore) {
-        locateHandler(location)
-      }
-
       if (shouldContinue()) {
+        const imageData = camera.captureFrame()
+        const { content, location } = scan(imageData)
+
+        if (content !== null && content !== contentBefore) {
+          decodeHandler(content)
+        }
+
+        if (location !== locationBefore) {
+          locateHandler(location)
+        }
+
         window.setTimeout(() => {
           window.requestAnimationFrame(
             recur(content || contentBefore, location)

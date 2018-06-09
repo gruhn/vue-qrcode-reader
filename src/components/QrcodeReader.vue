@@ -37,13 +37,17 @@ export default {
     return {
       camera: null,
       destroyed: false,
+      readyAfterPause: true,
     }
   },
 
   computed: {
 
     shouldScan () {
-      return !this.paused && this.camera !== null && !this.destroyed
+      return this.paused === false &&
+        this.camera !== null &&
+        this.destroyed === false &&
+        this.readyAfterPause
     },
 
     /**
@@ -74,36 +78,29 @@ export default {
 
   watch: {
     /**
-     * Automatically freezes the video stream when conditions for the scanning
-     * process are not fullfilled anymore.
-     *
      * Starts continuous scanning process as soon as conditions for that are
      * fullfilled. The process stops itself automatically when the conditions
      * are not fullfilled anymore.
      */
     shouldScan (shouldScan) {
       if (shouldScan) {
-        this.$refs.video.play()
         this.startScanning()
-      } else {
-        this.$refs.video.pause()
       }
     },
 
-    /**
-     * Resets decodeResult when component is un-paused. This way one QR code
-     * can be decoded twice in a row (see #8). Waits though until video is
-     * actually not frozen anymore. Otherwise the last frame from before
-     * pausing would be rescanned.
-     */
-    paused (newValue) {
-      if (newValue === false) {
-        const resetDecodeResult = () => { this.decodeResult = null }
-        const video = this.$refs.video
+    paused (paused) {
+      const video = this.$refs.video
+
+      if (paused) {
+        video.pause()
+
+        this.readyAfterPause = false
+      } else {
+        video.play()
 
         video.addEventListener(
           'timeupdate',
-          resetDecodeResult,
+          () => { this.readyAfterPause = true },
           { once: true }
         )
       }
