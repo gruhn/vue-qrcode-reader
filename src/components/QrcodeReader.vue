@@ -1,14 +1,19 @@
 <template lang="html">
   <div class="qrcode-reader">
     <div class="qrcode-reader__inner-wrapper">
+      <div class="qrcode-reader__overlay">
+        <slot></slot>
+      </div>
+
+      <canvas
+        ref="trackingLayer"
+        class="qrcode-reader__tracking-layer"
+      ></canvas>
+
       <video
         ref="video"
         class="qrcode-reader__camera"
       ></video>
-
-      <div class="qrcode-reader__overlay">
-        <slot></slot>
-      </div>
     </div>
   </div>
 </template>
@@ -17,8 +22,6 @@
 import * as Scanner from '../misc/Scanner.js'
 import Camera from '../misc/Camera.js'
 import isBoolean from 'lodash/isBoolean'
-
-const NO_LOCATION = [] // use specific array instance to guarantee equality ([] !== [] but NO_LOCATION === NO_LOCATION)
 
 export default {
   props: {
@@ -30,6 +33,11 @@ export default {
     videoConstraints: {
       type: [Object, Boolean],
       default: () => ({}), // empty object
+    },
+
+    track: {
+      type: [Function, Boolean],
+      default: true,
     },
   },
 
@@ -64,6 +72,7 @@ export default {
           facingMode: { ideal: 'environment' },
           width: { min: 360, ideal: 680, max: 1920 },
           height: { min: 240, ideal: 480, max: 1080 },
+
           ...this.videoConstraints,
         }
       }
@@ -71,6 +80,37 @@ export default {
       return {
         audio: false,
         video: withDefaults,
+      }
+    },
+
+    trackRepaintFunction () {
+      if (this.track === true) {
+        return function (location, ctx) {
+          if (location !== null) {
+            const {
+              topLeftCorner,
+              topRightCorner,
+              bottomLeftCorner,
+              bottomRightCorner,
+            } = location
+
+            ctx.strokeStyle = 'red'
+
+            ctx.beginPath()
+            ctx.moveTo(topLeftCorner.x, topRightCorner.y)
+            ctx.lineTo(bottomLeftCorner.x, bottomLeftCorner.y)
+            ctx.lineTo(bottomRightCorner.x, bottomRightCorner.y)
+            ctx.lineTo(topRightCorner.x, topRightCorner.y)
+            ctx.lineTo(topLeftCorner.x, topLeftCorner.y)
+            ctx.closePath()
+
+            ctx.stroke()
+          }
+        }
+      } else if (this.track === false) {
+        return null
+      } else {
+        return this.track
       }
     },
 
@@ -143,18 +183,13 @@ export default {
     },
 
     onLocate (location) {
-      if (location === null) {
-        this.$emit('locate', NO_LOCATION)
-      } else {
-        const locationArray = this.normalizeLocation([
-          location.topLeftCorner,
-          location.topRightCorner,
-          location.bottomRightCorner,
-          location.bottomLeftCorner,
-        ])
+      location = this.normalizeLocation(location)
 
-        this.$emit('locate', locationArray)
+      if (this.repaintTrack !== null) {
+        this.repaintTrack(location)
       }
+
+      this.$emit('locate', location)
     },
 
     /**
@@ -162,14 +197,34 @@ export default {
      * video element is responsive and scales with space available. Therefore
      * the coordinates are re-calculated to be relative to the video element.
      */
-    normalizeLocation (locationArray) {
-      const widthRatio = this.camera.displayWidth / this.camera.resolutionWidth
-      const heightRatio = this.camera.displayHeight / this.camera.resolutionHeight
+    normalizeLocation (location) {
+      if (location === null) {
+        return null
+      } else {
+        const widthRatio = this.camera.displayWidth / this.camera.resolutionWidth
+        const heightRatio = this.camera.displayHeight / this.camera.resolutionHeight
 
-      return locationArray.map(({ x, y }) => ({
-        x: Math.floor(x * widthRatio),
-        y: Math.floor(y * heightRatio),
-      }))
+        Object.keys(location).forEach(key => {
+          const { x, y } = location[key]
+
+          location[key].x = Math.floor(x * widthRatio)
+          location[key].y = Math.floor(y * heightRatio)
+        })
+
+        return location
+      }
+    },
+
+    repaintTrack (location) {
+      const canvas = this.$refs.trackingLayer
+      const ctx = canvas.getContext('2d')
+
+      canvas.width = this.camera.displayWidth
+      canvas.height = this.camera.displayHeight
+
+      window.requestAnimationFrame(
+        () => this.trackRepaintFunction(location, ctx)
+      )
     },
 
   },
@@ -194,13 +249,21 @@ export default {
   object-fit: contain;
   max-width: 100%;
   max-height: 100%;
+  z-index: 10;
+}
+
+.qrcode-reader__overlay,
+.qrcode-reader__tracking-layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .qrcode-reader__overlay {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  z-index: 30;
+}
+
+.qrcode-reader__tracking-layer {
+  z-index: 20;
 }
 </style>
