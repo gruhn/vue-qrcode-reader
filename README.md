@@ -12,33 +12,27 @@ A Vue.js component, accessing the device camera and allowing users to read QR co
 |:--:|:---:|:---:|:---:|:---:|
 | No | Yes | Yes | Yes | 11+ |
 
-* Chrome requires [HTTPS or localhost](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins). 
+* Chrome requires [HTTPS or localhost](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins).
 * on iOS, it doesn't (yet?) work in non-Safari browsers (see [#29](../../issues/29))
 * more details on [Caniuse](https://caniuse.com/#feat=stream)
 
 # Usage
 
-### `@decode` and `@locate`
+### `decode` event
 Once a stream from the users camera is loaded, it is displayed and continuously scanned for QR codes. Results are indicated by the `decode` event.
 
-`decode` only carries the string, encoded by the QR code. If you also want to track the QR codes position, listen for the `locate` event. Its payload is an array of coordinates (for example `{ x: 278, y: 346 }`) of the QR codes corners, relative to the components position and size. The event is emitted whenever the coordinates change or no QR code is detected anymore, resulting in an empty array payload.
-
 ```html
-<qrcode-reader @decode="onDecode" @locate="onLocate"></qrcode-reader>
+<qrcode-reader @decode="onDecode"></qrcode-reader>
 ```
 ```javascript
 methods: {
-  onDecode (content) {
-    // ...
-  },
-
-  onLocate (points) {
+  onDecode (decodedString) {
     // ...
   }
 }
 ```
 
-### `@init`
+### `init` event
 
 It might take a while before the component is ready and the scanning process starts. The user has to be asked for camera access permission first and the camera stream has to be loaded.
 
@@ -78,10 +72,49 @@ methods: {
   }
 }
 ```
+### `track` prop
+
+By default detected QR codes are visually highlighted. A transparent canvas overlays the camera stream. When a QR codes is detected its location is painted to the canvas. You can enable/disable this feature by passing `true`/`false` via the `track` prop.
+
+You can also pass a function to customize the way the location is painted. This function is called to produce each frame. It receives the location object as the first argument and a `CanvasRenderingContext2D` instance as the second argument.
+
+:point_right: Avoid access to reactive properties in this function (like stuff in `data`, `computed` or your Vuex store). The function is called several times a second and might cause memory leaks. If you want to be save don't access `this` at all.
+
+Say you want to paint in a different color that better fits your overall page theme.
+
+```html
+<qrcode-reader :track="repaintLocation"></qrcode-reader>
+```
+```javascript
+methods: {
+  repaintLocation (location, ctx) {
+    if (location !== null) {
+      const {
+        topLeftCorner,
+        topRightCorner,
+        bottomLeftCorner,
+        bottomRightCorner,
+      } = location
+
+      ctx.strokeStyle = 'blue' // instead of red
+
+      ctx.beginPath()
+      ctx.moveTo(topLeftCorner.x, topRightCorner.y)
+      ctx.lineTo(bottomLeftCorner.x, bottomLeftCorner.y)
+      ctx.lineTo(bottomRightCorner.x, bottomRightCorner.y)
+      ctx.lineTo(topRightCorner.x, topRightCorner.y)
+      ctx.lineTo(topLeftCorner.x, topLeftCorner.y)
+      ctx.closePath()
+
+      ctx.stroke()
+    }
+  }
+}
+```
 
 ### Distributed content
 
-Distributed content will overlay the camera stream, wrapped in a `position: absolute` container. You can use this for example to highlight the detected position of QR codes.
+Distributed content will overlay the camera stream, wrapped in a `position: absolute` container.
 
 ```html
 <qrcode-reader>
@@ -89,9 +122,9 @@ Distributed content will overlay the camera stream, wrapped in a `position: abso
 </qrcode-reader>
 ```
 
-### `:paused`
+### `paused` prop
 
-With the `paused` prop you can prevent further `decode` and `locate` propagation. Useful for example if you're only interested in the first result. This will also freeze the camera stream.
+With the `paused` prop you can prevent further `decode` propagation and functions passed via `track` are stopped being called. Useful for example if you're only interested in the first result. This will also freeze the camera stream.
 
 ```html
 <qrcode-reader @decode="onDecode" :paused="paused"></qrcode-reader>
@@ -111,7 +144,7 @@ methods: {
 }
 ```
 
-### `:video-constraints`
+### `video-constraints` prop
 
 This component uses [getUserMedia](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia) to request camera streams. This method accepts [a constraints object](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints#Properties_of_video_tracks) to configure for example if front or rear camera should be accessed. This is passed by default:
 
