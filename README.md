@@ -8,7 +8,7 @@ A Vue.js component, accessing the device camera and allowing users to read QR co
 
 # Browser support
 
-| ![Internet Explorer](http://iconshow.me/media/images/Application/mozilla-icons/png/32/internet_explorer.png) | ![Edge](https://github.com/alrra/browser-logos/blob/master/src/edge/edge_32x32.png?raw=true) | ![Firefox](https://github.com/alrra/browser-logos/blob/master/src/firefox/firefox_32x32.png?raw=true) | ![Chrome](https://github.com/alrra/browser-logos/blob/master/src/chrome/chrome_32x32.png?raw=true) | ![Safari](https://github.com/alrra/browser-logos/blob/master/src/safari/safari_32x32.png?raw=true) |
+| ![Internet Explorer](https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/ie_32x32.png) | ![Edge](https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/edge_32x32.png?raw=true) | ![Firefox](https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/firefox_32x32.png?raw=true) | ![Chrome](https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/chrome_32x32.png) | ![Safari](https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/safari_32x32.png) |
 |:--:|:---:|:---:|:---:|:---:|
 | No | Yes | Yes | Yes | 11+ |
 
