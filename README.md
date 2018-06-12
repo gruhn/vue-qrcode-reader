@@ -74,7 +74,7 @@ methods: {
 ```
 ### `track` prop
 
-By default detected QR codes are visually highlighted. A transparent canvas overlays the camera stream. When a QR codes is detected its location is painted to the canvas. You can enable/disable this feature by passing `true`/`false` via the `track` prop.
+By default detected QR codes are visually highlighted. A transparent canvas overlays the camera stream. When a QR code is detected, its location is painted to the canvas. You can enable/disable this feature by passing `true`/`false` via the `track` prop.
 
 You can also pass a function to customize the way the location is painted. This function is called to produce each frame. It receives the location object as the first argument and a `CanvasRenderingContext2D` instance as the second argument.
 
