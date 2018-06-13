@@ -167,6 +167,10 @@ export default {
   methods: {
 
     async init () {
+      if (this.camera !== null) {
+        this.camera.stop()
+      }
+
       this.camera = await Camera(this.constraints, this.$refs.video)
     },
 
