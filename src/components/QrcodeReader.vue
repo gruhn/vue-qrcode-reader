@@ -97,7 +97,7 @@ export default {
             ctx.strokeStyle = 'red'
 
             ctx.beginPath()
-            ctx.moveTo(topLeftCorner.x, topRightCorner.y)
+            ctx.moveTo(topLeftCorner.x, topLeftCorner.y)
             ctx.lineTo(bottomLeftCorner.x, bottomLeftCorner.y)
             ctx.lineTo(bottomRightCorner.x, bottomRightCorner.y)
             ctx.lineTo(topRightCorner.x, topRightCorner.y)
