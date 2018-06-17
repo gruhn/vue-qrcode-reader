@@ -4917,11 +4917,11 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^2.0.0"
     inherits "^2.0.1"
 
-rtcpeerconnection-shim@^1.1.13:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/rtcpeerconnection-shim/-/rtcpeerconnection-shim-1.2.0.tgz#d553ac5c104e43219b29fe91fb64c30f9d907aa5"
+rtcpeerconnection-shim@^1.2.10:
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/rtcpeerconnection-shim/-/rtcpeerconnection-shim-1.2.11.tgz#df2b2456020365daf26bf8c135523bca2deb252b"
   dependencies:
-    sdp "^2.2.0"
+    sdp "^2.6.0"
 
 run-async@^0.1.0:
   version "0.1.0"
@@ -4975,9 +4975,9 @@ scss-tokenizer@^0.2.3:
     js-base64 "^2.1.8"
     source-map "^0.4.2"
 
-sdp@^2.2.0, sdp@^2.3.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/sdp/-/sdp-2.5.0.tgz#b15a0b1dfd0a38f6a8c780e58f8c8fe73c29ffe5"
+sdp@^2.6.0, sdp@^2.7.0:
+  version "2.7.4"
+  resolved "https://registry.yarnpkg.com/sdp/-/sdp-2.7.4.tgz#cac76b0e2f16f55243d25bc0432f6bbb5488bfc1"
 
 selenium-server@^3.0.1:
   version "3.7.1"
@@ -5709,12 +5709,12 @@ webpack@^2.1.0-beta.28:
     webpack-sources "^1.0.1"
     yargs "^6.0.0"
 
-webrtc-adapter@^6.0.2:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/webrtc-adapter/-/webrtc-adapter-6.0.2.tgz#765f99c163e46046a758fec457f7859c90a19487"
+webrtc-adapter@^6.2.1:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/webrtc-adapter/-/webrtc-adapter-6.2.1.tgz#4d0eda592f27d5f3288ea8ae11c1245ac156d676"
   dependencies:
-    rtcpeerconnection-shim "^1.1.13"
-    sdp "^2.3.0"
+    rtcpeerconnection-shim "^1.2.10"
+    sdp "^2.7.0"
 
 whet.extend@~0.9.9:
   version "0.9.9"
