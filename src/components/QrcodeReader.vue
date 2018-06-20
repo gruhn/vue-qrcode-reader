@@ -59,6 +59,18 @@ export default {
     },
 
     /**
+     * Minimum delay in milliseconds between frames to be scanned. Don't scan
+     * so often when visual tracking is disabled to improve performance.
+     */
+    scanInterval () {
+      if (this.track === false) {
+        return 500
+      } else {
+        return 40 // ~ 25fps
+      }
+    },
+
+    /**
      * Full constraints object which is passed to `getUserMedia` to request a
      * camera stream. Properties define if a certain camera is adequate or not.
      */
@@ -179,6 +191,7 @@ export default {
         decodeHandler: this.onDecode,
         locateHandler: this.onLocate,
         shouldContinue: () => this.shouldScan,
+        minDelay: this.scanInterval,
       })
     },
 

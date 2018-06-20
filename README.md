@@ -74,9 +74,9 @@ methods: {
 ```
 ### `track` prop
 
-By default detected QR codes are visually highlighted. A transparent canvas overlays the camera stream. When a QR code is detected, its location is painted to the canvas. You can enable/disable this feature by passing `true`/`false` via the `track` prop.
+By default detected QR codes are visually highlighted. A transparent canvas overlays the camera stream. When a QR code is detected, its location is painted to the canvas. You can enable/disable this feature by passing `true`/`false` via the `track` prop. If tracking is disabled the camera stream is scanned much less frequently. So if you encounter performance problems on your target device, this might help.
 
-You can also pass a function to customize the way the location is painted. This function is called to produce each frame. It receives the location object as the first argument and a `CanvasRenderingContext2D` instance as the second argument.
+You can also pass a function with `track` to customize the way the location is painted. This function is called to produce each frame. It receives the location object as the first argument and a `CanvasRenderingContext2D` instance as the second argument.
 
 :point_right: Avoid access to reactive properties in this function (like stuff in `data`, `computed` or your Vuex store). The function is called several times a second and might cause memory leaks. If you want to be save don't access `this` at all.
 
@@ -155,6 +155,7 @@ This component uses [getUserMedia](https://developer.mozilla.org/en-US/docs/Web/
     facingMode: { ideal: 'environment' }, // use rear camera if available
     width: { min: 360, ideal: 680, max: 1920 }, // constrain video width resolution
     height: { min: 240, ideal: 480, max: 1080 }, // constrain video height resolution
+    frameRate: { min: 10, ideal: 25 }
   }
 }
 ```

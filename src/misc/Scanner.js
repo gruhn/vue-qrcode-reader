@@ -27,31 +27,38 @@ export function keepScanning (camera, options) {
     decodeHandler,
     locateHandler,
     shouldContinue,
-    scanInterval = 16, // milliseconds
+    minDelay,
   } = options
 
-  const recur = (contentBefore, locationBefore) => {
-    return () => {
-      const imageData = camera.captureFrame()
-      const { content, location } = scan(imageData)
+  let contentBefore = null
+  let locationBefore = null
+  let lastScanned = performance.now()
 
-      if (content !== null && content !== contentBefore) {
-        decodeHandler(content)
-      }
+  const processFrame = () => {
+    if (shouldContinue()) {
+      window.requestAnimationFrame(processFrame)
 
-      if (location !== locationBefore) {
-        locateHandler(location)
-      }
+      const timeNow = performance.now()
 
-      if (shouldContinue()) {
-        window.setTimeout(() => {
-          window.requestAnimationFrame(
-            recur(content || contentBefore, location)
-          )
-        }, scanInterval)
+      if (timeNow - lastScanned >= minDelay) {
+        lastScanned = timeNow
+
+        const imageData = camera.captureFrame()
+        const { content, location } = scan(imageData)
+
+        if (content !== null && content !== contentBefore) {
+          decodeHandler(content)
+        }
+
+        if (location !== locationBefore) {
+          locateHandler(location)
+        }
+
+        contentBefore = content || contentBefore
+        locationBefore = location
       }
     }
   }
 
-  window.requestAnimationFrame(recur(null, null))
+  processFrame()
 }
