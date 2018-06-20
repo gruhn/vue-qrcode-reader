@@ -200,13 +200,9 @@ export default {
     },
 
     onLocate (location) {
-      location = this.normalizeLocation(location)
-
-      if (this.repaintTrack !== null) {
+      if (this.trackRepaintFunction !== null) {
         this.repaintTrack(location)
       }
-
-      this.$emit('locate', location)
     },
 
     /**
@@ -233,6 +229,8 @@ export default {
     },
 
     repaintTrack (location) {
+      location = this.normalizeLocation(location)
+
       const canvas = this.$refs.trackingLayer
       const ctx = canvas.getContext('2d')
 
