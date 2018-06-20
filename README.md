@@ -153,8 +153,8 @@ This component uses [getUserMedia](https://developer.mozilla.org/en-US/docs/Web/
   audio: false, // don't request microphone access
   video: {
     facingMode: { ideal: 'environment' }, // use rear camera if available
-    width: { min: 360, ideal: 1280, max: 1920 }, // constrain video width resolution
-    height: { min: 240, ideal: 720, max: 1080 } // constrain video height resolution
+    width: { min: 360, ideal: 680, max: 1920 }, // constrain video width resolution
+    height: { min: 240, ideal: 480, max: 1080 }, // constrain video height resolution
   }
 }
 ```

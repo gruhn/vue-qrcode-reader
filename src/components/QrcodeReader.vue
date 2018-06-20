@@ -70,7 +70,7 @@ export default {
       } else {
         withDefaults = {
           facingMode: { ideal: 'environment' },
-          width: { min: 360, ideal: 680, max: 1920 },
+          width: { min: 360, ideal: 640, max: 1920 },
           height: { min: 240, ideal: 480, max: 1080 },
 
           ...this.videoConstraints,
