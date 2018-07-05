@@ -1,7 +1,7 @@
 {
   "name": "vue-qrcode-reader",
   "description": "A Vue.js component, accessing the device camera and allowing users to read QR-Codes, within the browser",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "author": {
     "name": "Niklas Gruhn",
     "email": "niklas.gruhn@gmail.com"
@@ -82,7 +82,7 @@
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
-    "jsqr": "^1.0.4",
+    "jsqr": "^1.1.0",
     "lodash": "^4.17.4",
     "webrtc-adapter": "^6.2.1"
   }
