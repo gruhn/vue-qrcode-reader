@@ -172,7 +172,10 @@ export default {
   },
 
   beforeDestroy () {
-    this.camera.stop()
+    if (this.camera !== null) {
+      this.camera.stop()
+    }
+
     this.destroyed = true
   },
 
