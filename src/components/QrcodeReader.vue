@@ -1,7 +1,13 @@
 <template lang="html">
   <div class="qrcode-reader">
     <div class="qrcode-reader__inner-wrapper">
-      <div class="qrcode-reader__overlay">
+      <div
+        class="qrcode-reader__overlay"
+        @drop.prevent.stop="onDrop"
+        @dragover.prevent.stop
+        @dragenter.prevent.stop
+        @dragleave.prevent.stop
+      >
         <slot></slot>
       </div>
 
@@ -19,8 +25,9 @@
 </template>
 
 <script>
-import * as Scanner from '../misc/Scanner.js'
-import Camera from '../misc/Camera.js'
+import * as Scanner from '../misc/scanner.js'
+import Camera from '../misc/camera.js'
+import { imageDataFromFile, imageDataFromUrl } from '../misc/image-data.js'
 import isBoolean from 'lodash/isBoolean'
 
 export default {
@@ -186,26 +193,74 @@ export default {
         this.camera.stop()
       }
 
-      this.camera = await Camera(this.constraints, this.$refs.video)
+      if (this.videoConstraints === false) {
+        this.camera = null
+      } else {
+        this.camera = await Camera(this.constraints, this.$refs.video)
+      }
     },
 
     startScanning () {
       Scanner.keepScanning(this.camera, {
-        decodeHandler: this.onDecode,
         locateHandler: this.onLocate,
+        detectHandler: scanResult => this.onDetect('stream', scanResult),
         shouldContinue: () => this.shouldScan,
         minDelay: this.scanInterval,
       })
-    },
-
-    onDecode (content) {
-      this.$emit('decode', content)
     },
 
     onLocate (location) {
       if (this.trackRepaintFunction !== null) {
         this.repaintTrack(location)
       }
+    },
+
+    async onDetect (source, promise) {
+      this.$emit('detect', (async () => {
+        const data = await promise
+
+        return { source, ...data }
+      })())
+
+      try {
+        const { content } = await promise
+
+        if (content !== null) {
+          this.$emit('decode', content)
+        }
+      } catch (error) {
+        // fail silently
+      }
+    },
+
+    onDrop ({ dataTransfer }) {
+      const droppedFiles = [...dataTransfer.files]
+
+      droppedFiles.forEach(this.onDropFile)
+
+      const droppedUrl = dataTransfer.getData('text')
+
+      if (droppedUrl !== '') {
+        this.onDropUrl(droppedUrl)
+      }
+    },
+
+    async onDropFile (file) {
+      this.onDetect('file', (async () => {
+        const imageData = await imageDataFromFile(file)
+        const scanResult = Scanner.scan(imageData)
+
+        return scanResult
+      })())
+    },
+
+    async onDropUrl (url) {
+      this.onDetect('url', (async () => {
+        const imageData = await imageDataFromUrl(url)
+        const scanResult = Scanner.scan(imageData)
+
+        return scanResult
+      })())
     },
 
     /**
@@ -220,14 +275,16 @@ export default {
         const widthRatio = this.camera.displayWidth / this.camera.resolutionWidth
         const heightRatio = this.camera.displayHeight / this.camera.resolutionHeight
 
-        Object.keys(location).forEach(key => {
-          const { x, y } = location[key]
-
-          location[key].x = Math.floor(x * widthRatio)
-          location[key].y = Math.floor(y * heightRatio)
+        const normalizeEntry = ({ x, y }) => ({
+          x: Math.floor(x * widthRatio),
+          y: Math.floor(y * heightRatio),
         })
 
-        return location
+        const joinObjects = (objA, objB) => ({ ...objA, ...objB })
+
+        return Object.entries(location)
+          .map(([ key, val ]) => [ key, normalizeEntry(val) ])
+          .reduce(joinObjects, {})
       }
     },
 
@@ -258,7 +315,6 @@ export default {
 }
 
 .qrcode-reader__inner-wrapper {
-  display: inline-block;
   position: relative;
 }
 

@@ -15,7 +15,7 @@ export function scan (imageData) {
     location = result.location
   }
 
-  return { content, location }
+  return { content, location, imageData }
 }
 
 /**
@@ -24,8 +24,8 @@ export function scan (imageData) {
  */
 export function keepScanning (camera, options) {
   const {
-    decodeHandler,
     locateHandler,
+    detectHandler,
     shouldContinue,
     minDelay,
   } = options
@@ -46,8 +46,8 @@ export function keepScanning (camera, options) {
         const imageData = camera.captureFrame()
         const { content, location } = scan(imageData)
 
-        if (content !== null && content !== contentBefore) {
-          decodeHandler(content)
+        if (content !== contentBefore && content !== null) {
+          detectHandler({ content, location, imageData })
         }
 
         if (location !== locationBefore) {
