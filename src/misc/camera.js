@@ -1,12 +1,8 @@
+import { imageDataFromVideo } from './image-data.js'
 
 class Camera {
 
   constructor (videoEl, stream) {
-    const canvas = document.createElement('canvas')
-    canvas.width = videoEl.videoWidth
-    canvas.height = videoEl.videoHeight
-
-    this.canvasCtx = canvas.getContext('2d')
     this.videoEl = videoEl
     this.stream = stream
   }
@@ -34,15 +30,7 @@ class Camera {
   }
 
   captureFrame () {
-    this.canvasCtx.drawImage(
-      this.videoEl, 0, 0,
-      this.resolutionWidth,
-      this.resolutionHeight
-    )
-
-    return this.canvasCtx.getImageData(
-      0, 0, this.resolutionWidth, this.resolutionHeight
-    )
+    return imageDataFromVideo(this.videoEl)
   }
 
 }
