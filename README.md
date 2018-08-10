@@ -2,7 +2,11 @@
 
 [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/) ![gzip-size](http://img.badgesize.io/gruhn/vue-qrcode-reader/master/dist/vue-qrcode-reader.common.js?compression=gzip)  [![npm](https://img.shields.io/npm/v/vue-qrcode-reader.svg) ![npm](https://img.shields.io/npm/dm/vue-qrcode-reader.svg)](https://www.npmjs.com/package/vue-qrcode-reader)
 
-A Vue.js component, accessing the device camera and allowing users to read QR codes, within the browser.
+A Vue.js 2 component, accessing the device camera and allowing users to read QR codes, within the browser.
+
+* read camera stream and/or drag-and-dropped images
+* customizable visual tracking of QR codes
+* responsive and layout agnostic
 
 ### [Demos](https://gruhn.github.io/vue-qrcode-reader/)
 
@@ -19,7 +23,7 @@ A Vue.js component, accessing the device camera and allowing users to read QR co
 # Usage
 
 ### `decode` event
-Once a stream from the users camera is loaded, it is displayed and continuously scanned for QR codes. Results are indicated by the `decode` event.
+Once a stream from the users camera is loaded, it is displayed and continuously scanned for QR codes. Results are indicated by the `decode` event. This also accounts for decoded images drag-and-dropped in the area the component occupies.
 
 ```html
 <qrcode-reader @decode="onDecode"></qrcode-reader>
@@ -32,8 +36,45 @@ methods: {
 }
 ```
 
-### `init` event
+### `detect` event
+The `detect` event is quite similar to `decode` but it provides more details. `decode` only gives you the string encoded by QR codes. `detect` additionally
 
+* tells you where results came from (i.e. a camera stream, a drag-and-dropped file or url)
+* gives you the unprocessed raw image data
+* the coordinates of the QR code in the image/camera frame
+
+In case of errors `decode` also silently fails. For example when a non-image file is drag-and-dropped.
+
+```html
+<qrcode-reader @detect="onDetect"></qrcode-reader>
+```
+```javascript
+methods: {
+  async onDetect (promise) {
+    try {
+      const {
+        source,       // 'file', 'url' or 'stream'
+        imageData,    // raw image data of image/frame
+        content,      // decoded String
+        location      // QR code coordinates
+      } = await promise
+
+      // ...
+    } catch (error) {
+      if (error.name === 'DropImageFetchError') {
+        // drag-and-dropped URL (probably just an <img> element) from different
+        // domain without CORS header caused same-origin-policy violation
+      } else if (error.name === 'DropImageDecodeError') {
+        // drag-and-dropped file is not of type image and can't be decoded
+      } else {
+        // idk, open an issue ¯\_(ツ)_/¯
+      }
+    }
+  }
+}
+```
+
+### `init` event
 It might take a while before the component is ready and the scanning process starts. The user has to be asked for camera access permission first and the camera stream has to be loaded.
 
 If you want to show a loading indicator, you can listen for the `init` event. It's emitted as soon as the component is mounted and carries a promise which resolves when everything is ready. The promise is rejected if initialization fails. This can have [a couple of reasons](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Exceptions).
@@ -62,9 +103,10 @@ methods: {
       } else if (error.name === 'NotReadableError') {
         // maybe camera is already in use
       } else if (error.name === 'OverconstrainedError') {
-        // passed constraints don't match any camera. Did you requested the front camera although there is none?
+        // passed constraints don't match any camera.
+        // Did you requested the front camera although there is none?
       } else {
-        // browser is probably lacking features (WebRTC, Canvas)
+        // browser might be lacking features (WebRTC, ...)
       }
     } finally {
       // hide loading indicator
@@ -155,7 +197,6 @@ This component uses [getUserMedia](https://developer.mozilla.org/en-US/docs/Web/
     facingMode: { ideal: 'environment' }, // use rear camera if available
     width: { min: 360, ideal: 680, max: 1920 }, // constrain video width resolution
     height: { min: 240, ideal: 480, max: 1080 }, // constrain video height resolution
-    frameRate: { min: 10, ideal: 25 }
   }
 }
 ```
