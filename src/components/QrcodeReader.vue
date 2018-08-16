@@ -283,7 +283,7 @@ export default {
         const joinObjects = (objA, objB) => ({ ...objA, ...objB })
 
         return Object.entries(location)
-          .map(([ key, val ]) => [ key, normalizeEntry(val) ])
+          .map(([ key, val ]) => ({ [key]: normalizeEntry(val) }))
           .reduce(joinObjects, {})
       }
     },
