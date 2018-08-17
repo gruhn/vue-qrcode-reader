@@ -17,6 +17,7 @@ A Vue.js 2 component, accessing the device camera and allowing users to read QR 
 | No | Yes | Yes | Yes | 11+ |
 
 * Chrome requires [HTTPS or localhost](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins) (see [#38](../../issues/38) for help)
+* Safari also requires HTTPS **even** on localhost (see [#48](../../issues/48))
 * on iOS it **only** works with Safari. Chrome or Firefox for iOS are not supported (see [#29](../../issues/29))
 * more details on [Caniuse](https://caniuse.com/#feat=stream)
 
