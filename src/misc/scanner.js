@@ -27,7 +27,7 @@ export function keepScanning (camera, options) {
     locateHandler,
     detectHandler,
     shouldContinue,
-    minDelay,
+    minDelay
   } = options
 
   let contentBefore = null

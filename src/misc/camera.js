@@ -1,7 +1,6 @@
 import { imageDataFromVideo } from './image-data.js'
 
 class Camera {
-
   constructor (videoEl, stream) {
     this.videoEl = videoEl
     this.stream = stream
@@ -32,7 +31,6 @@ class Camera {
   captureFrame () {
     return imageDataFromVideo(this.videoEl)
   }
-
 }
 
 export default async function (constraints, videoEl) {

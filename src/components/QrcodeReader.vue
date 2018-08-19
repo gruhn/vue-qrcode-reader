@@ -34,25 +34,25 @@ export default {
   props: {
     paused: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     videoConstraints: {
       type: [Object, Boolean],
-      default: () => ({}), // empty object
+      default: () => ({}) // empty object
     },
 
     track: {
       type: [Function, Boolean],
-      default: true,
-    },
+      default: true
+    }
   },
 
   data () {
     return {
       camera: null,
       destroyed: false,
-      readyAfterPause: true,
+      readyAfterPause: true
     }
   },
 
@@ -92,13 +92,13 @@ export default {
           width: { min: 360, ideal: 640, max: 1920 },
           height: { min: 240, ideal: 480, max: 1080 },
 
-          ...this.videoConstraints,
+          ...this.videoConstraints
         }
       }
 
       return {
         audio: false,
-        video: withDefaults,
+        video: withDefaults
       }
     },
 
@@ -110,7 +110,7 @@ export default {
               topLeftCorner,
               topRightCorner,
               bottomLeftCorner,
-              bottomRightCorner,
+              bottomRightCorner
             } = location
 
             ctx.strokeStyle = 'red'
@@ -131,7 +131,7 @@ export default {
       } else {
         return this.track
       }
-    },
+    }
 
   },
 
@@ -170,8 +170,8 @@ export default {
 
       handler () {
         this.$emit('init', this.init())
-      },
-    },
+      }
+    }
   },
 
   mounted () {
@@ -205,7 +205,7 @@ export default {
         locateHandler: this.onLocate,
         detectHandler: scanResult => this.onDetect('stream', scanResult),
         shouldContinue: () => this.shouldScan,
-        minDelay: this.scanInterval,
+        minDelay: this.scanInterval
       })
     },
 
@@ -277,7 +277,7 @@ export default {
 
         const normalizeEntry = ({ x, y }) => ({
           x: Math.floor(x * widthRatio),
-          y: Math.floor(y * heightRatio),
+          y: Math.floor(y * heightRatio)
         })
 
         const joinObjects = (objA, objB) => ({ ...objA, ...objB })
@@ -300,9 +300,9 @@ export default {
       window.requestAnimationFrame(
         () => this.trackRepaintFunction(location, ctx)
       )
-    },
+    }
 
-  },
+  }
 }
 </script>
 
