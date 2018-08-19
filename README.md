@@ -82,7 +82,7 @@ It might take a while before the component is ready and the scanning process sta
 
 If you want to show a loading indicator, you can listen for the `init` event. It's emitted as soon as the component is mounted and carries a promise which resolves when everything is ready. The promise is rejected if initialization fails. This can have [a couple of reasons](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Exceptions).
 
-:point_right: In Chrome you can't prompt users for permissions a second time. Once denied, users can only manually grant them. Make sure your users understand why you need access to their camera **before** you mount this component. Otherwise they might panic and deny and then get frustrated because they don't know how to change their decision.
+> In Chrome you can't prompt users for permissions a second time. Once denied, users can only manually grant them. Make sure your users understand why you need access to their camera **before** you mount this component. Otherwise they might panic and deny and then get frustrated because they don't know how to change their decision.
 
 ```html
 <qrcode-reader @init="onInit"></qrcode-reader>
@@ -123,7 +123,7 @@ By default detected QR codes are visually highlighted. A transparent canvas over
 
 You can also pass a function with `track` to customize the way the location is painted. This function is called to produce each frame. It receives the location object as the first argument and a `CanvasRenderingContext2D` instance as the second argument.
 
-:point_right: Avoid access to reactive properties in this function (like stuff in `data`, `computed` or your Vuex store). The function is called several times a second and might cause memory leaks. If you want to be save don't access `this` at all.
+> Avoid access to reactive properties in this function (like stuff in `data`, `computed` or your Vuex store). The function is called several times a second and might cause memory leaks. If you want to be save don't access `this` at all.
 
 Say you want to paint in a different color that better fits your overall page theme.
 
@@ -157,7 +157,7 @@ methods: {
 }
 ```
 
-### Distributed content
+### default slot
 
 Distributed content will overlay the camera stream, wrapped in a `position: absolute` container.
 
@@ -210,7 +210,7 @@ You can change the `video` part using the `video-constraints` prop. Note that yo
 <qrcode-reader :video-constraints="{ facingMode: 'user' }"></qrcode-reader>
 ```
 
-:point_right: If you change this property after initialization, a new camera stream will be requested and the `init` event will be emitted again.
+> If you change this property after initialization, a new camera stream will be requested and the `init` event will be emitted again.
 
 
 # Installation
