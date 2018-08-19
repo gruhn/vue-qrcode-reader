@@ -37,6 +37,8 @@ methods: {
 }
 ```
 
+> You might notice that when you scan the same QR code multiple times in a row, `decode` is still only emitted once. When you hold a QR code in the camera, frames are actually decoded multiple times a second but you don't want to be flooded with `decode` events that often. That's why the last decoded QR code is always cached and only new results are propagated. However, you can clear this internal cache by setting the `paused` prop to true.
+
 ### `detect` event
 The `detect` event is quite similar to `decode` but it provides more details. `decode` only gives you the string encoded by QR codes. `detect` additionally
 
@@ -167,7 +169,7 @@ Distributed content will overlay the camera stream, wrapped in a `position: abso
 
 ### `paused` prop
 
-With the `paused` prop you can prevent further `decode` propagation and functions passed via `track` are stopped being called. Useful for example if you're only interested in the first result. This will also freeze the camera stream.
+With the `paused` prop you can prevent further `decode` propagation and functions passed via `track` are stopped being called. Useful for example if you want to validate results one at a time. This will also freeze the camera stream.
 
 ```html
 <qrcode-reader @decode="onDecode" :paused="paused"></qrcode-reader>
