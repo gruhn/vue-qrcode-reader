@@ -10,10 +10,9 @@ script:
 cache: yarn
 
 deploy:
-  provider: npm
-  email: "niklas.gruhn@gmail.com"
-  tag: alpha
-  api_key: $NPM_TOKEN
+  provider: script
   skip_cleanup: true
   on:
     branch: master
+  script:
+    - npx semantic-release --branch master
