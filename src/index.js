@@ -12,11 +12,7 @@ export { QrcodeReader }
 /* You shouldn't have to modify the code below */
 
 // Plugin
-const plugin = {
-  /* eslint-disable no-undef */
-  version: VERSION,
-  install,
-}
+const plugin = { install }
 
 export default plugin
 
