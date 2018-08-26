@@ -250,42 +250,18 @@ Vue.component('my-component', {
 
 **⚠️ A css file is included when importing the package. You may have to setup your bundler to embed the css in your page.**
 
-## Distribution import
-
-Register component globally:
-
-```javascript
-import 'vue-qrcode-reader/dist/vue-qrcode-reader.css'
-import VueQrcodeReader from 'vue-qrcode-reader/dist/vue-qrcode-reader.common'
-
-Vue.use(VueQrcodeReader)
-```
-
-Register locally in other components scope:
-
-```javascript
-import 'vue-qrcode-reader/dist/vue-qrcode-reader.css'
-import { QrcodeReader } from 'vue-qrcode-reader/dist/vue-qrcode-reader.common'
-
-Vue.component('my-component', {
-  components: { QrcodeReader },
-
-  // ...
-)
-```
-
-**⚠️ You may have to setup your bundler to embed the css file in your page.**
-
 ## Browser
 
+You need to include a script and CSS file. You can pull both from [unpkg.com](https://unpkg.com). Make sure to replace `[VERSION]` with the version you need (for example `1.0.1`):
+
 ```html
-<link rel="stylesheet" href="vue-qrcode-reader/dist/vue-qrcode-reader.css"/>
+<link rel="stylesheet" href="https://unpkg.com/vue-qrcode-reader@[VERSION]/dist/vue-qrcode-reader.css"/>
 
 <script src="vue.js"></script>
-<script src="vue-qrcode-reader/dist/vue-qrcode-reader.browser.js"></script>
+<script src="https://unpkg.com/vue-qrcode-reader@[VERSION]/dist/vue-qrcode-reader.browser.js"></script>
 ```
 
-The plugin should be auto-installed. If not, you can install it manually with the instructions below.
+The plugin should be auto-installed. If not, you can install it manually.
 
 Register component globally:
 
@@ -304,32 +280,6 @@ Vue.component('my-component', {
   // ...
 )
 ```
-
-## Source import
-
-Register component globally:
-
-```javascript
-import Vue from 'vue'
-import VueQrcodeReader from 'vue-qrcode-reader/src'
-
-Vue.use(VueQrcodeReader)
-```
-
-Register locally in other components scope:
-
-```javascript
-import Vue from 'vue'
-import { QrcodeReader } from 'vue-qrcode-reader/src'
-
-Vue.component('my-component', {
-  components: { QrcodeReader },
-
-  // ...
-)
-```
-
-**⚠️ You need to configure your bundler to compile `.vue` files.** More info [in the official documentation](https://vuejs.org/v2/guide/single-file-components.html).
 
 ---
 
