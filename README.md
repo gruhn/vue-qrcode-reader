@@ -169,7 +169,9 @@ Distributed content will overlay the camera stream, wrapped in a `position: abso
 
 ### `paused` prop
 
-With the `paused` prop you can prevent further `decode` propagation and functions passed via `track` are stopped being called. Useful for example if you want to validate results one at a time. This will also freeze the camera stream.
+With the `paused` prop you can prevent further `decode` propagation. Functions passed via `track` are also stopped being called. Useful for example if you want to validate results one at a time.
+
+> When the component is paused the camera stream freezes but is actually still running in the background. The browser will tell you that the camera is still in use. If you want to kill the stream completely you can pass `false` to the `camera` prop.
 
 ```html
 <qrcode-reader @decode="onDecode" :paused="paused"></qrcode-reader>
@@ -189,9 +191,15 @@ methods: {
 }
 ```
 
-### `video-constraints` prop
+### `camera` prop
 
-This component uses [getUserMedia](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia) to request camera streams. This method accepts [a constraints object](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints#Properties_of_video_tracks) to configure for example if front or rear camera should be accessed. This is passed by default:
+With the `camera` prop you can filter the set of cameras installed on a client device. For example, if you want to access the front camera instead of the rear camera, pass this:
+
+```html
+<qrcode-reader :camera="{ facingMode: 'user' }"></qrcode-reader>
+```
+
+This component uses [getUserMedia](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia) to request camera streams. This method accepts [a constraints object](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints#Properties_of_video_tracks). By default this component passes this:
 
 ```javascript
 {
@@ -204,13 +212,17 @@ This component uses [getUserMedia](https://developer.mozilla.org/en-US/docs/Web/
 }
 ```
 
-You can change the `video` part using the `video-constraints` prop. Note that you only have to pass properties you want to override. If you want to use the front camera for example and change nothing else, pass this:
+This `video` part in this object is essentially what you can change using the `camera` prop. Note that you only have to pass properties you want to override. All the other default properties on the first depth level are preserved. Here are a few examples:
 
-```html
-<qrcode-reader :video-constraints="{ facingMode: 'user' }"></qrcode-reader>
-```
+`camera="{ facingMode: 'user' }"`: the `facingMode` property is passed and is the only property that changes. `width` and `height` are still the default value.
 
-> If you change this property after initialization, a new camera stream will be requested and the `init` event will be emitted again.
+`camera="false"`: overrides ALL default properties. No camera can match those constraints so no camera is request in the first place. You can use this to turn of the camera at runtime.
+
+`camera="{}"`: since an empty object does not contain properties that could override something, this is just like falling back to the default. The same as not using the `camera` prop at all or passing `undefined`/`null`.
+
+`camera="true"`: overrides ALL default properties. You will accept any camera type there is. Not recommended though as iOS seems to have trouble when the `height` and `width` constraints are missing.
+
+> If you change this property after initialization, a new camera stream has to be requested and the `init` event will be emitted again.
 
 
 # Installation
