@@ -120,26 +120,24 @@ export default {
     trackRepaintFunction () {
       if (this.track === true) {
         return function (location, ctx) {
-          if (location !== null) {
-            const {
-              topLeftCorner,
-              topRightCorner,
-              bottomLeftCorner,
-              bottomRightCorner,
-            } = location
+          const {
+            topLeftCorner,
+            topRightCorner,
+            bottomLeftCorner,
+            bottomRightCorner,
+          } = location
 
-            ctx.strokeStyle = 'red'
+          ctx.strokeStyle = 'red'
 
-            ctx.beginPath()
-            ctx.moveTo(topLeftCorner.x, topLeftCorner.y)
-            ctx.lineTo(bottomLeftCorner.x, bottomLeftCorner.y)
-            ctx.lineTo(bottomRightCorner.x, bottomRightCorner.y)
-            ctx.lineTo(topRightCorner.x, topRightCorner.y)
-            ctx.lineTo(topLeftCorner.x, topLeftCorner.y)
-            ctx.closePath()
+          ctx.beginPath()
+          ctx.moveTo(topLeftCorner.x, topLeftCorner.y)
+          ctx.lineTo(bottomLeftCorner.x, bottomLeftCorner.y)
+          ctx.lineTo(bottomRightCorner.x, bottomRightCorner.y)
+          ctx.lineTo(topRightCorner.x, topRightCorner.y)
+          ctx.lineTo(topLeftCorner.x, topLeftCorner.y)
+          ctx.closePath()
 
-            ctx.stroke()
-          }
+          ctx.stroke()
         }
       } else if (this.track === false) {
         return null
@@ -170,6 +168,8 @@ export default {
 
         this.readyAfterPause = false
       } else {
+        this.repaintTrack(null)
+
         video.play()
 
         video.addEventListener(
@@ -283,38 +283,42 @@ export default {
      * video element is responsive and scales with space available. Therefore
      * the coordinates are re-calculated to be relative to the video element.
      */
-    normalizeLocation (location) {
-      if (location === null) {
-        return null
-      } else {
-        const widthRatio = this.cameraInstance.displayWidth / this.cameraInstance.resolutionWidth
-        const heightRatio = this.cameraInstance.displayHeight / this.cameraInstance.resolutionHeight
+    normalizeLocation (widthRatio, heightRatio, location) {
+      const normalized = {}
 
-        const normalizeEntry = ({ x, y }) => ({
-          x: Math.floor(x * widthRatio),
-          y: Math.floor(y * heightRatio),
-        })
-
-        const joinObjects = (objA, objB) => ({ ...objA, ...objB })
-
-        return Object.entries(location)
-          .map(([ key, val ]) => ({ [key]: normalizeEntry(val) }))
-          .reduce(joinObjects, {})
+      for (const key in location) {
+        normalized[key] = {
+          x: Math.floor(location[key].x * widthRatio),
+          y: Math.floor(location[key].y * heightRatio),
+        }
       }
+
+      return normalized
     },
 
     repaintTrack (location) {
-      location = this.normalizeLocation(location)
-
       const canvas = this.$refs.trackingLayer
       const ctx = canvas.getContext('2d')
+      const cameraInstance = this.cameraInstance
 
-      canvas.width = this.cameraInstance.displayWidth
-      canvas.height = this.cameraInstance.displayHeight
+      window.requestAnimationFrame(() => {
+        if (location === null) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height)
+        } else {
+          const displayWidth = cameraInstance.displayWidth
+          const displayHeight = cameraInstance.displayHeight
 
-      window.requestAnimationFrame(
-        () => this.trackRepaintFunction(location, ctx)
-      )
+          canvas.width = displayWidth
+          canvas.height = displayHeight
+
+          const widthRatio = displayWidth / cameraInstance.resolutionWidth
+          const heightRatio = displayHeight / cameraInstance.resolutionHeight
+
+          location = this.normalizeLocation(widthRatio, heightRatio, location)
+
+          this.trackRepaintFunction(location, ctx)
+        }
+      })
     },
 
   },
