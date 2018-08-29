@@ -18,7 +18,7 @@
 
       <video
         ref="video"
-        class="qrcode-reader__camera"
+        class="qrcode-reader__camera-layer"
       ></video>
     </div>
   </div>
@@ -37,9 +37,16 @@ export default {
       default: false,
     },
 
+    /** deprecated in favor of `camera` **/
     videoConstraints: {
       type: [Object, Boolean],
-      default: () => ({}), // empty object
+      default: undefined,
+    },
+
+    camera: {
+      type: [Object, Boolean],
+      // default: () => ({}) // empty object
+      default: undefined,
     },
 
     track: {
@@ -50,7 +57,7 @@ export default {
 
   data () {
     return {
-      camera: null,
+      cameraInstance: null,
       destroyed: false,
       readyAfterPause: true,
     }
@@ -60,7 +67,7 @@ export default {
 
     shouldScan () {
       return this.paused === false &&
-        this.camera !== null &&
+        this.cameraInstance !== null &&
         this.destroyed === false &&
         this.readyAfterPause
     },
@@ -82,23 +89,31 @@ export default {
      * camera stream. Properties define if a certain camera is adequate or not.
      */
     constraints () {
-      let withDefaults
+      let videoConstraints = {}
 
-      if (isBoolean(this.videoConstraints)) {
-        withDefaults = this.videoConstraints
-      } else {
-        withDefaults = {
-          facingMode: { ideal: 'environment' },
-          width: { min: 360, ideal: 640, max: 1920 },
-          height: { min: 240, ideal: 480, max: 1080 },
-
-          ...this.videoConstraints,
-        }
+      if (this.camera !== undefined) {
+        videoConstraints = this.camera
+      } else if (this.videoConstraints !== undefined) {
+        console.warn('The `video-constraints` prop is deprecated. Use `camera` instead.')
+        videoConstraints = this.videoConstraints
       }
 
-      return {
-        audio: false,
-        video: withDefaults,
+      if (isBoolean(videoConstraints)) {
+        return {
+          audio: false,
+          video: videoConstraints,
+        }
+      } else {
+        return {
+          audio: false,
+          video: {
+            facingMode: { ideal: 'environment' },
+            width: { min: 360, ideal: 640, max: 1920 },
+            height: { min: 240, ideal: 480, max: 1080 },
+
+            ...videoConstraints,
+          },
+        }
       }
     },
 
@@ -179,8 +194,8 @@ export default {
   },
 
   beforeDestroy () {
-    if (this.camera !== null) {
-      this.camera.stop()
+    if (this.cameraInstance !== null) {
+      this.cameraInstance.stop()
     }
 
     this.destroyed = true
@@ -189,19 +204,19 @@ export default {
   methods: {
 
     async init () {
-      if (this.camera !== null) {
-        this.camera.stop()
+      if (this.cameraInstance !== null) {
+        this.cameraInstance.stop()
       }
 
       if (this.videoConstraints === false) {
-        this.camera = null
+        this.cameraInstance = null
       } else {
-        this.camera = await Camera(this.constraints, this.$refs.video)
+        this.cameraInstance = await Camera(this.constraints, this.$refs.video)
       }
     },
 
     startScanning () {
-      Scanner.keepScanning(this.camera, {
+      Scanner.keepScanning(this.cameraInstance, {
         locateHandler: this.onLocate,
         detectHandler: scanResult => this.onDetect('stream', scanResult),
         shouldContinue: () => this.shouldScan,
@@ -272,8 +287,8 @@ export default {
       if (location === null) {
         return null
       } else {
-        const widthRatio = this.camera.displayWidth / this.camera.resolutionWidth
-        const heightRatio = this.camera.displayHeight / this.camera.resolutionHeight
+        const widthRatio = this.cameraInstance.displayWidth / this.cameraInstance.resolutionWidth
+        const heightRatio = this.cameraInstance.displayHeight / this.cameraInstance.resolutionHeight
 
         const normalizeEntry = ({ x, y }) => ({
           x: Math.floor(x * widthRatio),
@@ -294,8 +309,8 @@ export default {
       const canvas = this.$refs.trackingLayer
       const ctx = canvas.getContext('2d')
 
-      canvas.width = this.camera.displayWidth
-      canvas.height = this.camera.displayHeight
+      canvas.width = this.cameraInstance.displayWidth
+      canvas.height = this.cameraInstance.displayHeight
 
       window.requestAnimationFrame(
         () => this.trackRepaintFunction(location, ctx)
@@ -318,7 +333,7 @@ export default {
   position: relative;
 }
 
-.qrcode-reader__camera {
+.qrcode-reader__camera-layer {
   display: block;
   object-fit: contain;
   max-width: 100%;
