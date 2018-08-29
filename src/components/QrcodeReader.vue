@@ -28,6 +28,7 @@
 import * as Scanner from '../misc/scanner.js'
 import Camera from '../misc/camera.js'
 import { imageDataFromFile, imageDataFromUrl } from '../misc/image-data.js'
+import { hasFired } from '../misc/promisify.js'
 import isBoolean from 'lodash/isBoolean'
 
 export default {
@@ -160,7 +161,7 @@ export default {
       }
     },
 
-    paused (paused) {
+    async paused (paused) {
       const video = this.$refs.video
 
       if (paused) {
@@ -172,11 +173,9 @@ export default {
 
         video.play()
 
-        video.addEventListener(
-          'timeupdate',
-          () => { this.readyAfterPause = true },
-          { once: true }
-        )
+        await hasFired(video, 'timeupdate')
+
+        this.readyAfterPause = true
       }
     },
 

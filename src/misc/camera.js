@@ -1,4 +1,5 @@
 import { imageDataFromVideo } from './image-data.js'
+import { hasFired } from './promisify.js'
 
 class Camera {
 
@@ -41,11 +42,7 @@ export default async function (constraints, videoEl) {
   }
 
   const stream = await navigator.mediaDevices.getUserMedia(constraints)
-
-  const streamLoadedPromise = new Promise((resolve, reject) => {
-    videoEl.addEventListener('loadeddata', resolve, { once: true })
-    videoEl.addEventListener('error', reject, { once: true })
-  })
+  const streamLoaded = hasFired(videoEl, 'loadeddata', 'error')
 
   if (videoEl.srcObject !== undefined) {
     videoEl.srcObject = stream
@@ -62,7 +59,7 @@ export default async function (constraints, videoEl) {
   videoEl.playsInline = true
   videoEl.play() // firefox does not emit `loadeddata` if video not playing
 
-  await streamLoadedPromise
+  await streamLoaded
 
   return new Camera(videoEl, stream)
 }
