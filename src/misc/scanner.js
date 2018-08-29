@@ -34,11 +34,9 @@ export function keepScanning (camera, options) {
   let locationBefore = null
   let lastScanned = performance.now()
 
-  const processFrame = () => {
+  const processFrame = timeNow => {
     if (shouldContinue()) {
       window.requestAnimationFrame(processFrame)
-
-      const timeNow = performance.now()
 
       if (timeNow - lastScanned >= minDelay) {
         lastScanned = timeNow
