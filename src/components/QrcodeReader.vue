@@ -16,10 +16,10 @@
         class="qrcode-reader__tracking-layer"
       ></canvas>
 
-      <video
-        ref="video"
-        class="qrcode-reader__camera-layer"
-      ></video>
+      <div class="qrcode-reader__camera-layer" ref="videoWrapper">
+        <canvas ref="pauseFrame"></canvas>
+        <video ref="video"></video>
+      </div>
     </div>
   </div>
 </template>
@@ -28,10 +28,10 @@
 import * as Scanner from '../misc/scanner.js'
 import Camera from '../misc/camera.js'
 import { imageDataFromFile, imageDataFromUrl } from '../misc/image-data.js'
-import { hasFired } from '../misc/promisify.js'
 import isBoolean from 'lodash/isBoolean'
 
 export default {
+
   props: {
     paused: {
       type: Boolean,
@@ -60,7 +60,6 @@ export default {
     return {
       cameraInstance: null,
       destroyed: false,
-      readyAfterPause: true,
     }
   },
 
@@ -69,8 +68,7 @@ export default {
     shouldScan () {
       return this.paused === false &&
         this.cameraInstance !== null &&
-        this.destroyed === false &&
-        this.readyAfterPause
+        this.destroyed === false
     },
 
     /**
@@ -161,21 +159,11 @@ export default {
       }
     },
 
-    async paused (paused) {
-      const video = this.$refs.video
-
+    paused (paused) {
       if (paused) {
-        video.pause()
-
-        this.readyAfterPause = false
+        this.stopPlayback()
       } else {
-        this.repaintTrack(null)
-
-        video.play()
-
-        await hasFired(video, 'timeupdate')
-
-        this.readyAfterPause = true
+        this.startPlayback()
       }
     },
 
@@ -193,24 +181,20 @@ export default {
   },
 
   beforeDestroy () {
-    if (this.cameraInstance !== null) {
-      this.cameraInstance.stop()
-    }
-
+    this.beforeResetCamera()
     this.destroyed = true
   },
 
   methods: {
 
     async init () {
-      if (this.cameraInstance !== null) {
-        this.cameraInstance.stop()
-      }
+      this.beforeResetCamera()
 
-      if (this.videoConstraints === false) {
+      if (this.constraints.video === false) {
         this.cameraInstance = null
       } else {
         this.cameraInstance = await Camera(this.constraints, this.$refs.video)
+        this.startPlayback()
       }
     },
 
@@ -221,6 +205,14 @@ export default {
         shouldContinue: () => this.shouldScan,
         minDelay: this.scanInterval,
       })
+    },
+
+    beforeResetCamera () {
+      if (this.cameraInstance !== null) {
+        this.stopPlayback()
+        this.cameraInstance.stop()
+        this.cameraInstance = null
+      }
     },
 
     onLocate (location) {
@@ -320,6 +312,64 @@ export default {
       })
     },
 
+    startPlayback () {
+      this.unlockCameraLayerSize()
+      this.repaintTrack(null)
+
+      const pauseFrame = this.$refs.pauseFrame
+      const ctx = pauseFrame.getContext('2d')
+
+      ctx.clearRect(0, 0, pauseFrame.width, pauseFrame.height)
+    },
+
+    stopPlayback () {
+      this.lockCameraLayerSize()
+
+      const pauseFrame = this.$refs.pauseFrame
+      const ctx = pauseFrame.getContext('2d')
+      const cameraInstance = this.cameraInstance
+
+      const displayWidth = cameraInstance.displayWidth
+      const displayHeight = cameraInstance.displayHeight
+
+      pauseFrame.width = displayWidth
+      pauseFrame.height = displayHeight
+
+      ctx.drawImage(this.$refs.video, 0, 0, displayWidth, displayHeight)
+    },
+
+    /*
+     * When a new stream is requested, the video element looses its width and
+     * height, causing the component to collapse until the new stream is loaded.
+     * Copying the size from the video element to its wrapper div compensates
+     * for this effect.
+     */
+    lockCameraLayerSize () {
+      const videoWrapper = this.$refs.videoWrapper
+      const cameraInstance = this.cameraInstance
+
+      if (cameraInstance !== null) {
+        console.log('TEST')
+
+        const displayWidth = cameraInstance.displayWidth
+        const displayHeight = cameraInstance.displayHeight
+
+        videoWrapper.style.width = displayWidth + 'px'
+        videoWrapper.style.height = displayHeight + 'px'
+      }
+    },
+
+    /**
+     * The video elements wrapper div should not have a fixed size all the so
+     * it can be responsive.
+     */
+    unlockCameraLayerSize () {
+      const videoWrapper = this.$refs.videoWrapper
+
+      videoWrapper.style.width = ''
+      videoWrapper.style.height = ''
+    },
+
   },
 }
 </script>
@@ -337,14 +387,24 @@ export default {
 }
 
 .qrcode-reader__camera-layer {
-  display: block;
-  object-fit: contain;
-  max-width: 100%;
-  max-height: 100%;
+  position: relative;
   z-index: 10;
 }
 
+.qrcode-reader__camera-layer > video {
+  display: block;
+  object-fit: contain;
+}
+
+.qrcode-reader__inner-wrapper,
+.qrcode-reader__camera-layer,
+.qrcode-reader__camera-layer > video {
+  max-width: 100%;
+  max-height: 100%;
+}
+
 .qrcode-reader__overlay,
+.qrcode-reader__camera-layer > canvas,
 .qrcode-reader__tracking-layer {
   position: absolute;
   width: 100%;
