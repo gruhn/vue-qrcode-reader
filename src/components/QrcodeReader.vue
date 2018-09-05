@@ -349,8 +349,6 @@ export default {
       const cameraInstance = this.cameraInstance
 
       if (cameraInstance !== null) {
-        console.log('TEST')
-
         const displayWidth = cameraInstance.displayWidth
         const displayHeight = cameraInstance.displayHeight
 
