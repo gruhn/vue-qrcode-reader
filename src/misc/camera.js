@@ -8,22 +8,6 @@ class Camera {
     this.stream = stream
   }
 
-  get resolutionWidth () {
-    return this.videoEl.videoWidth
-  }
-
-  get resolutionHeight () {
-    return this.videoEl.videoHeight
-  }
-
-  get displayWidth () {
-    return this.videoEl.offsetWidth
-  }
-
-  get displayHeight () {
-    return this.videoEl.offsetHeight
-  }
-
   stop () {
     this.stream.getTracks().forEach(
       track => track.stop()
