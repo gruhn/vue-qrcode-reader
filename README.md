@@ -1,6 +1,35 @@
-# vue-qrcode-reader
+<p align="center">
 
-[![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release) [![npm](https://img.shields.io/npm/v/vue-qrcode-reader.svg) ![npm](https://img.shields.io/npm/dm/vue-qrcode-reader.svg)](https://www.npmjs.com/package/vue-qrcode-reader)
+  <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/logo.png" alt="Logo" width="240" height="240" style="max-width: 100%;">
+
+  <br>
+  <br>
+
+  <a href="https://vuejs.org/">
+    <img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg" alt="for Vue.js 2">
+  </a>
+
+  <a href="https://github.com/semantic-release/semantic-release">
+    <img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" alt="uses semantic release">
+  </a>
+
+  <a href="https://www.npmjs.com/package/vue-qrcode-reader">
+    <img src="https://img.shields.io/npm/dm/vue-qrcode-reader.svg" alt="npm monthly downloads">
+    <img src="https://img.shields.io/npm/v/vue-qrcode-reader.svg" alt="npm current version">
+  </a>
+
+  <br>
+
+  <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" alt="is maintained? yes">
+
+  <a href="http://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/github/license/Naereen/StrapDown.js.svg" alt="licence: MIT">
+  </a>
+
+  <a href="https://github.com/Naereen/badges">
+    <img src="https://img.shields.io/badge/badges-awesome-green.svg" alt="badges = awesome">
+  </a>
+</p>
 
 A Vue.js 2 component, accessing the device camera and allowing users to read QR codes, within the browser.
 
