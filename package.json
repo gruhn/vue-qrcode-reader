@@ -79,7 +79,8 @@
     "vue-loader": "^10.0.0",
     "vue-template-compiler": "^2.1.6",
     "webpack": "^2.1.0-beta.28",
-    "webpack-merge": "^1.1.2"
+    "webpack-merge": "^1.1.2",
+    "worker-loader": "^2.0.0"
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",

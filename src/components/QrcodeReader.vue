@@ -265,7 +265,7 @@ export default {
     async onDropFile (file) {
       this.onDetect('file', (async () => {
         const imageData = await imageDataFromFile(file)
-        const scanResult = Scanner.scan(imageData)
+        const scanResult = await Scanner.scan(imageData)
 
         return scanResult
       })())
@@ -274,7 +274,7 @@ export default {
     async onDropUrl (url) {
       this.onDetect('url', (async () => {
         const imageData = await imageDataFromUrl(url)
-        const scanResult = Scanner.scan(imageData)
+        const scanResult = await Scanner.scan(imageData)
 
         return scanResult
       })())

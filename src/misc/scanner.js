@@ -1,21 +1,18 @@
 import 'webrtc-adapter'
-import jsQR from 'jsqr'
+import Worker from 'worker-loader?inline=true&fallback=false!./worker.js'
 
 export function scan (imageData) {
-  const { data, width, height } = imageData
-  const result = jsQR(data, width, height)
+  const worker = new Worker()
 
-  let content, location
+  return new Promise(resolve => {
+    worker.onmessage = event => {
+      resolve(event.data)
 
-  if (result === null) {
-    content = null
-    location = null
-  } else {
-    content = result.data
-    location = result.location
-  }
+      worker.terminate()
+    }
 
-  return { content, location, imageData }
+    worker.postMessage(imageData, [imageData.data.buffer])
+  })
 }
 
 /**
@@ -24,8 +21,8 @@ export function scan (imageData) {
  */
 export function keepScanning (camera, options) {
   const {
-    locateHandler,
     detectHandler,
+    locateHandler,
     shouldContinue,
     minDelay,
   } = options
@@ -34,6 +31,29 @@ export function keepScanning (camera, options) {
   let locationBefore = null
   let lastScanned = performance.now()
 
+  const worker = new Worker()
+
+  // If worker can't process frames fast enough, memory will quickly full up.
+  // Make sure to process only one frame at a time.
+  let workerBusy = false
+
+  worker.onmessage = event => {
+    workerBusy = false
+
+    const { content, location } = event.data
+
+    if (content !== null && content !== contentBefore) {
+      detectHandler(event.data)
+    }
+
+    if (location !== locationBefore) {
+      locateHandler(location)
+    }
+
+    contentBefore = content || contentBefore
+    locationBefore = location
+  }
+
   const processFrame = timeNow => {
     if (shouldContinue()) {
       window.requestAnimationFrame(processFrame)
@@ -41,20 +61,16 @@ export function keepScanning (camera, options) {
       if (timeNow - lastScanned >= minDelay) {
         lastScanned = timeNow
 
-        const imageData = camera.captureFrame()
-        const { content, location } = scan(imageData)
+        if (workerBusy === false) {
+          workerBusy = true
 
-        if (content !== contentBefore && content !== null) {
-          detectHandler({ content, location, imageData })
+          const imageData = camera.captureFrame()
+
+          worker.postMessage(imageData, [imageData.data.buffer])
         }
-
-        if (location !== locationBefore) {
-          locateHandler(location)
-        }
-
-        contentBefore = content || contentBefore
-        locationBefore = location
       }
+    } else {
+      worker.terminate()
     }
   }
 
