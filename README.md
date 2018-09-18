@@ -299,6 +299,8 @@ Vue.component('my-component', {
 
 ## Browser
 
+> All the examples on the demo page utilize [single-file components](https://vuejs.org/v2/guide/single-file-components.html). To use them in your project you need a build tool like webpack. Check out [#35](../../issues/35) for a simpler example you can use right in the browser.
+
 You need to include a script and CSS file. You can pull both from [unpkg.com](https://unpkg.com). Make sure to replace `[VERSION]` with the version you need (for example `1.0.1`):
 
 ```html
@@ -327,3 +329,4 @@ Vue.component('my-component', {
   // ...
 )
 ```
+
