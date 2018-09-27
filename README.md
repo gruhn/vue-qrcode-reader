@@ -56,6 +56,20 @@ A Vue.js 2 component, accessing the device camera and allowing users to read QR 
 * on iOS it **only** works with Safari. Chrome or Firefox for iOS are not supported (see [#29](../../issues/29))
 * more details on [Caniuse](https://caniuse.com/#feat=stream)
 
+# API
+
+| Prop      | Valid Types           |
+|-----------|-----------------------|
+| `:track`  | `Boolean`, `Function` |
+| `:paused` | `Boolean`             |
+| `:camera` | `Boolean`, `Object`   |
+
+| Event     | Payload Type      |
+|-----------|-------------------|
+| `@decode` | `String`          |
+| `@detect` | `Promise<Object>` |
+| `@init`   | `Promise<void>`   |
+
 # Usage
 
 ### `decode` event
@@ -168,26 +182,24 @@ Say you want to paint in a different color that better fits your overall page th
 ```javascript
 methods: {
   repaintLocation (location, ctx) {
-    if (location !== null) {
-      const {
-        topLeftCorner,
-        topRightCorner,
-        bottomLeftCorner,
-        bottomRightCorner,
-      } = location
+    const {
+      topLeftCorner,
+      topRightCorner,
+      bottomLeftCorner,
+      bottomRightCorner,
+    } = location
 
-      ctx.strokeStyle = 'blue' // instead of red
+    ctx.strokeStyle = 'blue' // instead of red
 
-      ctx.beginPath()
-      ctx.moveTo(topLeftCorner.x, topLeftCorner.y)
-      ctx.lineTo(bottomLeftCorner.x, bottomLeftCorner.y)
-      ctx.lineTo(bottomRightCorner.x, bottomRightCorner.y)
-      ctx.lineTo(topRightCorner.x, topRightCorner.y)
-      ctx.lineTo(topLeftCorner.x, topLeftCorner.y)
-      ctx.closePath()
+    ctx.beginPath()
+    ctx.moveTo(topLeftCorner.x, topLeftCorner.y)
+    ctx.lineTo(bottomLeftCorner.x, bottomLeftCorner.y)
+    ctx.lineTo(bottomRightCorner.x, bottomRightCorner.y)
+    ctx.lineTo(topRightCorner.x, topRightCorner.y)
+    ctx.lineTo(topLeftCorner.x, topLeftCorner.y)
+    ctx.closePath()
 
-      ctx.stroke()
-    }
+    ctx.stroke()
   }
 }
 ```
