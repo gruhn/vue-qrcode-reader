@@ -187,6 +187,9 @@ methods: {
       topRightCorner,
       bottomLeftCorner,
       bottomRightCorner,
+      // topLeftFinderPattern,
+      // topRightFinderPattern,
+      // bottomLeftFinderPattern
     } = location
 
     ctx.strokeStyle = 'blue' // instead of red
