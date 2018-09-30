@@ -58,11 +58,11 @@ A Vue.js 2 component, accessing the device camera and allowing users to read QR 
 
 # API
 
-| Prop      | Valid Types           |
-|-----------|-----------------------|
-| `:track`  | `Boolean`, `Function` |
-| `:paused` | `Boolean`             |
-| `:camera` | `Boolean`, `Object`   |
+| Prop      | Valid Types           | Default                   |
+|-----------|-----------------------|---------------------------|
+| `:track`  | `Boolean`, `Function` | `true`                    |
+| `:paused` | `Boolean`             | `false`                   |
+| `:camera` | `Boolean`, `Object`   | see [Usage](#camera-prop) |
 
 | Event     | Payload Type      |
 |-----------|-------------------|
