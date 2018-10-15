@@ -316,14 +316,9 @@ Vue.component('my-component', {
 
 > All the examples on the demo page utilize [single-file components](https://vuejs.org/v2/guide/single-file-components.html). To use them in your project you need a build tool like webpack. Check out [#35](../../issues/35) for a simpler example you can use right in the browser.
 
-You need to include a script and CSS file. You can pull both from [unpkg.com](https://unpkg.com). Make sure to replace `[VERSION]` with the version you need (for example `1.0.1`):
-
-```html
-<link rel="stylesheet" href="https://unpkg.com/vue-qrcode-reader@[VERSION]/dist/vue-qrcode-reader.css"/>
-
-<script src="vue.js"></script>
-<script src="https://unpkg.com/vue-qrcode-reader@[VERSION]/dist/vue-qrcode-reader.browser.js"></script>
-```
+Besides Vue you need to include the following CSS and JS file:
+ * `<link href="`[vue-qrcode-reader.css](https://unpkg.com/vue-qrcode-reader/dist/vue-qrcode-reader.css)`"  rel="stylesheet">`
+ * `<script src="`[vue-qrcode-reader.browser.js](https://unpkg.com/vue-qrcode-reader/dist/vue-qrcode-reader.browser.js)`"></script>`
 
 The plugin should be auto-installed. If not, you can install it manually.
 
