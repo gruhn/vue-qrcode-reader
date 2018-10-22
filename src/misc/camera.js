@@ -40,9 +40,6 @@ export default async function (constraints, videoEl) {
     videoEl.src = stream
   }
 
-  videoEl.playsInline = true
-  videoEl.play() // firefox does not emit `loadeddata` if video not playing
-
   await streamLoaded
 
   return new Camera(videoEl, stream)
