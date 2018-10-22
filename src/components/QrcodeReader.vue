@@ -26,6 +26,9 @@
         ref="video"
         v-show="shouldScan"
         class="qrcode-reader__camera"
+        autoplay
+        muted
+        playsinline
       ></video>
     </div>
   </div>
