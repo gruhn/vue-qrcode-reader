@@ -1,15 +1,11 @@
 <template lang="html">
   <div class="qrcode-reader">
     <div class="qrcode-reader__inner-wrapper">
-      <div
-        class="qrcode-reader__overlay"
-        @drop.prevent.stop="onDrop"
-        @dragover.prevent.stop
-        @dragenter.prevent.stop
-        @dragleave.prevent.stop
-      >
+      <QrcodeDropZone
+        @detect="onDetect"
+        class="qrcode-reader__overlay">
         <slot></slot>
-      </div>
+      </QrcodeDropZone>
 
       <canvas
         ref="trackingLayer"
@@ -35,12 +31,17 @@
 </template>
 
 <script>
-import * as Scanner from '../misc/scanner.js'
+import { keepScanning } from '../misc/scanner.js'
 import Camera from '../misc/camera.js'
-import { imageDataFromFile, imageDataFromUrl } from '../misc/image-data.js'
 import isBoolean from 'lodash/isBoolean'
+import QrcodeDropZone from './QrcodeDropZone.vue'
+import CommonAPI from '../mixins/CommonAPI.vue'
 
 export default {
+
+  components: { QrcodeDropZone },
+
+  mixins: [ CommonAPI ],
 
   props: {
     paused: {
@@ -210,9 +211,16 @@ export default {
     },
 
     startScanning () {
-      Scanner.keepScanning(this.cameraInstance, {
+      const detectHandler = promise => {
+        this.onDetect(async () => {
+          const result = await promise
+          return { source: 'stream', ...result }
+        })
+      }
+
+      keepScanning(this.cameraInstance, {
+        detectHandler,
         locateHandler: this.onLocate,
-        detectHandler: scanResult => this.onDetect('stream', scanResult),
         shouldContinue: () => this.shouldScan,
         minDelay: this.scanInterval,
       })
@@ -233,54 +241,6 @@ export default {
           this.repaintTrackingLayer(location)
         }
       }
-    },
-
-    async onDetect (source, promise) {
-      this.$emit('detect', (async () => {
-        const data = await promise
-
-        return { source, ...data }
-      })())
-
-      try {
-        const { content } = await promise
-
-        if (content !== null) {
-          this.$emit('decode', content)
-        }
-      } catch (error) {
-        // fail silently
-      }
-    },
-
-    onDrop ({ dataTransfer }) {
-      const droppedFiles = [...dataTransfer.files]
-
-      droppedFiles.forEach(this.onDropFile)
-
-      const droppedUrl = dataTransfer.getData('text')
-
-      if (droppedUrl !== '') {
-        this.onDropUrl(droppedUrl)
-      }
-    },
-
-    async onDropFile (file) {
-      this.onDetect('file', (async () => {
-        const imageData = await imageDataFromFile(file)
-        const scanResult = await Scanner.scan(imageData)
-
-        return scanResult
-      })())
-    },
-
-    async onDropUrl (url) {
-      this.onDetect('url', (async () => {
-        const imageData = await imageDataFromUrl(url)
-        const scanResult = await Scanner.scan(imageData)
-
-        return scanResult
-      })())
     },
 
     /**

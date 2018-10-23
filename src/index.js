@@ -1,4 +1,5 @@
 import QrcodeReader from './components/QrcodeReader.vue'
+// import QrcodeDropZone from './components/QrcodeDropZone.vue'
 
 // Install the components
 export function install (Vue) {
@@ -6,7 +7,10 @@ export function install (Vue) {
 }
 
 // Expose the components
-export { QrcodeReader }
+export {
+  QrcodeReader,
+  // QrcodeDropZone,
+}
 
 /* -- Plugin definition & Auto-install -- */
 /* You shouldn't have to modify the code below */
