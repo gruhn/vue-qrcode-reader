@@ -1,14 +1,18 @@
 import QrcodeReader from './components/QrcodeReader.vue'
+import QrcodeCapture from './components/QrcodeCapture.vue'
 // import QrcodeDropZone from './components/QrcodeDropZone.vue'
 
 // Install the components
 export function install (Vue) {
   Vue.component('qrcode-reader', QrcodeReader)
+  Vue.component('qrcode-capture', QrcodeCapture)
+  // Vue.component('qrcode-drop-zone', QrcodeDropZone)
 }
 
 // Expose the components
 export {
   QrcodeReader,
+  QrcodeCapture,
   // QrcodeDropZone,
 }
 
