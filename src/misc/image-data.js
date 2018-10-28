@@ -4,26 +4,31 @@ import { hasFired } from './promisify.js'
 const canvas = document.createElement('canvas')
 const canvasCtx = canvas.getContext('2d')
 
+canvas.width = 1920
+canvas.height = 1080
+
+function imageDataFromCanvas (canvasImageSource, width, height) {
+  const scalingRatio = Math.min(1, canvas.width / width, canvas.height / height)
+  const widthScaled = scalingRatio * width
+  const heightScaled = scalingRatio * height
+
+  canvasCtx.drawImage(canvasImageSource, 0, 0, widthScaled, heightScaled)
+
+  return canvasCtx.getImageData(0, 0, widthScaled, heightScaled)
+}
+
 export function imageDataFromImage (imageElement) {
-  canvas.width = imageElement.naturalWidth
-  canvas.height = imageElement.naturalHeight
+  const width = imageElement.naturalWidth
+  const height = imageElement.naturalHeight
 
-  const bounds = [0, 0, canvas.width, canvas.height]
-
-  canvasCtx.drawImage(imageElement, ...bounds)
-
-  return canvasCtx.getImageData(...bounds)
+  return imageDataFromCanvas(imageElement, width, height)
 }
 
 export function imageDataFromVideo (videoElement) {
-  canvas.width = videoElement.videoWidth
-  canvas.height = videoElement.videoHeight
+  const width = videoElement.videoWidth
+  const height = videoElement.videoHeight
 
-  const bounds = [0, 0, canvas.width, canvas.height]
-
-  canvasCtx.drawImage(videoElement, ...bounds)
-
-  return canvasCtx.getImageData(...bounds)
+  return imageDataFromCanvas(videoElement, width, height)
 }
 
 export async function imageDataFromUrl (url) {
