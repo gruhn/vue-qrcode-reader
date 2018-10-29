@@ -211,11 +211,10 @@ export default {
     },
 
     startScanning () {
-      const detectHandler = promise => {
-        this.onDetect(async () => {
-          const result = await promise
-          return { source: 'stream', ...result }
-        })
+      const detectHandler = result => {
+        this.onDetect(
+          Promise.resolve({ source: 'stream', ...result })
+        )
       }
 
       keepScanning(this.cameraInstance, {
