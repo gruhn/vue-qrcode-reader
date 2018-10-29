@@ -58,7 +58,7 @@ methods: {
 }
 ```
 
-### [Demos](https://gruhn.github.io/vue-qrcode-reader/) | [Docu](https://github.com/gruhn/vue-qrcode-reader/wiki)
+### [Demos](https://gruhn.github.io/vue-qrcode-reader/) | [Docs](https://github.com/gruhn/vue-qrcode-reader/wiki)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/screenshot1.png" height="500" alt="Screenshot 1">
