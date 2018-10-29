@@ -29,6 +29,12 @@
   <a href="https://github.com/Naereen/badges">
     <img src="https://img.shields.io/badge/badges-awesome-green.svg" alt="badges = awesome">
   </a>
+
+  <br>
+
+  <a href="https://bundlephobia.com/result?p=vue-qrcode-reader">
+    <img src="https://badgen.net/bundlephobia/minzip/vue-qrcode-reader" alt="size minified + gzipped">
+  </a>
 </p>
 
 A set of Vue.js components, allowing you to detect and decode QR codes, without leaving the browser.
