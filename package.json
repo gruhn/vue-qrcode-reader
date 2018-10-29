@@ -12,7 +12,8 @@
     "vue-component",
     "qrcode",
     "qrcode-reader",
-    "qrcode-scanner"
+    "qrcode-scanner",
+    "webrtc"
   ],
   "license": "MIT",
   "main": "dist/vue-qrcode-reader.common.js",
@@ -84,7 +85,6 @@
   "dependencies": {
     "babel-runtime": "^6.26.0",
     "jsqr": "^1.1.0",
-    "lodash": "^4.17.4",
     "webrtc-adapter": "^6.2.1"
   }
 }

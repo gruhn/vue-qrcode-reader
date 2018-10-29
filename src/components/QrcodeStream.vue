@@ -32,7 +32,7 @@
 <script>
 import { keepScanning } from '../misc/scanner.js'
 import Camera from '../misc/camera.js'
-import isBoolean from 'lodash/isBoolean'
+import { isBoolean, emptyObject } from '../misc/util.js'
 import CommonAPI from '../mixins/CommonAPI.vue'
 
 export default {
@@ -47,7 +47,7 @@ export default {
 
     camera: {
       type: [Object, Boolean],
-      default: () => ({}), // empty object
+      default: emptyObject
     },
 
     track: {
@@ -164,6 +164,7 @@ export default {
       deep: true,
 
       handler () {
+        debugger
         this.$emit('init', this.init())
       },
     },

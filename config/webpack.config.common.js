@@ -20,7 +20,6 @@ module.exports = merge(base, {
     'jsqr': 'jsqr',
     'babel-runtime': 'babel-runtime',
     'webrtc-adapter': 'webrtc-adapter',
-    'lodash/isBoolean': 'lodash/isBoolean',
   },
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
