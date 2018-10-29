@@ -1,3 +1,4 @@
+import { StreamApiNotSupportedError } from './errors.js'
 import { imageDataFromVideo } from './image-data.js'
 import { hasFired } from './promisify.js'
 
@@ -22,7 +23,7 @@ class Camera {
 
 export default async function (constraints, videoEl) {
   if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
-    throw new Error('WebRTC API not supported in this browser')
+    throw new StreamApiNotSupportedError()
   }
 
   const stream = await navigator.mediaDevices.getUserMedia(constraints)

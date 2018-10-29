@@ -14,3 +14,11 @@ export class DropImageDecodeError extends Error {
     this.name = 'DropImageDecodeError'
   }
 }
+
+export class StreamApiNotSupportedError extends Error {
+  constructor () {
+    super('this browser has no Stream API support')
+
+    this.name = 'StreamApiNotSupportedError'
+  }
+}
