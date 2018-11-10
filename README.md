@@ -78,8 +78,10 @@ This component fundamentally depends on the [Stream API](https://caniuse.com/#fe
 
 * Chrome requires [HTTPS or localhost](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins) (see [#38](../../issues/38) for help)
 * Safari also requires HTTPS **even** on localhost (see [#48](../../issues/48))
-* on iOS it **only** works with Safari. Chrome or Firefox for iOS are not supported (see [#29](../../issues/29))
-
+* on iOS it **only** works with Safari
+  * *Chrome for iOS*, *Firefox for iOS* and so on are not supported (see [#29](../../issues/29))
+  * even web apps added to home screen are not supported (see [#76](../../issues/76))
+  
 #### `QrcodeDropZone` and `QrcodeCapture`
 
 The newest API these components depend on is the [FileReader API](https://caniuse.com/#feat=filereader).
