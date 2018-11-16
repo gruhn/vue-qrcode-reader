@@ -1,0 +1,19 @@
+{
+  "name": "vue-qrcode-reader-docs",
+  "version": "1.0.0",
+  "description": "Docs and demos for vue-qrcode-reader",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vuepress dev docs",
+    "build": "vuepress build docs",
+    "deploy": "./deploy.sh"
+  },
+  "author": "Niklas Gruhn",
+  "license": "MIT",
+  "devDependencies": {
+    "vuepress": "^0.14.5"
+  },
+  "dependencies": {
+    "vue-qrcode-reader": "^1.3.0"
+  }
+}
