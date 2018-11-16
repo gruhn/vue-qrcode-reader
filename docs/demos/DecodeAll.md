@@ -1,4 +1,4 @@
-# Decode continiously
+# Decode continuously
 
 <DemoWrapper component="DecodeAll" />
 
