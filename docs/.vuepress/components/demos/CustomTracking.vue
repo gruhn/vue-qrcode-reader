@@ -1,5 +1,5 @@
 <template>
-  <qrcode-stream :track="repaint" @init="$emit('init', $event)" />
+  <qrcode-stream :track="repaint" @init="logErrors" />
 </template>
 
 <script>
@@ -28,10 +28,10 @@ export default {
       }
     },
 
-    onInit (promise) {
+    logErrors (promise) {
       promise.catch(console.error)
     }
   }
-  
+
 }
 </script>

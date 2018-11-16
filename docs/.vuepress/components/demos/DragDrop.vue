@@ -6,7 +6,7 @@
       {{ error }}
     </p>
 
-    <qrcode-drop-zone @detect="onDetect" @dragover="onDragOver">
+    <qrcode-drop-zone @detect="onDetect" @dragover="onDragOver" @init="logErrors">
       <div class="drop-area" :class="{ 'dragover': dragover }">
         DROP SOME IMAGES HERE
       </div>
@@ -40,6 +40,10 @@ export default {
           this.error = 'Ups, what kind of error is this?! ' + error.message
         }
       }
+    },
+
+    logErrors (promise) {
+      promise.catch(console.error)
     },
 
     onDragOver (isDraggingOver) {

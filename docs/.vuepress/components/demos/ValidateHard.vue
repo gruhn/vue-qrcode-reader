@@ -80,14 +80,16 @@ export default {
     },
 
     async onInit (promise) {
-      if (this.firstload) {
-        this.$emit('init', promise)
-      }
-
       this.loading = true
-      await promise
-      this.loading = false
-      this.firstLoad = false
+
+      try {
+        await promise
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.firstLoad = false
+        this.loading = false
+      }
     }
 
   }

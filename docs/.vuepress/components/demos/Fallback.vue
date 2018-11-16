@@ -2,7 +2,7 @@
   <div>
     <p class="decode-result">Last result: <b>{{ result }}</b></p>
 
-    <qrcode-drop-zone @decode="onDecode">
+    <qrcode-drop-zone @decode="onDecode" @init="logErrors">
       <qrcode-stream @decode="onDecode" @init="onInit" />
     </qrcode-drop-zone>
 
@@ -22,6 +22,10 @@ export default {
   methods: {
     onDecode (result) {
       this.result = result
+    },
+
+    logErrors (promise) {
+      promise.catch(console.error)
     },
 
     async onInit (promise) {

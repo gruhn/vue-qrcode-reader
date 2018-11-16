@@ -1,5 +1,5 @@
 <template>
-  <component :is="currentDemo" @init="" />
+  <component :is="currentDemo" />
 </template>
 
 <script>

@@ -2,7 +2,7 @@
   <div>
     <p class="decode-result">Last result: <b>{{ result }}</b></p>
 
-    <qrcode-stream :paused="paused" @decode="onDecode" @init="$emit('init', $event)">
+    <qrcode-stream :paused="paused" @decode="onDecode" @init="logErrors">
       <div v-show="paused" class="validation-layer">
         <div class="validation-notice">
           <div v-if="validating">
@@ -67,6 +67,10 @@ export default {
           }
         }, 3000)
       })
+    },
+
+    logErrors (promise) {
+      promise.catch(console.error)
     }
 
   }
