@@ -47,7 +47,7 @@ export default {
 
     camera: {
       type: [Object, Boolean],
-      default: emptyObject
+      default: emptyObject,
     },
 
     track: {
@@ -164,7 +164,6 @@ export default {
       deep: true,
 
       handler () {
-        debugger
         this.$emit('init', this.init())
       },
     },
