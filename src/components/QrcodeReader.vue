@@ -1,3 +1,6 @@
+
+<!-- DEPRECATED: use QrcodeStream instead -->
+
 <template lang="html">
   <div class="qrcode-reader">
     <div class="qrcode-reader__inner-wrapper">
