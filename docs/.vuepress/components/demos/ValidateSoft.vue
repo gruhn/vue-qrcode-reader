@@ -9,11 +9,11 @@
             Long validation in progress...
           </div>
 
-          <div v-else-if="isValid" class="text-success">
+          <div v-else-if="isValid" class="valid">
             This is a URL
           </div>
 
-          <div v-else class="text-danger">
+          <div v-else class="invalid">
             This is NOT a URL!
           </div>
         </div>
@@ -95,5 +95,12 @@ export default {
 .validation-notice {
   font-weight: bold;
   font-size: 1.4rem;
+}
+
+.valid {
+  color: green;
+}
+.invalid {
+  color: red;
 }
 </style>
