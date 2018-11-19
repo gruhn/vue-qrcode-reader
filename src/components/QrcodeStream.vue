@@ -1,22 +1,6 @@
 <template lang="html">
   <div class="qrcode-stream">
     <div class="qrcode-stream__inner-wrapper">
-      <div
-        class="qrcode-stream__overlay">
-        <slot></slot>
-      </div>
-
-      <canvas
-        ref="trackingLayer"
-        class="qrcode-stream__tracking-layer"
-      ></canvas>
-
-      <canvas
-        ref="pauseFrame"
-        v-show="!shouldScan"
-        class="qrcode-stream__pause-frame"
-      ></canvas>
-
       <video
         ref="video"
         v-show="shouldScan"
@@ -25,6 +9,21 @@
         muted
         playsinline
       ></video>
+
+      <canvas
+        ref="pauseFrame"
+        v-show="!shouldScan"
+        class="qrcode-stream__pause-frame"
+      ></canvas>
+
+      <canvas
+        ref="trackingLayer"
+        class="qrcode-stream__tracking-layer"
+      ></canvas>
+
+      <div class="qrcode-stream__overlay">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -309,6 +308,7 @@ export default {
   position: relative;
   max-width: 100%;
   max-height: 100%;
+  z-index: 0;
 }
 
 .qrcode-stream__overlay,
@@ -326,13 +326,5 @@ export default {
   object-fit: contain;
   max-width: 100%;
   max-height: 100%;
-}
-
-.qrcode-stream__overlay {
-  z-index: 30;
-}
-
-.qrcode-stream__tracking-layer {
-  z-index: 20;
 }
 </style>
