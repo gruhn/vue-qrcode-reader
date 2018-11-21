@@ -1,7 +1,8 @@
-<p align="center">
+<p align="center">  
   <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/logo.png" alt="Logo" width="240" height="240" style="max-width: 100%;">
   
-  <br><br>
+  <br>
+  <br>
   
   <a href="https://vuejs.org/">
     <img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg" alt="for Vue.js 2">
