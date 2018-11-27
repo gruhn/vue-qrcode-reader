@@ -100,6 +100,13 @@ The newest API these components depend on is the [FileReader API](https://canius
 
 * Drag-and-drop is not supported on mobile
 
+# Troubleshooting
+
+* I don't see the camera when using `QrcodeStream`.
+  * Check if it works on the demo page. Especially the [Decode All](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html) demo, since it renders error messages. If you see errors, consult the docs to understand their meaning.
+     * Demo works but not locally: Listen for the `init` event to investigate errors.
+     * Demo doesn't work: Carefully review the Browser Support section above. Maybe your device is just not supported.
+
 # Installation
 
 ```bash
