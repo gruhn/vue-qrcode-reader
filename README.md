@@ -103,7 +103,7 @@ The newest API these components depend on is the [FileReader API](https://canius
 # Installation
 
 ```bash
-npm install --save vue-qrcode-reader
+npm install vue-qrcode-reader
 ```
 or with Yarn:
 
