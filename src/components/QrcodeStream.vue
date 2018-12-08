@@ -186,6 +186,13 @@ export default {
         this.cameraInstance = null
       } else {
         this.cameraInstance = await Camera(this.constraints, this.$refs.video)
+
+        // if the component is destroyed before `cameraInstance` resolves a
+        // `beforeDestroy` hook has no chance to clear the remaining camera
+        // stream.
+        if (this.destroyed) {
+          this.cameraInstance.stop()
+        }
       }
     },
 
