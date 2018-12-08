@@ -150,7 +150,7 @@ Vue.use(VueQrcodeReader)
 
 ## Browser
 
-> All the examples on the demo page utilize [single-file components](https://vuejs.org/v2/guide/single-file-components.html). To use them in your project you need a build tool like webpack. Check out [#35](../../issues/35) for a simpler example you can use right in the browser.
+> All the examples on the demo page utilize [single-file components](https://vuejs.org/v2/guide/single-file-components.html). To use them in your project you need a build tool like webpack. Check out [this fiddle](https://jsfiddle.net/2bfohnax/) for a simpler example you can use right in the browser.
 
 Besides Vue you need to include the following CSS and JS file:
  * `<link href="`[vue-qrcode-reader.css](https://unpkg.com/vue-qrcode-reader/dist/vue-qrcode-reader.css)`"  rel="stylesheet">`
