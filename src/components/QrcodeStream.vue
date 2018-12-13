@@ -30,6 +30,7 @@
 
 <script>
 import { keepScanning } from '../misc/scanner.js'
+import { thinSquare } from '../misc/track-func.js'
 import Camera from '../misc/camera.js'
 import CommonAPI from '../mixins/CommonAPI.vue'
 import isEqual from 'lodash/isEqual'
@@ -93,26 +94,7 @@ export default {
 
     trackRepaintFunction () {
       if (this.track === true) {
-        return function (location, ctx) {
-          const {
-            topLeftCorner,
-            topRightCorner,
-            bottomLeftCorner,
-            bottomRightCorner,
-          } = location
-
-          ctx.strokeStyle = 'red'
-
-          ctx.beginPath()
-          ctx.moveTo(topLeftCorner.x, topLeftCorner.y)
-          ctx.lineTo(bottomLeftCorner.x, bottomLeftCorner.y)
-          ctx.lineTo(bottomRightCorner.x, bottomRightCorner.y)
-          ctx.lineTo(topRightCorner.x, topRightCorner.y)
-          ctx.lineTo(topLeftCorner.x, topLeftCorner.y)
-          ctx.closePath()
-
-          ctx.stroke()
-        }
+        return thinSquare({ color: 'red' })
       } else if (this.track === false) {
         return null
       } else {
