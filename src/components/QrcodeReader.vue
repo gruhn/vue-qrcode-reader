@@ -36,7 +36,7 @@
 <script>
 import { keepScanning } from '../misc/scanner.js'
 import Camera from '../misc/camera.js'
-import { isBoolean } from '../misc/util.js'
+import isBoolean from 'lodash/isBoolean'
 import QrcodeDropZone from './QrcodeDropZone.vue'
 import CommonAPI from '../mixins/CommonAPI.vue'
 

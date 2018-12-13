@@ -31,8 +31,11 @@
 <script>
 import { keepScanning } from '../misc/scanner.js'
 import Camera from '../misc/camera.js'
-import { isBoolean, emptyObject } from '../misc/util.js'
 import CommonAPI from '../mixins/CommonAPI.vue'
+import isEqual from 'lodash/isEqual'
+import isBoolean from 'lodash/isBoolean'
+import isObject from 'lodash/isObject'
+import stubObject from 'lodash/stubObject'
 
 export default {
 
@@ -46,7 +49,7 @@ export default {
 
     camera: {
       type: [Object, Boolean],
-      default: emptyObject,
+      default: stubObject,
     },
 
     track: {
@@ -59,6 +62,7 @@ export default {
     return {
       cameraInstance: null,
       destroyed: false,
+      constraints: {},
     }
   },
 
@@ -84,30 +88,6 @@ export default {
         return 500
       } else {
         return 40 // ~ 25fps
-      }
-    },
-
-    /**
-     * Full constraints object which is passed to `getUserMedia` to request a
-     * camera stream. Properties define if a certain camera is adequate or not.
-     */
-    constraints () {
-      if (isBoolean(this.camera)) {
-        return {
-          audio: false,
-          video: this.camera,
-        }
-      } else {
-        return {
-          audio: false,
-          video: {
-            facingMode: { ideal: 'environment' },
-            width: { min: 360, ideal: 640, max: 1920 },
-            height: { min: 240, ideal: 480, max: 1080 },
-
-            ...this.camera,
-          },
-        }
       }
     },
 
@@ -159,12 +139,39 @@ export default {
       }
     },
 
-    constraints: {
+    camera: {
       deep: true,
+      immediate: true,
 
-      handler () {
-        this.$emit('init', this.init())
+      handler (camera, oldValue) {
+        const deeplyEqual = isEqual(camera, oldValue)
+
+        if (deeplyEqual) {
+          // object reference changed but constraints are actually the same
+          return
+        } else if (isBoolean(camera)) {
+          this.constraints = {
+            audio: false,
+            video: camera,
+          }
+        } else if (isObject(camera)) {
+          this.constraints = {
+            audio: false,
+            video: {
+              facingMode: { ideal: 'environment' },
+              width: { min: 360, ideal: 640, max: 1920 },
+              height: { min: 240, ideal: 480, max: 1080 },
+
+              // overrides properties above if given
+              ...camera,
+            },
+          }
+        }
       },
+    },
+
+    constraints () {
+      this.$emit('init', this.init())
     },
   },
 
