@@ -23,7 +23,6 @@ export function keepScanning (camera, options) {
   const {
     detectHandler,
     locateHandler,
-    shouldContinue,
     minDelay,
   } = options
 
@@ -36,6 +35,7 @@ export function keepScanning (camera, options) {
   // If worker can't process frames fast enough, memory will quickly full up.
   // Make sure to process only one frame at a time.
   let workerBusy = false
+  let shouldContinue = true
 
   worker.onmessage = event => {
     workerBusy = false
@@ -55,7 +55,7 @@ export function keepScanning (camera, options) {
   }
 
   const processFrame = timeNow => {
-    if (shouldContinue()) {
+    if (shouldContinue) {
       window.requestAnimationFrame(processFrame)
 
       if (timeNow - lastScanned >= minDelay) {
@@ -75,4 +75,8 @@ export function keepScanning (camera, options) {
   }
 
   processFrame()
+
+  return () => {
+    shouldContinue = false
+  }
 }

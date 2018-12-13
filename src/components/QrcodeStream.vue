@@ -64,6 +64,7 @@ export default {
       cameraInstance: null,
       destroyed: false,
       constraints: {},
+      stopScanning: () => {},
     }
   },
 
@@ -118,6 +119,8 @@ export default {
         this.clearPauseFrame()
         this.clearTrackingLayer()
         this.startScanning()
+      } else {
+        this.stopScanning()
       }
     },
 
@@ -186,16 +189,17 @@ export default {
     },
 
     startScanning () {
+      // this.stopScanning()
+
       const detectHandler = result => {
         this.onDetect(
           Promise.resolve({ source: 'stream', ...result })
         )
       }
 
-      keepScanning(this.cameraInstance, {
+      this.stopScanning = keepScanning(this.cameraInstance, {
         detectHandler,
         locateHandler: this.onLocate,
-        shouldContinue: () => this.shouldScan,
         minDelay: this.scanInterval,
       })
     },
