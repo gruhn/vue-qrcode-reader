@@ -47,9 +47,9 @@
 
 A set of Vue.js components, allowing you to detect and decode QR codes, without leaving the browser.
 
-* `QrcodeStream` accesses the device camera and continuously scans the incoming frames.
-* `QrcodeDropZone` renders to an empty region where you can drag-and-drop images to be decoded.
-* `QrcodeCapture` is a classic file upload field, instantly scanning all files you select.
+* :movie_camera: `QrcodeStream` accesses the device camera and continuously scans the incoming frames.
+* :put_litter_in_its_place: `QrcodeDropZone` renders to an empty region where you can drag-and-drop images to be decoded. 
+* :open_file_folder: `QrcodeCapture` is a classic file upload field, instantly scanning all files you select.
 
 All components are responsive. What doesn't fit your layout can be customized.
 
@@ -66,7 +66,7 @@ methods: {
 }
 ```
 
-### [demos & docs](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html)
+### [Live Demos](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html) | [Documentation](https://gruhn.github.io/vue-qrcode-reader/api/QrcodeStream.html)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/screenshot1.png" height="500" alt="Screenshot 1">
