@@ -4,8 +4,10 @@ import Worker from 'worker-loader?inline=true&fallback=false!./worker.js'
 export function scan (imageData) {
   const worker = new Worker()
 
+
   return new Promise(resolve => {
     worker.onmessage = event => {
+
       resolve(event.data)
 
       worker.terminate()
