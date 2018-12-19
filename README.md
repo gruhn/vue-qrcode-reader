@@ -108,7 +108,7 @@ The newest API these components depend on is the [FileReader API](https://canius
      * Demo doesn't work: Carefully review the Browser Support section above. Maybe your device is just not supported.
 * I can't test my app on my mobile device since I'm running a dev server on localhost but it's not served with HTTPS.
   * If your setup is Desktop Chrome + Android Chrome, use [Remote Debugging](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/) which allows your Android device to [access your local server as localhost](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/local-server).
-  * Otherwise use a reverse proxy like [ngrok](https://ngrok.com/) to temporatily make your local server publicly available with HTTPS.
+  * Otherwise use a reverse proxy like [ngrok](https://ngrok.com/) to temporarily make your local server publicly available with HTTPS.
 
 # Installation
 
