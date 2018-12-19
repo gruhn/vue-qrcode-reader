@@ -84,7 +84,7 @@ This component fundamentally depends on the [Stream API](https://caniuse.com/#fe
 |:--:|:---:|:---:|:---:|:---:|
 | No | Yes | Yes | Yes | 11+ |
 
-* Chrome requires [HTTPS or localhost](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins) (see [#38](../../issues/38) for help)
+* Chrome requires [HTTPS or localhost](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins) (see _Troubleshooting_ for help)
 * Safari also requires HTTPS **even** on localhost (see [#48](../../issues/48))
 * on iOS it **only** works with Safari
   * *Chrome for iOS*, *Firefox for iOS* and so on are not supported (see [#29](../../issues/29))
@@ -106,6 +106,9 @@ The newest API these components depend on is the [FileReader API](https://canius
   * Check if it works on the demo page. Especially the [Decode All](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html) demo, since it renders error messages. If you see errors, consult the docs to understand their meaning.
      * Demo works but not locally: Listen for the `init` event to investigate errors.
      * Demo doesn't work: Carefully review the Browser Support section above. Maybe your device is just not supported.
+* I can't test my app on my mobile device since I'm running a dev server on localhost but it's not served with HTTPS.
+  * If your setup is Desktop Chrome + Android Chrome, use [Remote Debugging](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/) which allows your Android device to [access your local server as localhost](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/local-server).
+  * Otherwise use a reverse proxy like [ngrok](https://ngrok.com/) to temporatily make your local server publicly available with HTTPS.
 
 # Installation
 
