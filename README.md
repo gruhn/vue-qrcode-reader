@@ -110,6 +110,10 @@ The newest API these components depend on is the [FileReader API](https://canius
   * If your setup is Desktop Chrome + Android Chrome, use [Remote Debugging](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/) which allows your Android device to [access your local server as localhost](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/local-server).
   * Otherwise use a reverse proxy like [ngrok](https://ngrok.com/) or [serveo](https://serveo.net/) to temporarily make your local server publicly available with HTTPS.
 
+# Deployment
+
+  * Deploy your app using [netlify](https://www.netlify.com/) or [firebase](https://firebase.google.com). Netlify has many awesome features like Automate Deployment, Automatic HTTPS, Custom Domain and Sub Domain at FREE cost.
+
 # Installation
 
 ```bash
