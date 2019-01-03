@@ -88,6 +88,7 @@
     "babel-runtime": "^6.26.0",
     "jsqr": "^1.1.0",
     "lodash": "^4.17.11",
+    "rgba-to-canvas": "^1.0.1",
     "webrtc-adapter": "^6.2.1"
   }
 }

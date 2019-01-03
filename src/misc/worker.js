@@ -51,8 +51,9 @@ self.addEventListener('message', function (event) {
 })
 
 
+
 function toGrayscaleBuffer(imageBuffer, width, height) {
-  const grayscaleBuffer = new Uint8ClampedArray(width * height);
+  const grayscaleBuffer = new Uint8ClampedArray(width * height * 4);
   for (let i = 0, j = 0, length = imageBuffer.length; i < length; i += 4, j++) {
     let gray;
     const alpha = imageBuffer[i + 3];
@@ -72,6 +73,16 @@ function toGrayscaleBuffer(imageBuffer, width, height) {
         601 * pixelG +
         117 * pixelB +
         0x200) >> 10;
+
+      // gray = Math.max(pixelR, pixelG, pixelB);
+      // if (gray < 100) {
+      //   gray = 0;
+      // }
+      //
+      // if (gray > 155) {
+      //   gray = 255;
+      // }
+
     }
     grayscaleBuffer[j] = gray;
   }

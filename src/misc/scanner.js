@@ -1,5 +1,7 @@
 import 'webrtc-adapter'
 import Worker from 'worker-loader?inline=true&fallback=false!./worker.js'
+import rgbaToCanvas from 'rgba-to-canvas'
+
 
 export function scan (imageData) {
   const worker = new Worker()
