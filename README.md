@@ -112,7 +112,7 @@ The newest API these components depend on is the [FileReader API](https://canius
 
 # Deployment
 
-  * Deploy your app using [netlify](https://www.netlify.com/) or [firebase](https://firebase.google.com).
+  * Deploy your app using [netlify](https://www.netlify.com/) or [firebase](https://firebase.google.com) at Free cost.
 
 # Installation
 
