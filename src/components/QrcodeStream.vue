@@ -166,6 +166,7 @@ export default {
 
   beforeDestroy () {
     this.beforeResetCamera()
+    this.stopScanning()
     this.destroyed = true
   },
 
@@ -189,14 +190,13 @@ export default {
     },
 
     startScanning () {
-      // this.stopScanning()
-
       const detectHandler = result => {
         this.onDetect(
           Promise.resolve({ source: 'stream', ...result })
         )
       }
 
+      // this.stopScanning()
       this.stopScanning = keepScanning(this.cameraInstance, {
         detectHandler,
         locateHandler: this.onLocate,
