@@ -31,7 +31,7 @@ export default {
       const imageData = await imageDataFromFile(file);
       const scanResult = await scan(imageData);
 
-      return { source: "file", ...scanResult };
+      return scanResult;
     }
   }
 };

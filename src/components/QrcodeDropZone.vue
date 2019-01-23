@@ -41,14 +41,14 @@ export default {
       const imageData = await imageDataFromFile(file);
       const scanResult = await scan(imageData);
 
-      return { source: "file", ...scanResult };
+      return scanResult;
     },
 
     async processUrl(url) {
       const imageData = await imageDataFromUrl(url);
       const scanResult = await scan(imageData);
 
-      return { source: "url", ...scanResult };
+      return scanResult;
     },
 
     async processUrl(url) {
