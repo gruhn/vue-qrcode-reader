@@ -5,7 +5,7 @@
 ### `decode`
 * **Payload Type:** `String`
 
-Once a stream from the users camera is loaded, it is displayed and continuously scanned for QR codes. Results are indicated by the `decode` event. This also accounts for decoded images drag-and-dropped in the area the component occupies.
+Once a stream from the users camera is loaded, it's displayed and continuously scanned for QR codes. Results are indicated by the `decode` event.
 
 ```html
 <qrcode-stream @decode="onDecode"></qrcode-stream>
@@ -19,7 +19,7 @@ methods: {
 ```
 
 ::: warning
-You might notice that when you scan the same QR code multiple times in a row, `decode` is still only emitted once. When you hold a QR code in the camera, frames are actually decoded multiple times a second but you don't want to be flooded with `decode` events that often. That's why the last decoded QR code is always cached and only new results are propagated. However when you activate `paused` or modify the `camera` prop, this internal cache is cleared.
+If you scan the same QR code multiple times in a row, `decode` is still only emitted once. When you hold a QR code in the camera, frames are actually decoded multiple times a second but you don't want to be flooded with `decode` events that often. That's why the last decoded QR code is always cached and only new results are propagated. However setting `paused` to `true` or changing the value of `camera` resets this internal cache.
 :::
 
 ### `detect`
@@ -137,7 +137,7 @@ By default detected QR codes are visually highlighted. A transparent canvas over
 You can also pass a function with `track` to customize the way the location is painted. This function is called to produce each frame. It receives the location object as the first argument and a `CanvasRenderingContext2D` instance as the second argument.
 
 ::: danger
-Avoid access to reactive properties in this function (like stuff in `data`, `computed` or your Vuex store). The function is called several times a second and might cause memory leaks. If you want to be safe don't access `this` at all.
+Avoid access to reactive properties in this function (like stuff in `data`, `computed` or your Vuex store). The function is called several times a second and might cause memory leaks. To be safe don't access `this` at all.
 :::
 
 Say you want to paint in a different color that better fits your overall page theme.
