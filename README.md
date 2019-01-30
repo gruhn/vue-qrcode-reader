@@ -43,6 +43,11 @@
   <a href="https://github.com/semantic-release/semantic-release">
     <img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" alt="uses semantic release">
   </a>
+  
+  <br>
+  <br>
+  <a href="https://gruhn.github.io/vue-qrcode-reader/api/QrcodeStream.html">documentation</a> |
+  <a href="https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html">live demos</a>
 </p>
 
 A set of Vue.js components, allowing you to detect and decode QR codes, without leaving the browser.
@@ -65,8 +70,7 @@ methods: {
   }
 }
 ```
-
-### [Live Demos](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html) | [Documentation](https://gruhn.github.io/vue-qrcode-reader/api/QrcodeStream.html)
+### Screenshots
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/screenshot1.png" height="500" alt="Screenshot 1">
