@@ -52,13 +52,11 @@
 
 A set of Vue.js components, allowing you to detect and decode QR codes, without leaving the browser.
 
-* :movie_camera: `QrcodeStream` accesses the device camera and continuously scans the incoming frames.
+* :movie_camera: `QrcodeStream` accesses the device camera and continuously scans incoming frames.
 * :put_litter_in_its_place: `QrcodeDropZone` renders to an empty region where you can drag-and-drop images to be decoded. 
 * :open_file_folder: `QrcodeCapture` is a classic file upload field, instantly scanning all files you select.
 
-All components are responsive. What doesn't fit your layout can be customized.
-
-You also get simple elegant APIs:
+All components are responsive. Beyond that, close to zero styling. Make them fit your layout. Usage is simple and straight forward:
 
 ```html
 <qrcode-stream @decode="onDecode"></qrcode-stream>
@@ -110,7 +108,7 @@ The newest API these components depend on is the [FileReader API](https://canius
   * Check if it works on the demo page. Especially the [Decode All](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html) demo, since it renders error messages. If you see errors, consult the docs to understand their meaning.
      * Demo works but not locally: Listen for the `init` event to investigate errors.
      * Demo doesn't work: Carefully review the Browser Support section above. Maybe your device is just not supported.
-* I can't test my app on my mobile device since I'm running a dev server on localhost but it's not served with HTTPS.
+* I'm running a dev server on localhost. How to test on my mobile device without HTTPS?
   * If your setup is Desktop Chrome + Android Chrome, use [Remote Debugging](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/) which allows your Android device to [access your local server as localhost](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/local-server).
   * Otherwise use a reverse proxy like [ngrok](https://ngrok.com/) or [serveo](https://serveo.net/) to temporarily make your local server publicly available with HTTPS.
 
