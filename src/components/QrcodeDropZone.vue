@@ -1,9 +1,9 @@
 <template lang="html">
   <div
     @drop.prevent.stop="onDrop"
-    @dragover.prevent.stop
-    @dragenter.prevent.stop
-    @dragleave.prevent.stop>
+    @dragenter.prevent.stop="onDragOver(true)"
+    @dragleave.prevent.stop="onDragOver(false)"
+    @dragover.prevent.stop>
     <slot></slot>
   </div>
 </template>
@@ -18,7 +18,13 @@ export default {
   mixins: [ CommonAPI ],
 
   methods: {
+    onDragOver (isDraggingOver) {
+      this.$emit('dragover', isDraggingOver)
+    },
+
     onDrop ({ dataTransfer }) {
+      this.onDragOver(false)
+
       const droppedFiles = [...dataTransfer.files]
       const droppedUrl = dataTransfer.getData('text')
 
