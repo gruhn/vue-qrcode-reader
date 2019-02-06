@@ -1,10 +1,10 @@
 <template lang="html">
-  <div class="qrcode-stream">
-    <div class="qrcode-stream__inner-wrapper">
+  <div class="wrapper">
+    <div class="inside">
       <video
         ref="video"
         v-show="shouldScan"
-        class="qrcode-stream__camera"
+        class="camera"
         autoplay
         muted
         playsinline
@@ -13,15 +13,15 @@
       <canvas
         ref="pauseFrame"
         v-show="!shouldScan"
-        class="qrcode-stream__pause-frame"
+        class="pause-frame"
       ></canvas>
 
       <canvas
         ref="trackingLayer"
-        class="qrcode-stream__tracking-layer"
+        class="tracking-layer"
       ></canvas>
 
-      <div class="qrcode-stream__overlay">
+      <div class="overlay">
         <slot></slot>
       </div>
     </div>
@@ -283,23 +283,22 @@ export default {
 };
 </script>
 
-<style lang="css">
-.qrcode-stream {
+<style lang="css" scoped>
+.wrapper {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-around;
   align-items: center;
 }
 
-.qrcode-stream__inner-wrapper {
+.inside {
   position: relative;
   max-width: 100%;
   max-height: 100%;
   z-index: 0;
 }
 
-.qrcode-stream__overlay,
-.qrcode-stream__tracking-layer {
+.overlay, .tracking-layer {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -307,8 +306,7 @@ export default {
   left: 0;
 }
 
-.qrcode-stream__camera,
-.qrcode-stream__pause-frame {
+.camera, .pause-frame {
   display: block;
   object-fit: contain;
   max-width: 100%;
