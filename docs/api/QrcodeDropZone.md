@@ -44,7 +44,7 @@ methods: {
 
       if (content === null) {
          // decoded nothing
-      } else {      
+      } else {
          // ...
       }
     } catch (error) {
@@ -60,6 +60,36 @@ methods: {
   }
 }
 ```
+
+### `dragover`
+* **Payload Type:** `Boolean`
+
+When the user is dragging something over the the component you might want to apply some emphasizing styling. Do that by reacting to the `dragover` event.
+
+```html
+<qrcode-drop-zone @dragover="onDragOver">
+  <div :class="{ highlight: draggingOver }">
+    <!-- ... -->
+  </div>
+</qrcode-drop-zone>
+```
+```javascript
+data () {
+  return {
+    draggingOver: false
+  }
+},
+
+methods: {
+  onDragOver (draggingOver) {
+    this.draggingOver = draggingOver
+  }
+}
+```
+
+::: warning
+This is a custom event not to be confused with [native `dragover`](https://developer.mozilla.org/en-US/docs/Web/Events/dragover). If you really need to listen for the DOM event instead, use [Vues `native` event modifier](https://vuejs.org/v2/guide/components-custom-events.html#Binding-Native-Events-to-Components).
+:::
 
 ## Props
 
