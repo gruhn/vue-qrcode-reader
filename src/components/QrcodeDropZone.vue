@@ -26,7 +26,7 @@ export default {
       this.onDragOver(false);
 
       const droppedFiles = [...dataTransfer.files];
-      const droppedUrl = dataTransfer.getData("text");
+      const droppedUrl = dataTransfer.getData("text/uri-list");
 
       droppedFiles.forEach(file => {
         this.onDetect(this.processFile(file));
