@@ -5,35 +5,34 @@
     name="image"
     accept="image/*"
     capture="environment"
-    multiple>
+    multiple
+  />
 </template>
 
 <script>
-import { scan } from '../misc/scanner.js'
-import { imageDataFromFile } from '../misc/image-data.js'
-import CommonAPI from '../mixins/CommonAPI.vue'
+import { scan } from "../misc/scanner.js";
+import { imageDataFromFile } from "../misc/image-data.js";
+import CommonAPI from "../mixins/CommonAPI.vue";
 
 export default {
-
-  mixins: [ CommonAPI ],
+  mixins: [CommonAPI],
 
   methods: {
-    onChangeInput (event) {
-      const files = [...event.target.files]
-      const resultPromises = files.map(this.processFile)
+    onChangeInput(event) {
+      const files = [...event.target.files];
+      const resultPromises = files.map(this.processFile);
 
-      resultPromises.forEach(this.onDetect)
+      resultPromises.forEach(this.onDetect);
 
-      console.log(Promise.all(resultPromises))
+      console.log(Promise.all(resultPromises));
     },
 
-    async processFile (file) {
-      const imageData = await imageDataFromFile(file)
-      const scanResult = await scan(imageData)
+    async processFile(file) {
+      const imageData = await imageDataFromFile(file);
+      const scanResult = await scan(imageData);
 
-      return { source: 'file', ...scanResult }
-    },
-  },
-
-}
+      return { source: "file", ...scanResult };
+    }
+  }
+};
 </script>

@@ -39,13 +39,12 @@ import isObject from 'lodash/isObject'
 import stubObject from 'lodash/stubObject'
 
 export default {
-
-  mixins: [ CommonAPI ],
+  mixins: [CommonAPI],
 
   props: {
     paused: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     camera: {
@@ -55,11 +54,11 @@ export default {
 
     track: {
       type: [Function, Boolean],
-      default: true,
-    },
+      default: true
+    }
   },
 
-  data () {
+  data() {
     return {
       cameraInstance: null,
       destroyed: false,
@@ -69,58 +68,56 @@ export default {
   },
 
   computed: {
-
-    shouldStream () {
-      return this.paused === false &&
+    shouldStream() {
+      return (
+        this.paused === false &&
         this.destroyed === false &&
         this.constraints.video !== false
     },
 
-    shouldScan () {
-      return this.shouldStream === true &&
-        this.cameraInstance !== null
+    shouldScan() {
+      return this.shouldStream === true && this.cameraInstance !== null;
     },
 
     /**
      * Minimum delay in milliseconds between frames to be scanned. Don't scan
      * so often when visual tracking is disabled to improve performance.
      */
-    scanInterval () {
+    scanInterval() {
       if (this.track === false) {
-        return 500
+        return 500;
       } else {
-        return 40 // ~ 25fps
+        return 40; // ~ 25fps
       }
     },
 
-    trackRepaintFunction () {
+    trackRepaintFunction() {
       if (this.track === true) {
-        return thinSquare({ color: 'red' })
+        return thinSquare({ color: "red" });
       } else if (this.track === false) {
-        return null
+        return null;
       } else {
-        return this.track
+        return this.track;
       }
     },
 
   },
 
   watch: {
-
-    shouldStream (shouldStream) {
+    shouldStream(shouldStream) {
       if (!shouldStream) {
-        const frame = this.cameraInstance.captureFrame()
-        this.paintPauseFrame(frame)
+        const frame = this.cameraInstance.captureFrame();
+        this.paintPauseFrame(frame);
       }
     },
 
-    shouldScan (shouldScan) {
+    shouldScan(shouldScan) {
       if (shouldScan) {
-        this.clearPauseFrame()
-        this.clearTrackingLayer()
-        this.startScanning()
+        this.clearPauseFrame();
+        this.clearTrackingLayer();
+        this.startScanning();
       } else {
-        this.stopScanning()
+        this.stopScanning();
       }
     },
 
@@ -160,36 +157,35 @@ export default {
     },
   },
 
-  mounted () {
-    this.$emit('init', this.init())
+  mounted() {
+    this.$emit("init", this.init());
   },
 
-  beforeDestroy () {
-    this.beforeResetCamera()
-    this.stopScanning()
-    this.destroyed = true
+  beforeDestroy() {
+    this.beforeResetCamera();
+    this.stopScanning();
+    this.destroyed = true;
   },
 
   methods: {
-
-    async init () {
-      this.beforeResetCamera()
+    async init() {
+      this.beforeResetCamera();
 
       if (this.constraints.video === false) {
         this.cameraInstance = null
       } else {
-        this.cameraInstance = await Camera(this.constraints, this.$refs.video)
+        this.cameraInstance = await Camera(this.constraints, this.$refs.video);
 
         // if the component is destroyed before `cameraInstance` resolves a
         // `beforeDestroy` hook has no chance to clear the remaining camera
         // stream.
         if (this.destroyed) {
-          this.cameraInstance.stop()
+          this.cameraInstance.stop();
         }
       }
     },
 
-    startScanning () {
+    startScanning() {
       const detectHandler = result => {
         this.onDetect(
           Promise.resolve({ source: 'stream', ...result })
@@ -200,23 +196,23 @@ export default {
       this.stopScanning = keepScanning(this.cameraInstance, {
         detectHandler,
         locateHandler: this.onLocate,
-        minDelay: this.scanInterval,
-      })
+        minDelay: this.scanInterval
+      });
     },
 
-    beforeResetCamera () {
+    beforeResetCamera() {
       if (this.cameraInstance !== null) {
-        this.cameraInstance.stop()
-        this.cameraInstance = null
+        this.cameraInstance.stop();
+        this.cameraInstance = null;
       }
     },
 
-    onLocate (location) {
+    onLocate(location) {
       if (this.trackRepaintFunction !== null) {
         if (location === null) {
-          this.clearTrackingLayer()
+          this.clearTrackingLayer();
         } else {
-          this.repaintTrackingLayer(location)
+          this.repaintTrackingLayer(location);
         }
       }
     },
@@ -226,74 +222,73 @@ export default {
      * video element is responsive and scales with space available. Therefore
      * the coordinates are re-calculated to be relative to the video element.
      */
-    normalizeLocation (widthRatio, heightRatio, location) {
-      const normalized = {}
+    normalizeLocation(widthRatio, heightRatio, location) {
+      const normalized = {};
 
       for (const key in location) {
         normalized[key] = {
           x: Math.floor(location[key].x * widthRatio),
-          y: Math.floor(location[key].y * heightRatio),
-        }
+          y: Math.floor(location[key].y * heightRatio)
+        };
       }
 
-      return normalized
+      return normalized;
     },
 
-    repaintTrackingLayer (location) {
-      const video = this.$refs.video
-      const canvas = this.$refs.trackingLayer
-      const ctx = canvas.getContext('2d')
+    repaintTrackingLayer(location) {
+      const video = this.$refs.video;
+      const canvas = this.$refs.trackingLayer;
+      const ctx = canvas.getContext("2d");
 
-      const displayWidth = video.offsetWidth
-      const displayHeight = video.offsetWidth
-      const resolutionWidth = video.videoWidth
-      const resolutionHeight = video.videoHeight
+      const displayWidth = video.offsetWidth;
+      const displayHeight = video.offsetWidth;
+      const resolutionWidth = video.videoWidth;
+      const resolutionHeight = video.videoHeight;
 
       window.requestAnimationFrame(() => {
-        canvas.width = displayWidth
-        canvas.height = displayHeight
+        canvas.width = displayWidth;
+        canvas.height = displayHeight;
 
-        const widthRatio = displayWidth / resolutionWidth
-        const heightRatio = displayHeight / resolutionHeight
+        const widthRatio = displayWidth / resolutionWidth;
+        const heightRatio = displayHeight / resolutionHeight;
 
-        location = this.normalizeLocation(widthRatio, heightRatio, location)
+        location = this.normalizeLocation(widthRatio, heightRatio, location);
 
-        this.trackRepaintFunction(location, ctx)
-      })
+        this.trackRepaintFunction(location, ctx);
+      });
     },
 
-    clearTrackingLayer () {
-      const canvas = this.$refs.trackingLayer
-      const ctx = canvas.getContext('2d')
+    clearTrackingLayer() {
+      const canvas = this.$refs.trackingLayer;
+      const ctx = canvas.getContext("2d");
 
       window.requestAnimationFrame(() => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-      })
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      });
     },
 
-    paintPauseFrame (imageData) {
-      const canvas = this.$refs.pauseFrame
-      const ctx = canvas.getContext('2d')
+    paintPauseFrame(imageData) {
+      const canvas = this.$refs.pauseFrame;
+      const ctx = canvas.getContext("2d");
 
       window.requestAnimationFrame(() => {
-        canvas.width = imageData.width
-        canvas.height = imageData.height
+        canvas.width = imageData.width;
+        canvas.height = imageData.height;
 
-        ctx.putImageData(imageData, 0, 0)
-      })
+        ctx.putImageData(imageData, 0, 0);
+      });
     },
 
-    clearPauseFrame () {
-      const canvas = this.$refs.pauseFrame
-      const ctx = canvas.getContext('2d')
+    clearPauseFrame() {
+      const canvas = this.$refs.pauseFrame;
+      const ctx = canvas.getContext("2d");
 
       window.requestAnimationFrame(() => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-      })
-    },
-
-  },
-}
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      });
+    }
+  }
+};
 </script>
 
 <style lang="css">

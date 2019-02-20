@@ -1,47 +1,43 @@
-import { StreamApiNotSupportedError } from './errors.js'
-import { imageDataFromVideo } from './image-data.js'
-import { hasFired } from './promisify.js'
+import { StreamApiNotSupportedError } from "./errors.js";
+import { imageDataFromVideo } from "./image-data.js";
+import { hasFired } from "./promisify.js";
 
 class Camera {
-
-  constructor (videoEl, stream) {
-    this.videoEl = videoEl
-    this.stream = stream
+  constructor(videoEl, stream) {
+    this.videoEl = videoEl;
+    this.stream = stream;
   }
 
-  stop () {
-    this.stream.getTracks().forEach(
-      track => track.stop()
-    )
+  stop() {
+    this.stream.getTracks().forEach(track => track.stop());
   }
 
-  captureFrame () {
-    return imageDataFromVideo(this.videoEl)
+  captureFrame() {
+    return imageDataFromVideo(this.videoEl);
   }
-
 }
 
-export default async function (constraints, videoEl) {
+export default async function(constraints, videoEl) {
   if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
-    throw new StreamApiNotSupportedError()
+    throw new StreamApiNotSupportedError();
   }
 
-  const stream = await navigator.mediaDevices.getUserMedia(constraints)
-  const streamLoaded = hasFired(videoEl, 'loadeddata', 'error')
+  const stream = await navigator.mediaDevices.getUserMedia(constraints);
+  const streamLoaded = hasFired(videoEl, "loadeddata", "error");
 
   if (videoEl.srcObject !== undefined) {
-    videoEl.srcObject = stream
+    videoEl.srcObject = stream;
   } else if (videoEl.mozSrcObject !== undefined) {
-    videoEl.mozSrcObject = stream
+    videoEl.mozSrcObject = stream;
   } else if (window.URL.createObjectURL) {
-    videoEl.src = window.URL.createObjectURL(stream)
+    videoEl.src = window.URL.createObjectURL(stream);
   } else if (window.webkitURL) {
-    videoEl.src = window.webkitURL.createObjectURL(stream)
+    videoEl.src = window.webkitURL.createObjectURL(stream);
   } else {
-    videoEl.src = stream
+    videoEl.src = stream;
   }
 
-  await streamLoaded
+  await streamLoaded;
 
-  return new Camera(videoEl, stream)
+  return new Camera(videoEl, stream);
 }

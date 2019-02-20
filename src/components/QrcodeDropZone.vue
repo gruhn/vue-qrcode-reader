@@ -3,55 +3,60 @@
     @drop.prevent.stop="onDrop"
     @dragenter.prevent.stop="onDragOver(true)"
     @dragleave.prevent.stop="onDragOver(false)"
-    @dragover.prevent.stop>
+    @dragover.prevent.stop
+  >
     <slot></slot>
   </div>
 </template>
 
 <script>
-import { scan } from '../misc/scanner.js'
-import { imageDataFromFile, imageDataFromUrl } from '../misc/image-data.js'
-import CommonAPI from '../mixins/CommonAPI.vue'
+import { scan } from "../misc/scanner.js";
+import { imageDataFromFile, imageDataFromUrl } from "../misc/image-data.js";
+import CommonAPI from "../mixins/CommonAPI.vue";
 
 export default {
-
-  mixins: [ CommonAPI ],
+  mixins: [CommonAPI],
 
   methods: {
-    onDragOver (isDraggingOver) {
-      this.$emit('dragover', isDraggingOver)
+    onDragOver(isDraggingOver) {
+      this.$emit("dragover", isDraggingOver);
     },
 
-    onDrop ({ dataTransfer }) {
-      this.onDragOver(false)
+    onDrop({ dataTransfer }) {
+      this.onDragOver(false);
 
-      const droppedFiles = [...dataTransfer.files]
-      const droppedUrl = dataTransfer.getData('text')
+      const droppedFiles = [...dataTransfer.files];
+      const droppedUrl = dataTransfer.getData("text");
 
       droppedFiles.forEach(file => {
-        this.onDetect(this.processFile(file))
-      })
+        this.onDetect(this.processFile(file));
+      });
 
-      if (droppedUrl !== '') {
-        this.onDetect(this.processUrl(droppedUrl))
+      if (droppedUrl !== "") {
+        this.onDetect(this.processUrl(droppedUrl));
       }
     },
 
-    async processFile (file) {
-      const imageData = await imageDataFromFile(file)
-      const scanResult = await scan(imageData)
+    async processFile(file) {
+      const imageData = await imageDataFromFile(file);
+      const scanResult = await scan(imageData);
 
-      return { source: 'file', ...scanResult }
+      return { source: "file", ...scanResult };
     },
 
-    async processUrl (url) {
-      const imageData = await imageDataFromUrl(url)
-      const scanResult = await scan(imageData)
+    async processUrl(url) {
+      const imageData = await imageDataFromUrl(url);
+      const scanResult = await scan(imageData);
 
-      return { source: 'url', ...scanResult }
+      return { source: "url", ...scanResult };
     },
 
-  },
+    async processUrl(url) {
+      const imageData = await imageDataFromUrl(url);
+      const scanResult = await scan(imageData);
 
-}
+      return scanResult;
+    }
+  }
+};
 </script>
