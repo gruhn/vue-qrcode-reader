@@ -3,7 +3,9 @@ import jsQR from "jsqr";
 self.addEventListener("message", function(event) {
   const imageData = event.data;
 
-  const result = jsQR(imageData.data, imageData.width, imageData.height);
+  const result = jsQR(imageData.data, imageData.width, imageData.height, {
+    inversionAttempts: "dontInvert"
+  });
 
   let content = null;
   let location = null;
