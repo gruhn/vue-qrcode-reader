@@ -1,9 +1,18 @@
-export function hasFired(element, successEvent, errorEvent) {
-  return new Promise((resolve, reject) => {
-    element.addEventListener(successEvent, resolve, { once: true });
+export function hasFired(eventTarget, successEvent, errorEvent = "error") {
+  let $resolve, $reject;
 
-    if (errorEvent !== undefined) {
-      element.addEventListener(errorEvent, reject, { once: true });
-    }
+  const promise = new Promise((resolve, reject) => {
+    $resolve = resolve;
+    $reject = reject;
   });
+
+  eventTarget.addEventListener(successEvent, $resolve);
+  eventTarget.addEventListener(errorEvent, $reject);
+
+  promise.finally(() => {
+    eventTarget.removeEventListener(successEvent, $resolve);
+    eventTarget.removeEventListener(errorEvent, $reject);
+  });
+
+  return promise;
 }

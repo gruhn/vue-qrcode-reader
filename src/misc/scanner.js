@@ -1,18 +1,17 @@
 import "webrtc-adapter";
+import { hasFired } from "./promisify.js";
 import Worker from "./worker.js";
 
-export function scan(imageData) {
+export async function scan(imageData) {
   const worker = new Worker();
 
-  return new Promise(resolve => {
-    worker.onmessage = event => {
-      resolve(event.data);
+  worker.postMessage(imageData, [imageData.data.buffer]);
 
-      worker.terminate();
-    };
+  const event = await hasFired(worker, "message");
 
-    worker.postMessage(imageData, [imageData.data.buffer]);
-  });
+  worker.terminate();
+
+  return event.data;
 }
 
 /**

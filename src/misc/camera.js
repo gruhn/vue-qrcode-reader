@@ -23,7 +23,7 @@ export default async function(constraints, videoEl) {
   }
 
   const stream = await navigator.mediaDevices.getUserMedia(constraints);
-  const streamLoaded = hasFired(videoEl, "loadeddata", "error");
+  const streamLoaded = hasFired(videoEl, "loadeddata");
 
   if (videoEl.srcObject !== undefined) {
     videoEl.srcObject = stream;
