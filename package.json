@@ -24,7 +24,7 @@
     "build": "npm run build:browser && npm run build:common",
     "build:browser": "cross-env NODE_ENV=production webpack --config config/webpack.config.browser.js --progress --hide-modules",
     "build:common": "cross-env NODE_ENV=production webpack --config config/webpack.config.common.js --progress --hide-modules",
-    "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
+    "lint": "eslint --ext .js,.vue src"
   },
   "repository": {
     "type": "git",
@@ -71,7 +71,7 @@
     "semantic-release": "^15.9.9",
     "vue-loader": "^10.0.0",
     "vue-template-compiler": "^2.1.6",
-    "webpack": "^2.1.0-beta.28",
+    "webpack": "^3.0.0",
     "webpack-merge": "^1.1.2",
     "worker-loader": "^2.0.0"
   },
