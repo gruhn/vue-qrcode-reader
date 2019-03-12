@@ -1,9 +1,9 @@
-<p align="center">  
+<p align="center">
   <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/logo.png" alt="Logo" width="240" height="240" style="max-width: 100%;">
-  
+
   <br>
   <br>
-  
+
   <a href="https://vuejs.org/">
     <img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg" alt="for Vue.js 2">
   </a>
@@ -11,11 +11,11 @@
   <a href="https://www.npmjs.com/package/vue-qrcode-reader">
     <img src="https://img.shields.io/npm/dm/vue-qrcode-reader.svg" alt="npm monthly downloads">
   </a>
-  
+
   <a href="https://travis-ci.org/gruhn/vue-qrcode-reader">
     <img src="https://travis-ci.org/gruhn/vue-qrcode-reader.svg?branch=master" alt="Travis CI: build status">
   </a>
-  
+
   <br>
 
   <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" alt="is maintained? yes">
@@ -27,23 +27,23 @@
   <a href="https://github.com/Naereen/badges">
     <img src="https://img.shields.io/badge/badges-awesome-green.svg" alt="badges = awesome">
   </a>
-  
+
   <br>
 
   <a href="https://bundlephobia.com/result?p=vue-qrcode-reader">
     <img src="https://badgen.net/bundlephobia/minzip/vue-qrcode-reader" alt="size minified + gzipped">
   </a>
-  
+
   <a href="https://www.npmjs.com/package/vue-qrcode-reader">
     <img src="https://img.shields.io/npm/v/vue-qrcode-reader.svg" alt="npm current version">
   </a>
-  
+
   <br>
-    
+
   <a href="https://github.com/semantic-release/semantic-release">
     <img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" alt="uses semantic release">
   </a>
-  
+
   <br>
   <br>
   <a href="https://gruhn.github.io/vue-qrcode-reader/api/QrcodeStream.html">documentation</a> |
@@ -53,7 +53,7 @@
 A set of Vue.js components, allowing you to detect and decode QR codes, without leaving the browser.
 
 * :movie_camera: `QrcodeStream` accesses the device camera and continuously scans incoming frames.
-* :put_litter_in_its_place: `QrcodeDropZone` renders to an empty region where you can drag-and-drop images to be decoded. 
+* :put_litter_in_its_place: `QrcodeDropZone` renders to an empty region where you can drag-and-drop images to be decoded.
 * :open_file_folder: `QrcodeCapture` is a classic file upload field, instantly scanning all files you select.
 
 All components are responsive. Beyond that, close to zero styling. Make them fit your layout. Usage is simple and straight forward:
@@ -91,7 +91,7 @@ This component fundamentally depends on the [Stream API](https://caniuse.com/#fe
 * on iOS it **only** works with Safari
   * *Chrome for iOS*, *Firefox for iOS* and so on are not supported (see [#29](../../issues/29))
   * even web apps added to home screen are not supported (see [#76](../../issues/76))
-  
+
 #### `QrcodeDropZone` and `QrcodeCapture`
 
 The newest API these components depend on is the [FileReader API](https://caniuse.com/#feat=filereader).
@@ -182,3 +182,11 @@ Vue.component('my-component', {
   // ...
 )
 ```
+
+# Acknowledgements
+
+Tested with
+
+<a href="https://browserstack.com">
+  <img width="180" src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/browserstack-logo.png" alt="BrowserStack Logo">
+</a>
