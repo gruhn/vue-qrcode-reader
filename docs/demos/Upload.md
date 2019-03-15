@@ -1,11 +1,15 @@
 # Decode via upload
 
-Finally, _vue-qrcode-reader_ comes with another component which
+Finally, with `QrcodeCapture` comes with another component which
 allows image scanning via classic file upload. If you are on mobile and your
-browser supports it, your camera automatically starts to take the picture to
-be uploaded.
+browser supports it, your are not prompted with a file dialog but with
+your camera. So you can directly take the picture to be uploaded.
 
-<DemoWrapper component="Upload" />
+Note, that nothing is actually uploaded. Everything is done client-side.
+
+<ClientOnly>
+  <DemoWrapper component="Upload" />
+</ClientOnly>
 
 ### Source
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="reload">reload</button>
+    <button @click="reload">Destroy And Re-Create Component</button>
 
     <qrcode-stream @init="onInit" v-if="!destroyed">
       <div class="loading-indicator" v-if="loading">

@@ -4,30 +4,36 @@
       You don't seem to have a front camera on your device
     </p>
 
-    <qrcode-stream :camera="{ facingMode }" @init="onInit">
+    <p class="error" v-if="noRearCamera">
+      You don't seem to have a rear camera on your device
+    </p>
+
+    <qrcode-stream :camera="camera" @init="onInit">
       <button @click="switchCamera">Switch Camera</button>
     </qrcode-stream>
   </div>
 </template>
 
 <script>
-const REAR_CAMERA = { ideal: 'environment' }
-const FRONT_CAMERA = { exact: 'user' }
-
 export default {
   data () {
     return {
-      facingMode: REAR_CAMERA,
+      camera: 'rear',
+
+      noRearCamera: false,
       noFrontCamera: false
     }
   },
 
   methods: {
     switchCamera () {
-      if (this.facingMode === FRONT_CAMERA) {
-        this.facingMode = REAR_CAMERA
-      } else {
-        this.facingMode = FRONT_CAMERA
+      switch (this.camera) {
+        case 'front':
+          this.camera = 'rear'
+          break
+        case 'rear':
+          this.camera = 'front'
+          break
       }
     },
 
@@ -35,8 +41,18 @@ export default {
       try {
         await promise
       } catch (error) {
-        this.noFrontCamera = this.facingMode === FRONT_CAMERA
-          && error.name === 'OverconstrainedError'
+        const triedFrontCamera = this.camera === 'front'
+        const triedRearCamera = this.camera === 'rear'
+
+        const cameraMissingError = error.name === 'OverconstrainedError'
+
+        if (triedRearCamera && cameraMissingError) {
+          this.noRearCamera = true
+        }
+
+        if (triedFrontCamera && cameraMissingError) {
+          this.noFrontCamera = true
+        }
 
         console.error(error)
       }

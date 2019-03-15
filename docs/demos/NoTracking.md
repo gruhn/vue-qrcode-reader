@@ -1,9 +1,11 @@
 # Disable tracking
 
-QR-codes are not visually tracked in this demo. Do you notice better
-performance on your device?
+This is just like the previous demo but QR-codes are not visually tracked.
+Do you notice better performance on your device?
 
-<DemoWrapper component="NoTracking" />
+<ClientOnly>
+  <DemoWrapper component="NoTracking" />
+</ClientOnly>
 
 ### Source
 

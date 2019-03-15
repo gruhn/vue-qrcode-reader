@@ -1,8 +1,11 @@
 # Customize tracking
 
-You can completely customize how visual tracking should look like!
+You don't like the red square around detected QR codes?
+No problem, you can also completely customize how visual tracking should look like!
 
-<DemoWrapper component="CustomTracking" />
+<ClientOnly>
+  <DemoWrapper component="CustomTracking" />
+</ClientOnly>
 
 ### Source
 

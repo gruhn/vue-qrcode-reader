@@ -10,11 +10,10 @@ module.exports = {
     sidebar: {
       '/demos/': [
         'DecodeAll',
-        'LoadingIndicator',
         'NoTracking',
         'CustomTracking',
-        'ValidateSoft',
-        'ValidateHard',
+        'LoadingIndicator',
+        'Validate',
         'SwitchCamera',
         'DragDrop',
         'Upload',

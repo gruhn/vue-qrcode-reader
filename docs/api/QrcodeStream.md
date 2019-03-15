@@ -18,8 +18,8 @@ methods: {
 }
 ```
 
-::: warning
-If you scan the same QR code multiple times in a row, `decode` is still only emitted once. When you hold a QR code in the camera, frames are actually decoded multiple times a second but you don't want to be flooded with `decode` events that often. That's why the last decoded QR code is always cached and only new results are propagated. However setting `paused` to `true` or changing the value of `camera` resets this internal cache.
+::: tip
+If you scan the same QR code multiple times in a row, `decode` is still only emitted once. When you hold a QR code in the camera, frames are actually decoded multiple times a second but you don't want to be flooded with `decode` events that often. That's why the last decoded QR code is always cached and only new results are propagated. However changing the value of `camera` resets this internal cache.
 :::
 
 ### `detect`
@@ -86,8 +86,7 @@ methods: {
       } else if (error.name === 'NotReadableError') {
         // maybe camera is already in use
       } else if (error.name === 'OverconstrainedError') {
-        // passed constraints don't match any camera.
-        // Did you requested the front camera although there is none?
+        // did you requested the front camera although there is none?
       } else if (error.name === 'StreamApiNotSupportedError') {
         // browser seems to be lacking features
       }
@@ -99,34 +98,6 @@ methods: {
 ```
 
 ## Props
-
-### `paused`
-* **Input Type:** `Boolean`
-* **Default:** `false`
-
-With the `paused` prop you can prevent further `decode` and `detect` propagation. Functions passed via `track` are also not called anymore. Useful for example if you want to validate results one at a time.
-
-::: tip
-When the component is paused the camera stream freezes but is actually still running in the background. The browser will tell you that the camera is still in use. If you want to kill the stream completely you can pass `false` to the `camera` prop.
-:::
-
-```html
-<qrcode-stream @decode="onDecode" :paused="paused"></qrcode-stream>
-```
-```javascript
-data () {
-  return {
-    paused: false
-  }
-},
-
-methods: {
-  onDecode (content) {
-    this.paused = true
-    // ...
-  }
-}
-```
 
 ### `track`
 * **Input Type:** `Boolean`, `Function`
@@ -174,42 +145,48 @@ methods: {
 ```
 
 ### `camera`
-* **Input Type:** `Boolean`, `Object`
-* **Default:** see below
+* **Input Type:** `String`
+* **Default:** `auto`
+* **Valid Inputs:** `auto`, `rear`, `front`, `off`
 
-The clients device can have arbitrarily many cameras installed. Which one is picked when the component is mounted? This decision is left to the device itself so it's basically random. However, with the `camera` prop you can pass some constraints to filter what kind of cameras you what to allow. For example, if you want to access a front camera instead of a rear cameras, pass this:
+With the `camera` prop you can control which camera to access on the users device.
+
+ * Use `front` or `rear` to force request the front or rear camera respectively.
+ * If you choose `auto` the rear camera is requested by default.
+But if a device like a laptop has only a front camera installed, `auto` will fallback to that.
+ * Use `off` to not request a camera at all or in other words: turn the camera off.
+
+Every time the camera prop is modified, a new camera stream is requested so the `init` event is emitted again.
+That way you can catch errors.
+For example when the front camera is requested on a device that doesn't have one.
 
 ```html
-<qrcode-stream :camera="{ facingMode: 'user' }"></qrcode-stream>
+<qrcode-stream :camera="camera" @init="onCameraChange"></qrcode-stream>
 ```
+```js
+data () {
+  return {
+    camera: 'auto'
+  }
+},
 
-This component uses [getUserMedia](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia) to request camera streams. This method accepts [a constraints object](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints#Properties_of_video_tracks). This is passed by default:
+methods: {
+  startFrontCamera () {
+    this.camera = 'front'
+  },
 
-```javascript
-{
-  audio: false, // don't request microphone access
-  video: {
-    facingMode: { ideal: 'environment' }, // use rear camera if available
-    width: { min: 360, ideal: 680, max: 1920 }, // constrain video width resolution
-    height: { min: 240, ideal: 480, max: 1080 }, // constrain video height resolution
+  onCameraChange (promise) {
+    promise.catch(error => {
+      const cameraMissingError = error.name === 'OverconstrainedError'
+      const triedFrontCamera = this.camera === 'front'
+
+      if (triedFrontCamera && cameraMissingError) {
+        // no front camera on this device
+      }
+    })
   }
 }
 ```
-
-This `video` part in this object is essentially what you can change using the `camera` prop. Note that you only have to pass properties you want to override. All the other default properties on the first depth level are preserved. Here are a few examples:
-
-`camera="{ facingMode: 'user' }"`: the `facingMode` property is passed and is the only property that changes. `width` and `height` are still the default value.
-
-`camera="false"`: overrides ALL default properties. No camera can match those constraints so no camera is request in the first place. You can use this to turn of the camera at runtime.
-
-`camera="{}"`: since an empty object does not contain properties that could override something, this is just like falling back to the default. The same as not using the `camera` prop at all or passing `undefined`/`null`.
-
-`camera="true"`: overrides ALL default properties. You will accept any camera type there is. Not recommended though as iOS seems to have trouble when the `height` and `width` constraints are missing.
-
-::: warning
-If you change this property after initialization, a new camera stream has to be requested and the `init` event will be emitted again.
-:::
-
 
 ## Slots
 

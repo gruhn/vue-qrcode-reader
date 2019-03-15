@@ -4,6 +4,7 @@
 
 <script>
 import Vue from 'vue'
+import VueQrcodeReader from 'vue-qrcode-reader/dist/vue-qrcode-reader.browser.js'
 
 import CustomTracking from './demos/CustomTracking.vue'
 import DecodeAll from './demos/DecodeAll.vue'
@@ -13,10 +14,13 @@ import DragDrop from './demos/DragDrop.vue'
 import Upload from './demos/Upload.vue'
 import Fallback from './demos/Fallback.vue'
 import LoadingIndicator from './demos/LoadingIndicator.vue'
-import ValidateHard from './demos/ValidateHard.vue'
-import ValidateSoft from './demos/ValidateSoft.vue'
+import Validate from './demos/Validate.vue'
 
 export default {
+
+  components: {
+    DecodeAll
+  },
 
   props: {
     component: String
@@ -29,9 +33,7 @@ export default {
   },
 
   async mounted () {
-    const VueQrcodeReader = await import('vue-qrcode-reader/dist/vue-qrcode-reader.browser.js')
-
-    Vue.use(VueQrcodeReader)
+    Vue.use(window.VueQrcodeReader)
 
     Vue.component('CustomTracking', CustomTracking)
     Vue.component('DecodeAll', DecodeAll)
@@ -41,8 +43,7 @@ export default {
     Vue.component('Upload', Upload)
     Vue.component('Fallback', Fallback)
     Vue.component('LoadingIndicator', LoadingIndicator)
-    Vue.component('ValidateHard', ValidateHard)
-    Vue.component('ValidateSoft', ValidateSoft)
+    Vue.component('Validate', Validate)
 
     this.currentDemo = this.component
   }

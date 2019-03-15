@@ -3,7 +3,9 @@
 You can also allow users to choose the front or rear camera on their
 device.
 
-<DemoWrapper component="SwitchCamera" />
+<ClientOnly>
+  <DemoWrapper component="SwitchCamera" />
+</ClientOnly>
 
 ### Source
 
