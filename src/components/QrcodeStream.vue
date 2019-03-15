@@ -94,7 +94,7 @@ export default {
 
     trackRepaintFunction() {
       if (this.track === true) {
-        return thinSquare({ color: "red" });
+        return thinSquare({ color: "#ff0000" });
       } else if (this.track === false) {
         return null;
       } else {

@@ -7,7 +7,7 @@ export function thinSquare({ color }) {
       bottomRightCorner
     } = location;
 
-    ctx.strokeStyle = "red";
+    ctx.strokeStyle = color;
 
     ctx.beginPath();
     ctx.moveTo(topLeftCorner.x, topLeftCorner.y);
