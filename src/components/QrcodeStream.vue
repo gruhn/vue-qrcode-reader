@@ -38,11 +38,6 @@ export default {
   mixins: [CommonAPI],
 
   props: {
-    paused: {
-      type: Boolean,
-      default: false
-    },
-
     camera: {
       type: String,
       default: "rear",
@@ -68,11 +63,7 @@ export default {
 
   computed: {
     shouldStream() {
-      return (
-        this.paused === false &&
-        this.destroyed === false &&
-        this.camera !== "off"
-      );
+      return this.destroyed === false && this.camera !== "off";
     },
 
     shouldScan() {
