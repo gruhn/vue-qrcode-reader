@@ -49,8 +49,6 @@
   </a>
 
   <br>
-
-  <br>
   <br>
   <a href="https://gruhn.github.io/vue-qrcode-reader/api/QrcodeStream.html">documentation</a> |
   <a href="https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html">live demos</a>
