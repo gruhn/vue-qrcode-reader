@@ -23,7 +23,8 @@
     "dev": "cross-env NODE_ENV=development webpack --config config/webpack.config.dev.js --progress --watch",
     "build": "npm run build:browser && npm run build:common",
     "build:browser": "cross-env NODE_ENV=production webpack --config config/webpack.config.browser.js --progress --hide-modules",
-    "build:common": "cross-env NODE_ENV=production webpack --config config/webpack.config.common.js --progress --hide-modules"
+    "build:common": "cross-env NODE_ENV=production webpack --config config/webpack.config.common.js --progress --hide-modules",
+    "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "repository": {
     "type": "git",
@@ -56,6 +57,7 @@
     "cross-spawn": "^5.0.1",
     "css-loader": "^0.26.1",
     "eslint": "^3.12.1",
+    "eslint-config-prettier": "^4.1.0",
     "eslint-config-standard": "^6.2.1",
     "eslint-loader": "^1.6.1",
     "eslint-plugin-html": "^1.6.0",

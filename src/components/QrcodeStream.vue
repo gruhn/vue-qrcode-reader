@@ -29,14 +29,14 @@
 </template>
 
 <script>
-import { keepScanning } from '../misc/scanner.js'
-import { thinSquare } from '../misc/track-func.js'
-import Camera from '../misc/camera.js'
-import CommonAPI from '../mixins/CommonAPI.vue'
-import isEqual from 'lodash/isEqual'
-import isBoolean from 'lodash/isBoolean'
-import isObject from 'lodash/isObject'
-import stubObject from 'lodash/stubObject'
+import { keepScanning } from "../misc/scanner.js";
+import { thinSquare } from "../misc/track-func.js";
+import Camera from "../misc/camera.js";
+import CommonAPI from "../mixins/CommonAPI.vue";
+import isEqual from "lodash/isEqual";
+import isBoolean from "lodash/isBoolean";
+import isObject from "lodash/isObject";
+import stubObject from "lodash/stubObject";
 
 export default {
   mixins: [CommonAPI],
@@ -49,7 +49,7 @@ export default {
 
     camera: {
       type: [Object, Boolean],
-      default: stubObject,
+      default: stubObject
     },
 
     track: {
@@ -63,8 +63,8 @@ export default {
       cameraInstance: null,
       destroyed: false,
       constraints: {},
-      stopScanning: () => {},
-    }
+      stopScanning: () => {}
+    };
   },
 
   computed: {
@@ -73,6 +73,7 @@ export default {
         this.paused === false &&
         this.destroyed === false &&
         this.constraints.video !== false
+      );
     },
 
     shouldScan() {
@@ -99,8 +100,7 @@ export default {
       } else {
         return this.track;
       }
-    },
-
+    }
   },
 
   watch: {
@@ -125,36 +125,36 @@ export default {
       deep: true,
       immediate: true,
 
-      handler (camera, oldValue) {
-        const deeplyEqual = isEqual(camera, oldValue)
+      handler(camera, oldValue) {
+        const deeplyEqual = isEqual(camera, oldValue);
 
         if (deeplyEqual) {
           // object reference changed but constraints are actually the same
-          return
+          return;
         } else if (isBoolean(camera)) {
           this.constraints = {
             audio: false,
-            video: camera,
-          }
+            video: camera
+          };
         } else if (isObject(camera)) {
           this.constraints = {
             audio: false,
             video: {
-              facingMode: { ideal: 'environment' },
+              facingMode: { ideal: "environment" },
               width: { min: 360, ideal: 640, max: 1920 },
               height: { min: 240, ideal: 480, max: 1080 },
 
               // overrides properties above if given
-              ...camera,
-            },
-          }
+              ...camera
+            }
+          };
         }
-      },
+      }
     },
 
-    constraints () {
-      this.$emit('init', this.init())
-    },
+    constraints() {
+      this.$emit("init", this.init());
+    }
   },
 
   mounted() {
@@ -172,7 +172,7 @@ export default {
       this.beforeResetCamera();
 
       if (this.constraints.video === false) {
-        this.cameraInstance = null
+        this.cameraInstance = null;
       } else {
         this.cameraInstance = await Camera(this.constraints, this.$refs.video);
 
@@ -187,10 +187,8 @@ export default {
 
     startScanning() {
       const detectHandler = result => {
-        this.onDetect(
-          Promise.resolve({ source: 'stream', ...result })
-        )
-      }
+        this.onDetect(Promise.resolve({ source: "stream", ...result }));
+      };
 
       // this.stopScanning()
       this.stopScanning = keepScanning(this.cameraInstance, {
