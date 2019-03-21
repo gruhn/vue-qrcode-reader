@@ -94,9 +94,10 @@ This component fundamentally depends on the [Stream API](https://caniuse.com/#fe
 
 - Chrome requires [HTTPS or localhost](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins) (see _Troubleshooting_ for help)
 - Safari also requires HTTPS **even** on localhost (see [#48](../../issues/48))
-- on iOS it **only** works with Safari
-  - _Chrome for iOS_, _Firefox for iOS_ and so on are not supported (see [#29](../../issues/29))
-  - even web apps added to home screen are not supported (see [#76](../../issues/76))
+- on iOS it **really only** works with Safari. It won't work in
+  - _Chrome for iOS_, _Firefox for iOS_, ... (see [#29](../../issues/29))
+  - a WebView component of your native iOS App
+  - web apps added to home screen (see [#76](../../issues/76))
 
 #### `QrcodeDropZone` and `QrcodeCapture`
 
@@ -110,13 +111,15 @@ The newest API these components depend on is the [FileReader API](https://canius
 
 # Troubleshooting
 
-- I don't see the camera when using `QrcodeStream`.
-  - Check if it works on the demo page. Especially the [Decode All](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html) demo, since it renders error messages. If you see errors, consult the docs to understand their meaning.
-    - Demo works but not locally: Listen for the `init` event to investigate errors.
-    - Demo doesn't work: Carefully review the Browser Support section above. Maybe your device is just not supported.
-- I'm running a dev server on localhost. How to test on my mobile device without HTTPS?
-  - If your setup is Desktop Chrome + Android Chrome, use [Remote Debugging](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/) which allows your Android device to [access your local server as localhost](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/local-server).
-  - Otherwise use a reverse proxy like [ngrok](https://ngrok.com/) or [serveo](https://serveo.net/) to temporarily make your local server publicly available with HTTPS.
+#### I don't see the camera when using `QrcodeStream`.
+
+ - Check if it works on the demo page. Especially the [Decode All](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html) demo, since it renders error messages. If you see errors, consult the docs to understand their meaning.
+   - Demo works but not locally: Listen for the `init` event to investigate errors.
+   - Demo doesn't work: Carefully review the Browser Support section above. Maybe your device is just not supported.
+#### I'm running a dev server on localhost. How to test on my mobile device without HTTPS?
+ - If your setup is Desktop Chrome + Android Chrome, use [Remote Debugging](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/) which allows your Android device to [access your local server as localhost](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/local-server).
+ - Otherwise use a reverse proxy like [ngrok](https://ngrok.com/) or [serveo](https://serveo.net/) to temporarily make your local server publicly available with HTTPS.
+ - There are also loads of serverless/static hosting services that have HTTPS enabled by default and where you can deploy your web app for free. For example _GitHub Pages_, _Google Firebase_, _Netlify_, ...
 
 # Installation
 
