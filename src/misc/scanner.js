@@ -1,4 +1,3 @@
-import "webrtc-adapter";
 import { hasFired } from "./promisify.js";
 import Worker from "./worker.js";
 
