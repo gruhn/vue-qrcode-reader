@@ -82,7 +82,7 @@ methods: {
   <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/screenshot3.png" height="500" alt="Screenshot 3">
 </p>
 
-# Browser support
+# Browser support :chart_with_upwards_trend:
 
 #### `QrcodeStream`
 
@@ -110,7 +110,7 @@ The newest API these components depend on is the [FileReader API](https://canius
 - Drag-and-drop is not supported on mobile
 - Home screen web apps on iOS prior to 11.3 don't support `QrcodeCapture` (see [this StackOverflow question](https://stackoverflow.com/questions/46228218/how-to-access-camera-on-ios11-home-screen-web-app))
 
-# Troubleshooting
+# Troubleshooting :zap:
 
 #### I don't see the camera when using `QrcodeStream`.
 
@@ -122,7 +122,7 @@ The newest API these components depend on is the [FileReader API](https://canius
  - Otherwise use a reverse proxy like [ngrok](https://ngrok.com/) or [serveo](https://serveo.net/) to temporarily make your local server publicly available with HTTPS.
  - There are also loads of serverless/static hosting services that have HTTPS enabled by default and where you can deploy your web app for free. For example _GitHub Pages_, _Google Firebase_, _Netlify_, ...
 
-# Installation
+# Installation :package:
 
 ```bash
 npm install vue-qrcode-reader
@@ -195,7 +195,7 @@ Vue.component('my-component', {
 )
 ```
 
-# Acknowledgements
+# Acknowledgements :pray:
 
 Tested with
 
