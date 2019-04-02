@@ -108,6 +108,7 @@ The newest API these components depend on is the [FileReader API](https://canius
 |                                                     10+                                                     |                                               Yes                                                |                                                  Yes                                                   |                                                 Yes                                                  |                                                 Yes                                                  |
 
 - Drag-and-drop is not supported on mobile
+- Home screen web apps on iOS prior to 11.3 don't support `QrcodeCapture` (see [this StackOverflow question](https://stackoverflow.com/questions/46228218/how-to-access-camera-on-ios11-home-screen-web-app))
 
 # Troubleshooting
 
