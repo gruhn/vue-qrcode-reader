@@ -203,6 +203,6 @@ Vue.component('my-component', {
   <img height="38" src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/browserstack-logo.png" alt="BrowserStack Logo">
 </a>
 <span>&emsp;&emsp;</span>
-<a href="https://browserstack.com">
+<a href="https://travis-ci.org">
   <img height="38" src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/travis-logo.png" alt="Travis-CI Logo">
 </a>
