@@ -114,13 +114,15 @@ The newest API these components depend on is the [FileReader API](https://canius
 
 #### I don't see the camera when using `QrcodeStream`.
 
- - Check if it works on the demo page. Especially the [Decode All](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html) demo, since it renders error messages. If you see errors, consult the docs to understand their meaning.
-   - Demo works but not locally: Listen for the `init` event to investigate errors.
-   - Demo doesn't work: Carefully review the Browser Support section above. Maybe your device is just not supported.
+- Check if it works on the demo page. Especially the [Decode All](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html) demo, since it renders error messages. If you see errors, consult the docs to understand their meaning.
+  - Demo works but not locally: Listen for the `init` event to investigate errors.
+  - Demo doesn't work: Carefully review the Browser Support section above. Maybe your device is just not supported.
+
 #### I'm running a dev server on localhost. How to test on my mobile device without HTTPS?
- - If your setup is Desktop Chrome + Android Chrome, use [Remote Debugging](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/) which allows your Android device to [access your local server as localhost](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/local-server).
- - Otherwise use a reverse proxy like [ngrok](https://ngrok.com/) or [serveo](https://serveo.net/) to temporarily make your local server publicly available with HTTPS.
- - There are also loads of serverless/static hosting services that have HTTPS enabled by default and where you can deploy your web app for free. For example _GitHub Pages_, _Google Firebase_, _Netlify_, ...
+
+- If your setup is Desktop Chrome + Android Chrome, use [Remote Debugging](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/) which allows your Android device to [access your local server as localhost](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/local-server).
+- Otherwise use a reverse proxy like [ngrok](https://ngrok.com/) or [serveo](https://serveo.net/) to temporarily make your local server publicly available with HTTPS.
+- There are also loads of serverless/static hosting services that have HTTPS enabled by default and where you can deploy your web app for free. For example _GitHub Pages_, _Google Firebase_, _Netlify_, ...
 
 # Installation :package:
 
@@ -195,10 +197,12 @@ Vue.component('my-component', {
 )
 ```
 
-# Acknowledgements :pray:
-
-Tested with
+# Thanks :pray:
 
 <a href="https://browserstack.com">
-  <img width="180" src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/browserstack-logo.png" alt="BrowserStack Logo">
+  <img height="38" src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/browserstack-logo.png" alt="BrowserStack Logo">
+</a>
+<span>&emsp;&emsp;</span>
+<a href="https://browserstack.com">
+  <img height="38" src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/travis-logo.png" alt="Travis-CI Logo">
 </a>
