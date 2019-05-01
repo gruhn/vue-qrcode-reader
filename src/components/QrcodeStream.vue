@@ -16,10 +16,7 @@
         class="pause-frame"
       ></canvas>
 
-      <canvas
-        ref="trackingLayer"
-        class="tracking-layer"
-      ></canvas>
+      <canvas ref="trackingLayer" class="tracking-layer"></canvas>
 
       <div class="overlay">
         <slot></slot>
@@ -40,10 +37,10 @@ export default {
   props: {
     camera: {
       type: String,
-      default: "rear",
+      default: "auto",
 
       validator(camera) {
-        return ["rear", "front", "off"].includes(camera);
+        return ["auto", "rear", "front", "off"].includes(camera);
       }
     },
 
@@ -102,8 +99,12 @@ export default {
       };
 
       switch (this.camera) {
-        case "rear":
+        case "auto":
           base.video.facingMode = { ideal: "environment" };
+
+          return base;
+        case "rear":
+          base.video.facingMode = { exact: "environment" };
 
           return base;
         case "front":
