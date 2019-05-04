@@ -1,4 +1,4 @@
-# Switch camera
+# Switch to Front Camera
 
 You can also allow users to choose the front or rear camera on their
 device.

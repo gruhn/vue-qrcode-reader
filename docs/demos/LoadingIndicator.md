@@ -1,4 +1,4 @@
-# Show loading indicator
+# Show Loading Indicator
 
 There is some delay between mounting the component and the camera stream
 becoming visible. Listen for the `init` event to show a loading indicator.

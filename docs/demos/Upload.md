@@ -1,4 +1,4 @@
-# Decode via upload
+# Decode by Upload
 
 Finally, with `QrcodeCapture` comes with another component which
 allows image scanning via classic file upload. If you are on mobile and your
