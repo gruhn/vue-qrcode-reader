@@ -49,13 +49,6 @@ export default {
       const scanResult = await scan(imageData);
 
       return scanResult;
-    },
-
-    async processUrl(url) {
-      const imageData = await imageDataFromUrl(url);
-      const scanResult = await scan(imageData);
-
-      return scanResult;
     }
   }
 };
