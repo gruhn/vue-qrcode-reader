@@ -83,7 +83,7 @@ export default {
       if (this.track === true) {
         return thinSquare({ color: "#ff0000" });
       } else if (this.track === false) {
-        return null;
+        return undefined;
       } else {
         return this.track;
       }
@@ -192,12 +192,10 @@ export default {
     },
 
     onLocate(location) {
-      if (this.trackRepaintFunction !== null) {
-        if (location === null) {
-          this.clearTrackingLayer();
-        } else {
-          this.repaintTrackingLayer(location);
-        }
+      if (this.trackRepaintFunction === undefined || location === null) {
+        this.clearTrackingLayer();
+      } else {
+        this.repaintTrackingLayer(location);
       }
     },
 
