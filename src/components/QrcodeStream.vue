@@ -1,6 +1,11 @@
 <template lang="html">
   <div class="wrapper">
     <div class="inside">
+      <!--
+      All DOM elements here are stacked upon each other.
+      Order matters! The last element is on top.
+      Therefore we don't need `z-index`.
+      -->
       <video
         ref="video"
         v-show="shouldScan"
