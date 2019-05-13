@@ -13,11 +13,19 @@
 import { scan } from "../misc/scanner.js";
 import { imageDataFromFile, imageDataFromUrl } from "../misc/image-data.js";
 import CommonAPI from "../mixins/CommonAPI.vue";
+import Worker from "../worker/jsqr.js";
 
 export default {
   name: "qrcode-drop-zone",
 
   mixins: [CommonAPI],
+
+  props: {
+    worker: {
+      type: Function,
+      default: Worker
+    }
+  },
 
   methods: {
     onDragOver(isDraggingOver) {
@@ -41,14 +49,14 @@ export default {
 
     async processFile(file) {
       const imageData = await imageDataFromFile(file);
-      const scanResult = await scan(imageData);
+      const scanResult = await scan(this.worker, imageData);
 
       return scanResult;
     },
 
     async processUrl(url) {
       const imageData = await imageDataFromUrl(url);
-      const scanResult = await scan(imageData);
+      const scanResult = await scan(this.worker, imageData);
 
       return scanResult;
     }
