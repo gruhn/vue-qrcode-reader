@@ -35,6 +35,7 @@ import { keepScanning } from "../misc/scanner.js";
 import { thinSquare } from "../misc/track-func.js";
 import Camera from "../misc/camera.js";
 import CommonAPI from "../mixins/CommonAPI.vue";
+import Worker from "../worker/jsqr.js";
 
 export default {
   name: "qrcode-stream",
@@ -54,6 +55,11 @@ export default {
     track: {
       type: [Function, Boolean],
       default: true
+    },
+
+    worker: {
+      type: Function,
+      default: Worker
     }
   },
 
@@ -184,7 +190,7 @@ export default {
       };
 
       // this.stopScanning()
-      this.stopScanning = keepScanning(this.cameraInstance, {
+      this.stopScanning = keepScanning(this.worker, this.cameraInstance, {
         detectHandler,
         locateHandler: this.onLocate,
         minDelay: this.scanInterval
