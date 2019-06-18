@@ -15,6 +15,8 @@ import { imageDataFromFile, imageDataFromUrl } from "../misc/image-data.js";
 import CommonAPI from "../mixins/CommonAPI.vue";
 
 export default {
+  name: "qrcode-drop-zone",
+
   mixins: [CommonAPI],
 
   methods: {

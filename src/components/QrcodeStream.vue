@@ -37,6 +37,8 @@ import Camera from "../misc/camera.js";
 import CommonAPI from "../mixins/CommonAPI.vue";
 
 export default {
+  name: "qrcode-stream",
+
   mixins: [CommonAPI],
 
   props: {
