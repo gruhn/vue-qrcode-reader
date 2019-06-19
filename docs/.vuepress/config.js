@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'VueQrcodeReader',
+  title: 'Vue Qrcode Reader',
   description: 'A set of Vue.js components for detecting and decoding QR codes.',
 
   base: '/vue-qrcode-reader/',
