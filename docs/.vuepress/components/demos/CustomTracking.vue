@@ -13,12 +13,16 @@
       Last result: <b>{{ result }}</b>
     </p>
 
-    <qrcode-stream :track="selected.value" @decode="onDecode" @init="logErrors" />
+    <qrcode-stream :key="_uid" :track="selected.value" @decode="onDecode" @init="logErrors" />
   </div>
 </template>
 
 <script>
+import { QrcodeStream } from 'vue-qrcode-reader'
+
 export default {
+
+  components: { QrcodeStream },
 
   data () {
     const options = [

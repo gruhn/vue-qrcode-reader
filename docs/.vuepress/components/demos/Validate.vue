@@ -19,7 +19,12 @@
 </template>
 
 <script>
+import { QrcodeStream } from 'vue-qrcode-reader'
+
 export default {
+
+  components: { QrcodeStream },
+
   data () {
     return {
       isValid: undefined,

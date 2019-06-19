@@ -15,7 +15,12 @@
 </template>
 
 <script>
+import { QrcodeDropZone } from 'vue-qrcode-reader'
+
 export default {
+
+  components: { QrcodeDropZone },
+
   data () {
     return {
       result: null,

@@ -7,7 +7,12 @@
 </template>
 
 <script>
+import { QrcodeCapture } from 'vue-qrcode-reader'
+
 export default {
+
+  components: { QrcodeCapture },
+
   data () {
     return {
       result: ''

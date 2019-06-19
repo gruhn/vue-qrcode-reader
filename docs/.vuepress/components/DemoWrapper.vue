@@ -3,9 +3,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import VueQrcodeReader from 'vue-qrcode-reader/dist/vue-qrcode-reader.browser.js'
-
 import CustomTracking from './demos/CustomTracking.vue'
 import DecodeAll from './demos/DecodeAll.vue'
 import SwitchCamera from './demos/SwitchCamera.vue'
@@ -18,7 +15,14 @@ import Validate from './demos/Validate.vue'
 export default {
 
   components: {
-    DecodeAll
+    DecodeAll,
+    CustomTracking,
+    SwitchCamera,
+    DragDrop,
+    Upload,
+    Fallback,
+    LoadingIndicator,
+    Validate
   },
 
   props: {
@@ -31,18 +35,7 @@ export default {
     }
   },
 
-  async mounted () {
-    Vue.use(window.VueQrcodeReader)
-
-    Vue.component('CustomTracking', CustomTracking)
-    Vue.component('DecodeAll', DecodeAll)
-    Vue.component('SwitchCamera', SwitchCamera)
-    Vue.component('DragDrop', DragDrop)
-    Vue.component('Upload', Upload)
-    Vue.component('Fallback', Fallback)
-    Vue.component('LoadingIndicator', LoadingIndicator)
-    Vue.component('Validate', Validate)
-
+  mounted () {
     this.currentDemo = this.component
   }
 
