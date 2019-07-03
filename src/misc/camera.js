@@ -26,7 +26,7 @@ const STREAM_API_SUPPORTED =
 let streamApiShimApplied = false;
 
 export default async function(constraints, videoEl) {
-  if (STREAM_API_SUPPORTED === false) {
+  if (!STREAM_API_SUPPORTED) {
     throw new StreamApiNotSupportedError();
   }
 
