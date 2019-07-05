@@ -25,8 +25,6 @@ export default {
       const resultPromises = files.map(this.processFile);
 
       resultPromises.forEach(this.onDetect);
-
-      console.log(Promise.all(resultPromises));
     },
 
     async processFile(file) {
