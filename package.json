@@ -33,7 +33,7 @@
   "bugs": {
     "url": "https://github.com/gruhn/vue-qrcode-reader/issues"
   },
-  "homepage": "https://github.com/gruhn/vue-qrcode-reader#readme",
+  "homepage": "https://gruhn.github.io/vue-qrcode-reader",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
