@@ -230,7 +230,7 @@ export default {
       const ctx = canvas.getContext("2d");
 
       const displayWidth = video.offsetWidth;
-      const displayHeight = video.offsetWidth;
+      const displayHeight = video.offsetHeight;
       const resolutionWidth = video.videoWidth;
       const resolutionHeight = video.videoHeight;
 
