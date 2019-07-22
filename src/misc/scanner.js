@@ -1,4 +1,4 @@
-import { hasFired } from "./promisify.js";
+import { eventOn } from "./promisify.js";
 import Worker from "./worker.js";
 
 export async function scan(imageData) {
@@ -6,7 +6,7 @@ export async function scan(imageData) {
 
   worker.postMessage(imageData, [imageData.data.buffer]);
 
-  const event = await hasFired(worker, "message");
+  const event = await eventOn(worker, "message");
 
   worker.terminate();
 

@@ -1,4 +1,4 @@
-export function hasFired(eventTarget, successEvent, errorEvent = "error") {
+export function eventOn(eventTarget, successEvent, errorEvent = "error") {
   let $resolve, $reject;
 
   const promise = new Promise((resolve, reject) => {

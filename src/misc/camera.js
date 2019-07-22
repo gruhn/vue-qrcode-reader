@@ -1,7 +1,7 @@
 import adapterFactory from "webrtc-adapter/src/js/adapter_factory.js";
 import { StreamApiNotSupportedError } from "./errors.js";
 import { imageDataFromVideo } from "./image-data.js";
-import { hasFired } from "./promisify.js";
+import { eventOn } from "./promisify.js";
 
 class Camera {
   constructor(videoEl, stream) {
@@ -36,7 +36,6 @@ export default async function(constraints, videoEl) {
   }
 
   const stream = await navigator.mediaDevices.getUserMedia(constraints);
-  const streamLoaded = hasFired(videoEl, "loadeddata", "error");
 
   if (videoEl.srcObject !== undefined) {
     videoEl.srcObject = stream;
@@ -50,7 +49,7 @@ export default async function(constraints, videoEl) {
     videoEl.src = stream;
   }
 
-  await streamLoaded;
+  await eventOn(videoEl, "loadeddata");
 
   return new Camera(videoEl, stream);
 }
