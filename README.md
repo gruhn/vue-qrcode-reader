@@ -124,6 +124,12 @@ The newest API these components depend on is the [FileReader API](https://canius
 - Otherwise use a reverse proxy like [ngrok](https://ngrok.com/) or [serveo](https://serveo.net/) to temporarily make your local server publicly available with HTTPS.
 - There are also loads of serverless/static hosting services that have HTTPS enabled by default and where you can deploy your web app for free. For example _GitHub Pages_, _Google Firebase_, _Netlify_, ...
 
+#### Some of my QR codes are not being detected.
+
+- Make sure, there is some white border around the QR code.
+- Color inverted QR codes are not supported (dark background, light foreground).
+- [Model 1 QR codes](https://en.wikipedia.org/wiki/QR_code#Model_1) are also not supported.
+
 # Installation :package:
 
 ```bash
