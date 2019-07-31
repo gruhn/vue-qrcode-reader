@@ -40,7 +40,7 @@ methods: {
 
       if (content === null) {
          // decoded nothing
-      } else {      
+      } else {
          // ...
       }
     } catch (error) {
@@ -52,7 +52,33 @@ methods: {
 
 ## Props
 
-> no props
+`QrcodeCapture` has no explicitly defined props.
+However, checkout the components template:
+
+```html
+<template lang="html">
+  <input
+    @change="onChangeInput"
+    type="file"
+    name="image"
+    accept="image/*"
+    capture="environment"
+    multiple
+  />
+</template>
+```
+
+Because the `input` element is the root element of the component and because Vue components accept [non-prop attributes](https://vuejs.org/v2/guide/components-props.html#Non-Prop-Attributes) you can make use of any valid `input` attribute:
+
+```html
+<qrcode-capture disabled />
+```
+
+You can even remove or replace already defined attributes:
+
+```html
+<qrcode-capture :multiple="false" capture="user" />
+```
 
 ## Slots
 
