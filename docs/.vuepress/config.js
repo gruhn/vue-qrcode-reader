@@ -9,6 +9,7 @@ module.exports = {
 
     sidebar: {
       '/demos/': [
+        'Simple',
         'DecodeAll',
         'CustomTracking',
         'LoadingIndicator',
