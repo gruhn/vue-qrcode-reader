@@ -110,6 +110,60 @@ The newest API these components depend on is the [FileReader API](https://canius
 - Drag-and-drop is not supported on mobile
 - Home screen web apps on iOS prior to 11.3 don't support `QrcodeCapture` (see [this StackOverflow question](https://stackoverflow.com/questions/46228218/how-to-access-camera-on-ios11-home-screen-web-app))
 
+# Installation :package:
+
+## Module import
+
+Run:
+
+```bash
+npm install vue-qrcode-reader
+```
+
+Either import the components independantly for local registration:
+
+```javascript
+import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader'
+
+const MyComponent = {
+
+  components: {
+    QrcodeStream,
+    QrcodeDropZone,
+    QrcodeCapture
+  },
+
+  // ...
+))
+```
+
+Or register all of them globally right away:
+
+```javascript
+import Vue from "vue";
+import VueQrcodeReader from "vue-qrcode-reader";
+
+Vue.use(VueQrcodeReader);
+```
+
+**⚠️ A css file is included when importing the package. You may have to setup your bundler to embed the css in your page.**
+
+## Classic import
+
+Vue itself must be included first. Then add the following CSS and JS file:
+
+- `<link href="`[vue-qrcode-reader.css](https://unpkg.com/vue-qrcode-reader/dist/vue-qrcode-reader.css)`" rel="stylesheet">`
+- `<script src="`[vue-qrcode-reader.browser.js](https://unpkg.com/vue-qrcode-reader/dist/vue-qrcode-reader.browser.js)`"></script>`
+
+All components are automatically registered globally.
+Use kebab-case to reference them in your templates:
+
+```html
+<qrcode-stream></qrcode-stream>
+<qrcode-drop-zone></qrcode-drop-zone>
+<qrcode-capture></qrcode-capture>
+```
+
 # Troubleshooting :zap:
 
 #### I don't see the camera when using `QrcodeStream`.
@@ -129,79 +183,6 @@ The newest API these components depend on is the [FileReader API](https://canius
 - Make sure, there is some white border around the QR code.
 - Color inverted QR codes are not supported (dark background, light foreground).
 - [Model 1 QR codes](https://en.wikipedia.org/wiki/QR_code#Model_1) are also not supported.
-
-# Installation :package:
-
-```bash
-npm install vue-qrcode-reader
-```
-
-or with Yarn:
-
-```bash
-yarn add vue-qrcode-reader
-```
-
-## Default import
-
-You can either import the components independantly and register them in another
-components scope:
-
-```javascript
-import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader'
-
-Vue.component('my-component', {
-  components: {
-    QrcodeStream,
-    QrcodeDropZone,
-    QrcodeCapture
-  },
-
-  // ...
-))
-```
-
-Or alternatively register all of them globally right away:
-
-```javascript
-import Vue from "vue";
-import VueQrcodeReader from "vue-qrcode-reader";
-
-Vue.use(VueQrcodeReader);
-```
-
-**⚠️ A css file is included when importing the package. You may have to setup your bundler to embed the css in your page.**
-
-## Browser
-
-> All the examples on the demo page utilize [single-file components](https://vuejs.org/v2/guide/single-file-components.html). To use them in your project you need a build tool like webpack. Check out [this fiddle](https://jsfiddle.net/2bfohnax/) for a simpler example you can use right in the browser.
-
-Besides Vue you need to include the following CSS and JS file:
-
-- `<link href="`[vue-qrcode-reader.css](https://unpkg.com/vue-qrcode-reader/dist/vue-qrcode-reader.css)`" rel="stylesheet">`
-- `<script src="`[vue-qrcode-reader.browser.js](https://unpkg.com/vue-qrcode-reader/dist/vue-qrcode-reader.browser.js)`"></script>`
-
-The global variable `window.VueQrcodeReader` should now be available.
-
-All components should be automatically registered globally. If not, you can do it like this:
-
-```javascript
-Vue.use(VueQrcodeReader);
-```
-
-You can also register specific components locally, in one of your components:
-
-```javascript
-Vue.component('my-component', {
-  components: {
-    'qrcode-stream': VueQrcodeReader.QrcodeStream,
-    'qrcode-drop-zone': VueQrcodeReader.QrcodeDropZone,
-    'qrcode-capture': VueQrcodeReader.QrcodeCapture
-  },
-
-  // ...
-)
-```
 
 # Thanks :pray:
 
