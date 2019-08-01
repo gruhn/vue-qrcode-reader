@@ -169,8 +169,8 @@ Use kebab-case to reference them in your templates:
 #### I don't see the camera when using `QrcodeStream`.
 
 - Check if it works on the demo page. Especially the [Decode All](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html) demo, since it renders error messages. If you see errors, consult the docs to understand their meaning.
-  - Demo works but not locally: Listen for the `init` event to investigate errors.
-  - Demo doesn't work: Carefully review the Browser Support section above. Maybe your device is just not supported.
+  - The demo works but it doesn't work in my project: Listen for the `init` event to investigate errors.
+  - The demo doesn't work: Carefully review the Browser Support section above. Maybe your device is just not supported.
 
 #### I'm running a dev server on localhost. How to test on my mobile device without HTTPS?
 
