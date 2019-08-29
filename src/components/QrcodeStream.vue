@@ -111,7 +111,7 @@ export default {
 
           return base;
         case "rear":
-          base.video.facingMode = { exact: "environment" };
+          base.video.facingMode = { ideal: "environment" };
 
           return base;
         case "front":
