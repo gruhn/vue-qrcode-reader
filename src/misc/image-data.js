@@ -1,5 +1,5 @@
 import { DropImageFetchError, DropImageDecodeError } from "./errors.js";
-import { eventOn } from "./promisify.js";
+import { eventOn } from "callforth";
 
 const canvas = document.createElement("canvas");
 const canvasCtx = canvas.getContext("2d");

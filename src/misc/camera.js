@@ -1,7 +1,7 @@
 import adapterFactory from "webrtc-adapter/src/js/adapter_factory.js";
 import { StreamApiNotSupportedError } from "./errors.js";
 import { imageDataFromVideo } from "./image-data.js";
-import { eventOn } from "./promisify.js";
+import { eventOn } from "callforth";
 
 class Camera {
   constructor(videoEl, stream) {

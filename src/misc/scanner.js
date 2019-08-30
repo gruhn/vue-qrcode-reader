@@ -1,4 +1,4 @@
-import { eventOn } from "./promisify.js";
+import { eventOn } from "callforth";
 import Worker from "./worker.js";
 
 export async function scan(imageData) {
