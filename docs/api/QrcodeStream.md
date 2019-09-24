@@ -188,6 +188,57 @@ methods: {
 }
 ```
 
+### `worker` <Badge text="experimental" type="error" />
+
+::: tip
+So far *vue-qrcode-reader* could only process QR codes.
+However, many people requested support for different code types
+(bar codes, data matrix, color inverted QR codes, ...) though.
+With this prop we try to meet these demands.
+
+Please share your successful or unsuccessful implementation attempts at
+[#109](https://github.com/gruhn/vue-qrcode-reader/issues/109).
+Your feedback is greatly appreciated.
+:::
+
+By default, *QrcodeStream* will only detect QR codes.
+Processing image data is expensive so a web worker is doing the heavy lifting.
+Because the worker is the only QR code specific part of the library though,
+you can replace the default worker and get a component that can scan whatever you want.
+
+First of all you need to create a custom worker class:
+
+```js
+class MyWorkerClass extends Worker {
+  constructor() {
+    super("path/to/worker.js")
+  }
+}
+```
+(Internally, *vue-qrcode-reader* leverages [worker-loader](https://github.com/webpack-contrib/worker-loader)
+to makes this slightly more convenient)
+
+To get your `worker.js` right, check out [the default implementation](https://github.com/gruhn/vue-qrcode-reader/blob/91ee3fc8bf2f7fab96ac3f0a5d84d2d4c09b012f/src/worker/jsqr.js).
+
+Now, pass the worker class via the `worker` prop.
+Don't pass a class instance, we need the class itself!
+
+```html
+<qrcode-stream :worker="Worker"></qrcode-stream>
+```
+```js
+data() {
+  return {
+    Worker: MyWorkerClass // Don't do: new MyWorkerClass()
+  }
+}
+```
+
+:::tip
+`QrcodeCapture` and `QrcodeDropZone` too expose the `worker` prop.
+Dedicated API documentation is missing so far but usage should be similar.
+:::
+
 ## Slots
 
 ### default
