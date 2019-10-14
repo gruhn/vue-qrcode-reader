@@ -80,6 +80,7 @@ export default {
 }
 
 .fullscreen-button {
+  background-color: white;
   position: absolute;
   bottom: 0;
   right: 0;
