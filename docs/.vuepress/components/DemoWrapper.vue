@@ -9,6 +9,7 @@ import SwitchCamera from './demos/SwitchCamera.vue'
 import DragDrop from './demos/DragDrop.vue'
 import Upload from './demos/Upload.vue'
 import Fallback from './demos/Fallback.vue'
+import Fullscreen from './demos/Fullscreen.vue'
 import LoadingIndicator from './demos/LoadingIndicator.vue'
 import Validate from './demos/Validate.vue'
 
@@ -21,6 +22,7 @@ export default {
     DragDrop,
     Upload,
     Fallback,
+    Fullscreen,
     LoadingIndicator,
     Validate
   },

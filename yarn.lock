@@ -1707,6 +1707,11 @@ caller-path@^2.0.0:
   dependencies:
     caller-callsite "^2.0.0"
 
+callforth@^0.3.0:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/callforth/-/callforth-0.3.1.tgz#d40f610c7dd47d0011fd84bac32b3fe11cff1785"
+  integrity sha512-Q2zPfqnwoKsb1DTVCr4lmhe49wKNBsMmNlbudjleu3/co+Nw1pOqFHYJHrW3VZ253ou9AAr+xauQR0C55NPdzA==
+
 callsites@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/callsites/-/callsites-2.0.0.tgz#06eb84f00eea413da86affefacbffb36093b3c50"
@@ -6932,12 +6937,13 @@ vue-loader@^15.2.4:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
-vue-qrcode-reader@^2.0.2:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/vue-qrcode-reader/-/vue-qrcode-reader-2.0.3.tgz#c28d296545a76b33bb8b4de95b6fe3ea2d2fe5f0"
-  integrity sha512-oKc3ZJt3OnWUu4k8DQA3PcSNklVSM6cXO6eWxc2hgpX/qs0PFAm834gQt4Q4ooE6BvtyRYCRMpjoBG9Ndx6VAw==
+vue-qrcode-reader@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/vue-qrcode-reader/-/vue-qrcode-reader-2.1.1.tgz#caebd63b08c3f4bdaad10e129d73623cc963bf90"
+  integrity sha512-rIxV0RAuiomNi4n03L7XVbCKRtq4sT1LYtIk3osuBdJA/1W6y8yDtP4SvGpBdRCLaurfHaicpAZxQB98mejSCg==
   dependencies:
     babel-runtime "^6.26.0"
+    callforth "^0.3.0"
     jsqr "^1.2.0"
     webrtc-adapter "^6.2.1"
 

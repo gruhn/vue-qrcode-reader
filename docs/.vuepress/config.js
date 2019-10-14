@@ -15,6 +15,7 @@ module.exports = {
         'LoadingIndicator',
         'Validate',
         'SwitchCamera',
+        'Fullscreen',
         'DragDrop',
         'Upload',
         'Fallback'
