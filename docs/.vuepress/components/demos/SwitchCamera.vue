@@ -9,7 +9,9 @@
     </p>
 
     <qrcode-stream :camera="camera" @init="onInit">
-      <button @click="switchCamera">Switch Camera</button>
+      <button @click="switchCamera">
+        <img src="/camera-switch.svg" alt="switch camera">
+      </button>
     </qrcode-stream>
   </div>
 </template>
