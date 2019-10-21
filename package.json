@@ -26,13 +26,8 @@
     "build:common": "cross-env NODE_ENV=production webpack --config config/webpack.config.common.js --progress --hide-modules",
     "lint": "eslint --ext .js,.vue src"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gruhn/vue-qrcode-reader.git"
-  },
-  "bugs": {
-    "url": "https://github.com/gruhn/vue-qrcode-reader/issues"
-  },
+  "repository": "github:gruhn/vue-qrcode-reader",
+  "bugs": "https://github.com/gruhn/vue-qrcode-reader/issues",
   "homepage": "https://gruhn.github.io/vue-qrcode-reader",
   "husky": {
     "hooks": {
