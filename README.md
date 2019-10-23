@@ -48,6 +48,13 @@
     <img src="https://img.shields.io/npm/v/vue-qrcode-reader.svg" alt="npm current version">
   </a>
 
+
+  <br>
+
+  <a href="https://github.com/vuejs/awesome-vue">
+    <img src="https://awesome.re/mentioned-badge.svg" alt="Mentioned in Awesome Vue">
+  </a>
+
   <br>
   <br>
   <a href="https://gruhn.github.io/vue-qrcode-reader/api/QrcodeStream.html">documentation</a> |
