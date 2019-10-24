@@ -10,7 +10,7 @@
 
     <qrcode-stream :camera="camera" @init="onInit">
       <button @click="switchCamera">
-        <img src="/camera-switch.svg" alt="switch camera">
+        <img :src="$withBase('/camera-switch.svg')" alt="switch camera">
       </button>
     </qrcode-stream>
   </div>

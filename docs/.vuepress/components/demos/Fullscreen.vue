@@ -2,7 +2,7 @@
   <div :class="{ 'fullscreen': fullscreen }" ref="wrapper" @fullscreenchange="onFullscreenChange">
     <qrcode-stream @init="logErrors">
       <button @click="fullscreen = !fullscreen" class="fullscreen-button">
-        <img :src="fullscreenIcon" alt="toggle fullscreen" />
+        <img :src="$withBase(fullscreenIcon)" alt="toggle fullscreen" />
       </button>
     </qrcode-stream>
   </div>
