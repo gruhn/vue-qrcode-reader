@@ -48,6 +48,13 @@
     <img src="https://img.shields.io/npm/v/vue-qrcode-reader.svg" alt="npm current version">
   </a>
 
+
+  <br>
+
+  <a href="https://github.com/vuejs/awesome-vue">
+    <img src="https://awesome.re/mentioned-badge.svg" alt="Mentioned in Awesome Vue">
+  </a>
+
   <br>
   <br>
   <a href="https://gruhn.github.io/vue-qrcode-reader/api/QrcodeStream.html">documentation</a> |
@@ -110,41 +117,23 @@ The newest API these components depend on is the [FileReader API](https://canius
 - Drag-and-drop is not supported on mobile
 - Home screen web apps on iOS prior to 11.3 don't support `QrcodeCapture` (see [this StackOverflow question](https://stackoverflow.com/questions/46228218/how-to-access-camera-on-ios11-home-screen-web-app))
 
-# Troubleshooting :zap:
-
-#### I don't see the camera when using `QrcodeStream`.
-
-- Check if it works on the demo page. Especially the [Decode All](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html) demo, since it renders error messages. If you see errors, consult the docs to understand their meaning.
-  - Demo works but not locally: Listen for the `init` event to investigate errors.
-  - Demo doesn't work: Carefully review the Browser Support section above. Maybe your device is just not supported.
-
-#### I'm running a dev server on localhost. How to test on my mobile device without HTTPS?
-
-- If your setup is Desktop Chrome + Android Chrome, use [Remote Debugging](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/) which allows your Android device to [access your local server as localhost](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/local-server).
-- Otherwise use a reverse proxy like [ngrok](https://ngrok.com/) or [serveo](https://serveo.net/) to temporarily make your local server publicly available with HTTPS.
-- There are also loads of serverless/static hosting services that have HTTPS enabled by default and where you can deploy your web app for free. For example _GitHub Pages_, _Google Firebase_, _Netlify_, ...
-
 # Installation :package:
+
+## Module import
+
+Run:
 
 ```bash
 npm install vue-qrcode-reader
 ```
 
-or with Yarn:
-
-```bash
-yarn add vue-qrcode-reader
-```
-
-## Default import
-
-You can either import the components independantly and register them in another
-components scope:
+Either import the components independantly for local registration:
 
 ```javascript
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader'
 
-Vue.component('my-component', {
+const MyComponent = {
+
   components: {
     QrcodeStream,
     QrcodeDropZone,
@@ -155,7 +144,7 @@ Vue.component('my-component', {
 ))
 ```
 
-Or alternatively register all of them globally right away:
+Or register all of them globally right away:
 
 ```javascript
 import Vue from "vue";
@@ -166,36 +155,41 @@ Vue.use(VueQrcodeReader);
 
 **⚠️ A css file is included when importing the package. You may have to setup your bundler to embed the css in your page.**
 
-## Browser
+## Classic import
 
-> All the examples on the demo page utilize [single-file components](https://vuejs.org/v2/guide/single-file-components.html). To use them in your project you need a build tool like webpack. Check out [this fiddle](https://jsfiddle.net/2bfohnax/) for a simpler example you can use right in the browser.
-
-Besides Vue you need to include the following CSS and JS file:
+Vue itself must be included first. Then add the following CSS and JS file:
 
 - `<link href="`[vue-qrcode-reader.css](https://unpkg.com/vue-qrcode-reader/dist/vue-qrcode-reader.css)`" rel="stylesheet">`
 - `<script src="`[vue-qrcode-reader.browser.js](https://unpkg.com/vue-qrcode-reader/dist/vue-qrcode-reader.browser.js)`"></script>`
 
-The global variable `window.VueQrcodeReader` should now be available.
+All components are automatically registered globally.
+Use kebab-case to reference them in your templates:
 
-All components should be automatically registered globally. If not, you can do it like this:
-
-```javascript
-Vue.use(VueQrcodeReader);
+```html
+<qrcode-stream></qrcode-stream>
+<qrcode-drop-zone></qrcode-drop-zone>
+<qrcode-capture></qrcode-capture>
 ```
 
-You can also register specific components locally, in one of your components:
+# Troubleshooting :zap:
 
-```javascript
-Vue.component('my-component', {
-  components: {
-    'qrcode-stream': VueQrcodeReader.QrcodeStream,
-    'qrcode-drop-zone': VueQrcodeReader.QrcodeDropZone,
-    'qrcode-capture': VueQrcodeReader.QrcodeCapture
-  },
+#### I don't see the camera when using `QrcodeStream`.
 
-  // ...
-)
-```
+- Check if it works on the demo page. Especially the [Decode All](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html) demo, since it renders error messages. If you see errors, consult the docs to understand their meaning.
+  - The demo works but it doesn't work in my project: Listen for the `init` event to investigate errors.
+  - The demo doesn't work: Carefully review the Browser Support section above. Maybe your device is just not supported.
+
+#### I'm running a dev server on localhost. How to test on my mobile device without HTTPS?
+
+- If your setup is Desktop Chrome + Android Chrome, use [Remote Debugging](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/) which allows your Android device to [access your local server as localhost](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/local-server).
+- Otherwise use a reverse proxy like [ngrok](https://ngrok.com/) or [serveo](https://serveo.net/) to temporarily make your local server publicly available with HTTPS.
+- There are also loads of serverless/static hosting services that have HTTPS enabled by default and where you can deploy your web app for free. For example _GitHub Pages_, _Google Firebase_, _Netlify_, ...
+
+#### Some of my QR codes are not being detected.
+
+- Make sure, there is some white border around the QR code.
+- Color inverted QR codes are not supported (dark background, light foreground).
+- [Model 1 QR codes](https://en.wikipedia.org/wiki/QR_code#Model_1) are also not supported.
 
 # Thanks :pray:
 

@@ -13,9 +13,19 @@
 import { scan } from "../misc/scanner.js";
 import { imageDataFromFile } from "../misc/image-data.js";
 import CommonAPI from "../mixins/CommonAPI.vue";
+import Worker from "../worker/jsqr.js";
 
 export default {
+  name: "qrcode-capture",
+
   mixins: [CommonAPI],
+
+  props: {
+    worker: {
+      type: Function,
+      default: Worker
+    }
+  },
 
   methods: {
     onChangeInput(event) {
@@ -23,13 +33,11 @@ export default {
       const resultPromises = files.map(this.processFile);
 
       resultPromises.forEach(this.onDetect);
-
-      console.log(Promise.all(resultPromises));
     },
 
     async processFile(file) {
       const imageData = await imageDataFromFile(file);
-      const scanResult = await scan(imageData);
+      const scanResult = await scan(this.worker, imageData);
 
       return scanResult;
     }

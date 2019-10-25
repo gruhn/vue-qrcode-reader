@@ -1,31 +1,26 @@
 <template lang="html">
   <div class="wrapper">
-    <div class="inside">
-      <!--
-      All DOM elements here are stacked upon each other.
-      Order matters! The last element is on top.
-      Therefore we don't need `z-index`.
-      -->
-      <video
-        ref="video"
-        v-show="shouldScan"
-        class="camera"
-        autoplay
-        muted
-        playsinline
-      ></video>
+    <!--
+    Note that the order of DOM elements matters.
+    It defines the stacking order.
+    The first element is at the very bottom, the last element is on top.
+    This eliminates the need for `z-index`.
+    -->
+    <video
+      ref="video"
+      v-show="shouldScan"
+      class="camera"
+      autoplay
+      muted
+      playsinline
+    ></video>
 
-      <canvas
-        ref="pauseFrame"
-        v-show="!shouldScan"
-        class="pause-frame"
-      ></canvas>
+    <canvas ref="pauseFrame" v-show="!shouldScan" class="pause-frame"></canvas>
 
-      <canvas ref="trackingLayer" class="tracking-layer"></canvas>
+    <canvas ref="trackingLayer" class="tracking-layer"></canvas>
 
-      <div class="overlay">
-        <slot></slot>
-      </div>
+    <div class="overlay">
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -35,8 +30,11 @@ import { keepScanning } from "../misc/scanner.js";
 import { thinSquare } from "../misc/track-func.js";
 import Camera from "../misc/camera.js";
 import CommonAPI from "../mixins/CommonAPI.vue";
+import Worker from "../worker/jsqr.js";
 
 export default {
+  name: "qrcode-stream",
+
   mixins: [CommonAPI],
 
   props: {
@@ -57,6 +55,10 @@ export default {
     torch: {
       type: Boolean,
       default: false
+
+    worker: {
+      type: Function,
+      default: Worker
     }
   },
 
@@ -195,7 +197,7 @@ export default {
       };
 
       // this.stopScanning()
-      this.stopScanning = keepScanning(this.cameraInstance, {
+      this.stopScanning = keepScanning(this.worker, this.cameraInstance, {
         detectHandler,
         locateHandler: this.onLocate,
         minDelay: this.scanInterval
@@ -217,44 +219,51 @@ export default {
       }
     },
 
-    /**
-     * The coordinates are based on the original camera resolution but the
-     * video element is responsive and scales with space available. Therefore
-     * the coordinates are re-calculated to be relative to the video element.
-     */
-    normalizeLocation(widthRatio, heightRatio, location) {
-      const normalized = {};
-
-      for (const key in location) {
-        normalized[key] = {
-          x: Math.floor(location[key].x * widthRatio),
-          y: Math.floor(location[key].y * heightRatio)
-        };
-      }
-
-      return normalized;
-    },
-
     repaintTrackingLayer(location) {
       const video = this.$refs.video;
       const canvas = this.$refs.trackingLayer;
       const ctx = canvas.getContext("2d");
 
+      // The visually occupied area of the video element.
+      // Because the component is responsive and fills the available space,
+      // this can be more or less than the actual resolution of the camera.
       const displayWidth = video.offsetWidth;
-      const displayHeight = video.offsetWidth;
+      const displayHeight = video.offsetHeight;
+
+      // The actual resolution of the camera.
+      // These values are fixed no matter the screen size.
       const resolutionWidth = video.videoWidth;
       const resolutionHeight = video.videoHeight;
+
+      // Dimensions of the video element as if there would be no
+      //   object-fit: cover;
+      // Thus, the ratio is the same as the cameras resolution but it's
+      // scaled down to the size of the visually occupied area.
+      const largerRatio = Math.max(
+        displayWidth / resolutionWidth,
+        displayHeight / resolutionHeight
+      );
+      const uncutWidth = resolutionWidth * largerRatio;
+      const uncutHeight = resolutionHeight * largerRatio;
+
+      const xScalar = uncutWidth / resolutionWidth;
+      const yScalar = uncutHeight / resolutionHeight;
+      const xOffset = (displayWidth - uncutWidth) / 2;
+      const yOffset = (displayHeight - uncutHeight) / 2;
+
+      const coordinatesAdjusted = {};
+      for (const key in location) {
+        coordinatesAdjusted[key] = {
+          x: Math.floor(location[key].x * xScalar + xOffset),
+          y: Math.floor(location[key].y * yScalar + yOffset)
+        };
+      }
 
       window.requestAnimationFrame(() => {
         canvas.width = displayWidth;
         canvas.height = displayHeight;
 
-        const widthRatio = displayWidth / resolutionWidth;
-        const heightRatio = displayHeight / resolutionHeight;
-
-        location = this.normalizeLocation(widthRatio, heightRatio, location);
-
-        this.trackRepaintFunction(location, ctx);
+        this.trackRepaintFunction(coordinatesAdjusted, ctx);
       });
     },
 
@@ -293,17 +302,10 @@ export default {
 
 <style lang="css" scoped>
 .wrapper {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.inside {
   position: relative;
-  max-width: 100%;
-  max-height: 100%;
   z-index: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .overlay, .tracking-layer {
@@ -316,8 +318,8 @@ export default {
 
 .camera, .pause-frame {
   display: block;
-  object-fit: contain;
-  max-width: 100%;
-  max-height: 100%;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
 </style>

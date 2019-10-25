@@ -1,5 +1,5 @@
 import { DropImageFetchError, DropImageDecodeError } from "./errors.js";
-import { hasFired } from "./promisify.js";
+import { eventOn } from "callforth";
 
 const canvas = document.createElement("canvas");
 const canvasCtx = canvas.getContext("2d");
@@ -41,11 +41,9 @@ export async function imageDataFromUrl(url) {
   }
 
   const image = document.createElement("img");
-  const imageLoaded = hasFired(image, "load");
-
   image.src = url;
 
-  await imageLoaded;
+  await eventOn(image, "load");
 
   return imageDataFromImage(image);
 }
@@ -53,11 +51,11 @@ export async function imageDataFromUrl(url) {
 export async function imageDataFromFile(file) {
   if (/image.*/.test(file.type)) {
     const reader = new FileReader();
-    const readerLoaded = hasFired(reader, "load");
 
     reader.readAsDataURL(file);
 
-    const dataURL = (await readerLoaded).target.result;
+    const result = await eventOn(reader, "load");
+    const dataURL = result.target.result;
 
     return imageDataFromUrl(dataURL);
   } else {

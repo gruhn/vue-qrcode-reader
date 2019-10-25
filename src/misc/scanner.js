@@ -1,12 +1,11 @@
-import { hasFired } from "./promisify.js";
-import Worker from "./worker.js";
+import { eventOn } from "callforth";
 
-export async function scan(imageData) {
+export async function scan(Worker, imageData) {
   const worker = new Worker();
 
   worker.postMessage(imageData, [imageData.data.buffer]);
 
-  const event = await hasFired(worker, "message");
+  const event = await eventOn(worker, "message");
 
   worker.terminate();
 
@@ -17,7 +16,7 @@ export async function scan(imageData) {
  * Continuously extracts frames from camera stream and tries to read
  * potentially pictured QR codes.
  */
-export function keepScanning(camera, options) {
+export function keepScanning(Worker, camera, options) {
   const { detectHandler, locateHandler, minDelay } = options;
 
   let contentBefore = null;

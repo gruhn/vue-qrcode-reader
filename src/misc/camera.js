@@ -1,7 +1,7 @@
 import adapterFactory from "webrtc-adapter/src/js/adapter_factory.js";
-import { StreamApiNotSupportedError } from "./errors.js";
+import { StreamApiNotSupportedError, InsecureContextError } from "./errors.js";
 import { imageDataFromVideo } from "./image-data.js";
-import { hasFired } from "./promisify.js";
+import { eventOn } from "callforth";
 
 class Camera {
   constructor(videoEl, stream) {
@@ -18,15 +18,28 @@ class Camera {
   }
 }
 
-const STREAM_API_SUPPORTED =
+const INSECURE_CONTEXT = window.isSecureContext !== true;
+
+const STREAM_API_NOT_SUPPORTED = !(
   navigator &&
   (navigator.getUserMedia ||
-    (navigator.mediaDevices && navigator.mediaDevices.getUserMedia));
+    (navigator.mediaDevices && navigator.mediaDevices.getUserMedia))
+);
 
 let streamApiShimApplied = false;
 
 export default async function(constraints, videoEl) {
-  if (STREAM_API_SUPPORTED === false) {
+  // At least in Chrome `navigator.mediaDevices` is undefined when the page is
+  // loaded using HTTP rather than HTTPS. Thus `STREAM_API_NOT_SUPPORTED` is
+  // initialized with `false` although the API might actually be supported.
+  // So although `getUserMedia` already should have a build-in mechanism to
+  // detect insecure context (by throwing `NotAllowedError`), we have to do a
+  // manual check before even calling `getUserMedia`.
+  if (INSECURE_CONTEXT) {
+    throw new InsecureContextError();
+  }
+
+  if (STREAM_API_NOT_SUPPORTED) {
     throw new StreamApiNotSupportedError();
   }
 
@@ -36,7 +49,6 @@ export default async function(constraints, videoEl) {
   }
 
   const stream = await navigator.mediaDevices.getUserMedia(constraints);
-  const streamLoaded = hasFired(videoEl, "loadeddata", "error");
 
   if (videoEl.srcObject !== undefined) {
     videoEl.srcObject = stream;
@@ -50,7 +62,7 @@ export default async function(constraints, videoEl) {
     videoEl.src = stream;
   }
 
-  await streamLoaded;
+  await eventOn(videoEl, "loadeddata");
 
   return new Camera(videoEl, stream);
 }
