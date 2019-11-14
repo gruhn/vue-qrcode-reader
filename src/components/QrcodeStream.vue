@@ -43,8 +43,13 @@ export default {
       default: "auto",
 
       validator(camera) {
-        return ["auto", "rear", "front", "off"].includes(camera);
+        return ["auto", "rear", "front", "off", "id"].includes(camera);
       }
+    },
+
+    deviceId: {
+      type: String,
+      default: ""
     },
 
     track: {
@@ -117,6 +122,11 @@ export default {
           return base;
         case "front":
           base.video.facingMode = { exact: "user" };
+
+          return base;
+        case "id":
+          base.video.facingMode = { ideal: "" };
+          base.video.deviceId = { exact: this.deviceId };
 
           return base;
         case "off":
