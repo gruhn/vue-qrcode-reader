@@ -183,7 +183,7 @@ Use kebab-case to reference them in your templates:
 
 - If your setup is Desktop Chrome + Android Chrome, use [Remote Debugging](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/) which allows your Android device to [access your local server as localhost](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/local-server).
 - Otherwise use a reverse proxy like [ngrok](https://ngrok.com/) or [serveo](https://serveo.net/) to temporarily make your local server publicly available with HTTPS.
-- There are also loads of serverless/static hosting services that have HTTPS enabled by default and where you can deploy your web app for free. For example _GitHub Pages_, _Google Firebase_, _Netlify_, ...
+- There are also loads of serverless/static hosting services that have HTTPS enabled by default and where you can deploy your web app for free (e.g. *GitHub Pages*, *GitLab Pages*, *Google Firebase*, *Netlify*, *Heroku*, *ZEIT Now*, ...)
 
 #### Some of my QR codes are not being detected.
 
