@@ -30,7 +30,7 @@ import { keepScanning } from "../misc/scanner.js";
 import { thinSquare } from "../misc/track-func.js";
 import Camera from "../misc/camera.js";
 import CommonAPI from "../mixins/CommonAPI.vue";
-import Worker from "../worker/jsqr.js";
+import Worker from "../worker/jsqr.worker.js";
 
 export default {
   name: "qrcode-stream",
@@ -63,14 +63,17 @@ export default {
       type: Function,
       default: Worker
     },
+
     mediaConstraints: {
       type: Object,
-      default: {
-        audio: false,
-        video: {
-          width: { min: 360, ideal: 640, max: 1920 },
-          height: { min: 240, ideal: 480, max: 1080 }
-        }
+      default: () => {
+        return {
+          audio: false,
+          video: {
+            width: { min: 360, ideal: 640, max: 1920 },
+            height: { min: 240, ideal: 480, max: 1080 }
+          }
+        };
       }
     }
   },
@@ -330,5 +333,6 @@ export default {
   object-fit: cover;
   width: 100%;
   height: 100%;
+  transform: rotateY(180deg);
 }
 </style>

@@ -1,16 +1,16 @@
 import QrcodeStream from "./components/QrcodeStream.vue";
-import QrcodeCapture from "./components/QrcodeCapture.vue";
-import QrcodeDropZone from "./components/QrcodeDropZone.vue";
+// import QrcodeCapture from "./components/QrcodeCapture.vue";
+// import QrcodeDropZone from "./components/QrcodeDropZone.vue";
 
 // Install the components
 export function install(Vue) {
   Vue.component("qrcode-stream", QrcodeStream);
-  Vue.component("qrcode-capture", QrcodeCapture);
-  Vue.component("qrcode-drop-zone", QrcodeDropZone);
+  // Vue.component("qrcode-capture", QrcodeCapture);
+  // Vue.component("qrcode-drop-zone", QrcodeDropZone);
 }
 
 // Expose the components
-export { QrcodeStream, QrcodeCapture, QrcodeDropZone };
+export { QrcodeStream };
 
 /* -- Plugin definition & Auto-install -- */
 /* You shouldn't have to modify the code below */

@@ -17,7 +17,7 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        test: /worker\//,
+        test: /\.worker\.js$/,
         loader: "worker-loader",
         options: {
           inline: true,
