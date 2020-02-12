@@ -43,7 +43,14 @@ export default {
       default: "auto",
 
       validator(camera) {
-        return ["auto", "rear", "front", "off"].includes(camera);
+        return [
+          "auto",
+          "rear",
+          "front",
+          "off",
+          "autoRear",
+          "autoFront"
+        ].includes(camera);
       }
     },
 
@@ -55,6 +62,16 @@ export default {
     worker: {
       type: Function,
       default: Worker
+    },
+    mediaConstraints: {
+      type: Object,
+      default: {
+        audio: false,
+        video: {
+          width: { min: 360, ideal: 640, max: 1920 },
+          height: { min: 240, ideal: 480, max: 1080 }
+        }
+      }
     }
   },
 
@@ -98,13 +115,7 @@ export default {
     },
 
     constraints() {
-      const base = {
-        audio: false,
-        video: {
-          width: { min: 360, ideal: 640, max: 1920 },
-          height: { min: 240, ideal: 480, max: 1080 }
-        }
-      };
+      const base = this.mediaConstraints;
 
       switch (this.camera) {
         case "auto":
@@ -117,6 +128,14 @@ export default {
           return base;
         case "front":
           base.video.facingMode = { exact: "user" };
+
+          return base;
+        case "autoRear":
+          base.video.facingMode = { ideal: "environment" };
+
+          return base;
+        case "autoFront":
+          base.video.facingMode = { ideal: "user" };
 
           return base;
         case "off":
@@ -296,7 +315,8 @@ export default {
   height: 100%;
 }
 
-.overlay, .tracking-layer {
+.overlay,
+.tracking-layer {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -304,7 +324,8 @@ export default {
   left: 0;
 }
 
-.camera, .pause-frame {
+.camera,
+.pause-frame {
   display: block;
   object-fit: cover;
   width: 100%;
