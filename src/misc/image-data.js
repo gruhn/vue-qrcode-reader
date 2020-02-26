@@ -1,13 +1,13 @@
 import { DropImageFetchError, DropImageDecodeError } from "./errors.js";
 import { eventOn } from "callforth";
 
-const canvas = document.createElement("canvas");
-const canvasCtx = canvas.getContext("2d");
-
-canvas.width = 1920;
-canvas.height = 1080;
-
 function imageDataFromCanvas(canvasImageSource, width, height) {
+  const canvas = document.createElement("canvas");
+  const canvasCtx = canvas.getContext("2d");
+
+  canvas.width = 1920;
+  canvas.height = 1080;
+
   const scalingRatio = Math.min(
     1,
     canvas.width / width,
