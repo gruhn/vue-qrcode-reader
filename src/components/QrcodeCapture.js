@@ -1,18 +1,6 @@
-<template lang="html">
-  <input
-    @change="onChangeInput"
-    type="file"
-    name="image"
-    accept="image/*"
-    capture="environment"
-    multiple
-  />
-</template>
-
-<script>
 import { scan } from "../misc/scanner.js";
 import { imageDataFromFile } from "../misc/image-data.js";
-import CommonAPI from "../mixins/CommonAPI.vue";
+import CommonAPI from "../mixins/CommonAPI.js";
 import Worker from "../worker/jsqr.js";
 
 export default {
@@ -41,6 +29,19 @@ export default {
 
       return scanResult;
     }
+  },
+
+  render(h) {
+    return h("input", {
+      nativeOn: { change: this.onChangeInput },
+
+      attrs: {
+        "type": "file",
+        "name": "image",
+        "accept": "image/*",
+        "capture": "environment",
+        "multiple": "multiple"
+      }
+    })
   }
 };
-</script>

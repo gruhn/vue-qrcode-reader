@@ -1,18 +1,6 @@
-<template lang="html">
-  <div
-    @drop.prevent.stop="onDrop"
-    @dragenter.prevent.stop="onDragOver(true)"
-    @dragleave.prevent.stop="onDragOver(false)"
-    @dragover.prevent.stop
-  >
-    <slot></slot>
-  </div>
-</template>
-
-<script>
 import { scan } from "../misc/scanner.js";
 import { imageDataFromFile, imageDataFromUrl } from "../misc/image-data.js";
-import CommonAPI from "../mixins/CommonAPI.vue";
+import CommonAPI from "../mixins/CommonAPI.js";
 import Worker from "../worker/jsqr.js";
 
 export default {
@@ -60,6 +48,23 @@ export default {
 
       return scanResult;
     }
+  },
+
+  render(h) {
+    const preventAndStop = handler => event => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      handler(event);
+    };
+
+    return h("div", {
+      nativeOn: {
+        drop: preventAndStop(event => this.onDrop(event)),
+        dragenter: preventAndStop(() => this.onDragOver(true)),
+        dragleave: preventAndStop(() => this.onDragOver(false)),
+        dragover: preventAndStop(() => {})
+      }
+    }, this.$slots.default)
   }
 };
-</script>

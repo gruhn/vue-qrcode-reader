@@ -1,6 +1,6 @@
-import QrcodeStream from "./components/QrcodeStream.vue";
-import QrcodeCapture from "./components/QrcodeCapture.vue";
-import QrcodeDropZone from "./components/QrcodeDropZone.vue";
+import QrcodeStream from "./components/QrcodeStream.js";
+import QrcodeCapture from "./components/QrcodeCapture.js";
+import QrcodeDropZone from "./components/QrcodeDropZone.js";
 
 // Install the components
 export function install(Vue) {

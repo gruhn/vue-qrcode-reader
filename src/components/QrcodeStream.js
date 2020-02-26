@@ -1,35 +1,7 @@
-<template lang="html">
-  <div class="wrapper">
-    <!--
-    Note that the order of DOM elements matters.
-    It defines the stacking order.
-    The first element is at the very bottom, the last element is on top.
-    This eliminates the need for `z-index`.
-    -->
-    <video
-      ref="video"
-      v-show="shouldScan"
-      class="camera"
-      autoplay
-      muted
-      playsinline
-    ></video>
-
-    <canvas ref="pauseFrame" v-show="!shouldScan" class="pause-frame"></canvas>
-
-    <canvas ref="trackingLayer" class="tracking-layer"></canvas>
-
-    <div class="overlay">
-      <slot></slot>
-    </div>
-  </div>
-</template>
-
-<script>
 import { keepScanning } from "../misc/scanner.js";
 import { thinSquare } from "../misc/track-func.js";
 import Camera from "../misc/camera.js";
-import CommonAPI from "../mixins/CommonAPI.vue";
+import CommonAPI from "../mixins/CommonAPI.js";
 import Worker from "../worker/jsqr.js";
 
 export default {
@@ -280,30 +252,71 @@ export default {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       });
     }
+  },
+
+  render(h) {
+    const wrapperStyle = {
+      "position": "relative",
+      "z-index": "0",
+      "width": "100%",
+      "height": "100%"
+    };
+
+    const overlayStyle = {
+      "position": "absolute",
+      "width": "100%",
+      "height": "100%",
+      "top": "0",
+      "left": "0",
+    };
+
+    const bottomLayerStyle = {
+      "display": "block",
+      "object-fit": "cover",
+      "width": "100%",
+      "height": "100%"
+    };
+
+    const vShow = shouldShow => {
+      if (shouldShow) {
+        return { display: "block" };
+      } else {
+        return { display: "none" };
+      }
+    };
+
+    return h("div", { style: wrapperStyle }, [
+
+      h("video", {
+        ref: "video",
+        style: {
+          ...bottomLayerStyle,
+          ...vShow(this.shouldScan)
+        },
+        attrs: {
+          autoplay: "autoplay",
+          muted: "muted",
+          playsinline: "playsinline",
+        }
+      }),
+
+      h("canvas", {
+        ref: "pauseFrame",
+        style: {
+          ...bottomLayerStyle,
+          ...vShow(!this.shouldScan)
+        }
+      }),
+
+      h("canvas", {
+        ref: "trackingLayer",
+        style: overlayStyle
+      }),
+
+      h("div", {
+        style: overlayStyle
+      }, this.$slots.default)
+
+    ]);
   }
 };
-</script>
-
-<style lang="css" scoped>
-.wrapper {
-  position: relative;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.overlay, .tracking-layer {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-}
-
-.camera, .pause-frame {
-  display: block;
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
-</style>

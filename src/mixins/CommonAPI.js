@@ -1,4 +1,3 @@
-<script>
 export default {
   methods: {
     async onDetect(resultPromise) {
@@ -16,4 +15,3 @@ export default {
     }
   }
 };
-</script>

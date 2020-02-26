@@ -2,10 +2,33 @@
   "name": "vue-qrcode-reader",
   "description": "A set of Vue.js components for detecting and decoding QR codes.",
   "version": "0.0.0-development",
-  "author": {
-    "name": "Niklas Gruhn",
-    "email": "niklas@gruhn.me"
+  "source": "src/index.js",
+  "main": "dist/vue-qrcode-reader.js",
+  "module": "dist/vue-qrcode-reader.mjs",
+  "unpkg": "dist/vue-qrcode-reader.umd.js",
+  "scripts": {
+    "build": "microbundle --external vue --name VueQrcodeReader",
+    "watch": "microbundle watch",
+    "serve-demo": "static ./dist"
   },
+  "devDependencies": {
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "microbundle": "^0.11.0",
+    "node-static": "^0.7.11",
+    "prettier": "1.16.4",
+    "semantic-release": "^15.9.9"
+  },
+  "dependencies": {
+    "callforth": "^0.3.0",
+    "inline-worker": "^1.1.0",
+    "vue": "^2.6.10",
+    "webrtc-adapter": "^6.2.1"
+  },
+  "repository": "github:gruhn/vue-qrcode-reader",
+  "bugs": "https://github.com/gruhn/vue-qrcode-reader/issues",
+  "homepage": "https://gruhn.github.io/vue-qrcode-reader",
+  "license": "MIT",
   "keywords": [
     "vue",
     "vuejs",
@@ -15,70 +38,18 @@
     "qrcode-scanner",
     "webrtc"
   ],
-  "license": "MIT",
-  "main": "dist/vue-qrcode-reader.common.js",
-  "unpkg": "dist/vue-qrcode-reader.browser.js",
-  "module": "index.js",
-  "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack --config config/webpack.config.dev.js --progress --watch",
-    "build": "npm run build:browser && npm run build:common",
-    "build:browser": "cross-env NODE_ENV=production webpack --config config/webpack.config.browser.js --progress --hide-modules",
-    "build:common": "cross-env NODE_ENV=production webpack --config config/webpack.config.common.js --progress --hide-modules",
-    "lint": "eslint --ext .js,.vue src"
+  "author": {
+    "name": "Niklas Gruhn",
+    "email": "niklas@gruhn.me"
   },
-  "repository": "github:gruhn/vue-qrcode-reader",
-  "bugs": "https://github.com/gruhn/vue-qrcode-reader/issues",
-  "homepage": "https://gruhn.github.io/vue-qrcode-reader",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
-    "*.{js,json,css,md,vue}": [
-      "prettier --write",
-      "git add"
+    "*.{js}": [
+      "prettier --write"
     ]
-  },
-  "devDependencies": {
-    "babel-core": "^6.0.0",
-    "babel-eslint": "^7.1.1",
-    "babel-loader": "^6.0.0",
-    "babel-plugin-istanbul": "^4.1.1",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-es2015": "^6.14.0",
-    "babel-preset-stage-0": "^6.16.0",
-    "cross-env": "^3.1.3",
-    "cross-spawn": "^5.0.1",
-    "css-loader": "^0.26.1",
-    "cz-conventional-changelog": "^2.1.0",
-    "eslint": "^3.12.1",
-    "eslint-config-prettier": "^4.1.0",
-    "eslint-config-standard": "^6.2.1",
-    "eslint-loader": "^1.6.1",
-    "eslint-plugin-html": "^1.6.0",
-    "eslint-plugin-promise": "^3.4.0",
-    "eslint-plugin-standard": "^2.0.1",
-    "extract-text-webpack-plugin": "^2.0.0-beta.4",
-    "husky": "^1.3.1",
-    "inject-loader": "^3.0.0",
-    "lint-staged": "^8.1.4",
-    "prettier": "1.16.4",
-    "semantic-release": "^17.0.7",
-    "vue-loader": "^10.0.0",
-    "vue-template-compiler": "^2.1.6",
-    "webpack": "^3.0.0",
-    "webpack-merge": "^1.1.2",
-    "worker-loader": "^2.0.0"
-  },
-  "dependencies": {
-    "babel-runtime": "^6.26.0",
-    "callforth": "^0.3.0",
-    "webrtc-adapter": "^6.2.1"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }

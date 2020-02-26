@@ -6,6 +6,8 @@ install:
 
 script:
   - npm run build
+  - cp ./dist/vue-qrcode-reader.js ./dist/vue-qrcode-reader.common.js
+  - cp ./dist/vue-qrcode-reader.umd.js ./dist/vue-qrcode-reader.browser.js
 
 cache: npm
 
