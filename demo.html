@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vue-qrcode-reader-demo</title>
+
+  <script src="https://unpkg.com/vue@2.6.10/dist/vue.js"></script>
+  <script src="./dist/vue-qrcode-reader.browser.js"></script>
+  <link rel="stylesheet" href="./dist/vue-qrcode-reader.css">
+</head>
+
+<body>
+  <div id="app">
+    <p>
+      Last result: <b>{{ decodedContent }}</b>
+    </p>
+
+    <qrcode-stream @decode="onDecode" @init="onInit" :camera="camera" v-if="!destroyed">
+      <div class="loading-indicator" v-if="loading">
+        Loading...
+      </div>
+    </qrcode-stream>
+
+    <button @click="reload">Destroy And Re-Create Component</button>
+    <button @click="pause">Pause Component</button>
+  </div>
+</body>
+<script>
+  new Vue({
+    el: '#app',
+
+    data() {
+      return {
+        decodedContent: '',
+        destroyed: false,
+        loading: false,
+        camera: 'auto'
+      }
+    },
+
+    methods: {
+      onDecode(content) {
+        this.decodedContent = content
+      },
+
+      async onInit (promise) {
+        this.loading = true
+
+        try {
+          await promise
+        } catch (error) {
+          console.error(error)
+        } finally {
+          this.loading = false
+        }
+      },
+
+      async reload() {
+        this.destroyed = true
+
+        await this.$nextTick()
+
+        this.destroyed = false
+      },
+
+      pause() {
+        this.camera = 'off'
+
+        window.setTimeout(() => {
+          this.camera = 'auto'
+        }, 5000);
+      },
+    }
+  })
+
+</script>
+</html>
