@@ -2,12 +2,12 @@ language: node_js
 node_js: "8.11"
 
 install:
-  - yarn install
+  - npm install
 
 script:
-  - yarn run build
+  - npm run build
 
-cache: yarn
+cache: npm
 
 deploy:
   provider: script
