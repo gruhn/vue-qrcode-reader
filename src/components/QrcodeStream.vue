@@ -10,14 +10,24 @@
       ref="video"
       v-show="shouldScan"
       class="camera"
+      :class="[{ mirror: mirror }]"
       autoplay
       muted
       playsinline
     ></video>
 
-    <canvas ref="pauseFrame" v-show="!shouldScan" class="pause-frame"></canvas>
+    <canvas
+      ref="pauseFrame"
+      v-show="!shouldScan"
+      class="pause-frame"
+      :class="[{ mirror: mirror }]"
+    ></canvas>
 
-    <canvas ref="trackingLayer" class="tracking-layer"></canvas>
+    <canvas
+      ref="trackingLayer"
+      class="tracking-layer"
+      :class="[{ mirror: mirror }]"
+    ></canvas>
 
     <div class="overlay">
       <slot></slot>
@@ -75,6 +85,11 @@ export default {
           }
         };
       }
+    },
+
+    mirror: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -333,6 +348,9 @@ export default {
   object-fit: cover;
   width: 100%;
   height: 100%;
+}
+
+.mirror {
   transform: rotateY(180deg);
 }
 </style>

@@ -1807,7 +1807,8 @@
                 }
               };
             }
-          }
+          },
+          mirror: { type: Boolean, default: !1 }
         },
         data: function() {
           return {
@@ -7583,6 +7584,7 @@
               ],
               ref: "video",
               staticClass: "camera",
+              class: [{ mirror: e.mirror }],
               attrs: { autoplay: "", muted: "", playsinline: "" },
               domProps: { muted: !0 }
             }),
@@ -7597,12 +7599,14 @@
                 }
               ],
               ref: "pauseFrame",
-              staticClass: "pause-frame"
+              staticClass: "pause-frame",
+              class: [{ mirror: e.mirror }]
             }),
             e._v(" "),
             r("canvas", {
               ref: "trackingLayer",
-              staticClass: "tracking-layer"
+              staticClass: "tracking-layer",
+              class: [{ mirror: e.mirror }]
             }),
             e._v(" "),
             r("div", { staticClass: "overlay" }, [e._t("default")], 2)
