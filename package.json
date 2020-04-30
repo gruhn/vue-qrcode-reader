@@ -11,9 +11,10 @@
   "author": "Niklas Gruhn",
   "license": "MIT",
   "devDependencies": {
+    "regenerator-runtime": "^0.13.5",
     "vuepress": "^1"
   },
   "dependencies": {
-    "vue-qrcode-reader": "^2.1.1"
+    "vue-qrcode-reader": "^2.2.0"
   }
 }

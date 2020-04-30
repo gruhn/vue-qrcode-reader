@@ -11,10 +11,10 @@ import Upload from './demos/Upload.vue'
 import Fallback from './demos/Fallback.vue'
 import Fullscreen from './demos/Fullscreen.vue'
 import LoadingIndicator from './demos/LoadingIndicator.vue'
+import Torch from './demos/Torch.vue'
 import Validate from './demos/Validate.vue'
 
 export default {
-
   components: {
     DecodeAll,
     CustomTracking,
@@ -24,6 +24,7 @@ export default {
     Fallback,
     Fullscreen,
     LoadingIndicator,
+    Torch,
     Validate
   },
 

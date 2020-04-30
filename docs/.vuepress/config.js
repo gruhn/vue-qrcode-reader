@@ -16,6 +16,7 @@ module.exports = {
         'Validate',
         'SwitchCamera',
         'Fullscreen',
+        'Torch',
         'DragDrop',
         'Upload',
         'Fallback'

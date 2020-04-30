@@ -53,7 +53,7 @@ methods: {
 }
 ```
 
-### `init`
+### `init` <Badge text="deprecated" type="warn" />
 * **Payload Type:** `Promise<void>`
 
 It might take a while before the component is ready and the scanning process starts. The user has to be asked for camera access permission first and the camera stream has to be loaded.
@@ -186,6 +186,23 @@ methods: {
     })
   }
 }
+```
+
+### `torch`
+* **Input Type:** `Boolean`
+* **Default:** `false`
+
+With the `torch` prop you can turn a devices flashlight on/off.
+This is not consistently supported by all devices and browsers.
+Obviously, especially devices without the required hardware.
+At the moment, `torch` silently fails on unsupported devices.
+
+Due to API limitations the camera stream must be reloaded when turning the torch on/off.
+That means the `init` event will be emitted again.
+
+
+```html
+<qrcode-stream :torch="true"></qrcode-stream>
 ```
 
 ### `worker` <Badge text="experimental" type="error" />
