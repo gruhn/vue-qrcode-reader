@@ -47,6 +47,11 @@ export default {
       }
     },
 
+    torch: {
+      type: Boolean,
+      default: false
+    },
+
     track: {
       type: [Function, Boolean],
       default: true
@@ -146,6 +151,10 @@ export default {
       }
     },
 
+    torch() {
+      this.$emit("init", this.init());
+    },
+
     constraints() {
       this.$emit("init", this.init());
     }
@@ -168,7 +177,9 @@ export default {
       if (this.constraints === undefined) {
         this.cameraInstance = null;
       } else {
-        this.cameraInstance = await Camera(this.constraints, this.$refs.video);
+        this.cameraInstance = await Camera(this.constraints, this.$refs.video, {
+          torch: this.torch
+        });
 
         // if the component is destroyed before `cameraInstance` resolves a
         // `beforeDestroy` hook has no chance to clear the remaining camera

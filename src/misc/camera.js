@@ -28,7 +28,7 @@ const STREAM_API_NOT_SUPPORTED = !(
 
 let streamApiShimApplied = false;
 
-export default async function(constraints, videoEl) {
+export default async function(constraints, videoEl, advancedConstraints) {
   // At least in Chrome `navigator.mediaDevices` is undefined when the page is
   // loaded using HTTP rather than HTTPS. Thus `STREAM_API_NOT_SUPPORTED` is
   // initialized with `false` although the API might actually be supported.
@@ -63,6 +63,16 @@ export default async function(constraints, videoEl) {
   }
 
   await eventOn(videoEl, "loadeddata");
+
+  if (advancedConstraints.torch) {
+    const [track] = stream.getVideoTracks();
+
+    try {
+      await track.applyConstraints({ advanced: [{ torch: true }] });
+    } catch (error) {
+      console.warn("device does not support torch capability");
+    }
+  }
 
   return new Camera(videoEl, stream);
 }
