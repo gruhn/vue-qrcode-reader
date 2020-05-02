@@ -1,6 +1,7 @@
 import QrcodeStream from "./components/QrcodeStream.vue";
 import QrcodeCapture from "./components/QrcodeCapture.vue";
 import QrcodeDropZone from "./components/QrcodeDropZone.vue";
+import processFile from "./functions/processFile.js";
 
 // Install the components
 export function install(Vue) {
@@ -10,7 +11,7 @@ export function install(Vue) {
 }
 
 // Expose the components
-export { QrcodeStream, QrcodeCapture, QrcodeDropZone };
+export { QrcodeStream, QrcodeCapture, QrcodeDropZone, processFile };
 
 /* -- Plugin definition & Auto-install -- */
 /* You shouldn't have to modify the code below */
