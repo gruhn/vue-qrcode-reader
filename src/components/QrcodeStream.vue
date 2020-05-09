@@ -152,16 +152,16 @@ export default {
     },
 
     torch() {
-      this.$emit("init", this.init());
+      this.init();
     },
 
     constraints() {
-      this.$emit("init", this.init());
+      this.init();
     }
   },
 
   mounted() {
-    this.$emit("init", this.init());
+    this.init();
   },
 
   beforeDestroy() {
@@ -171,23 +171,41 @@ export default {
   },
 
   methods: {
-    async init() {
-      this.beforeResetCamera();
+    init() {
+      const promise = (async () => {
+        this.beforeResetCamera();
 
-      if (this.constraints === undefined) {
-        this.cameraInstance = null;
-      } else {
-        this.cameraInstance = await Camera(this.constraints, this.$refs.video, {
-          torch: this.torch
-        });
+        if (this.constraints === undefined) {
+          this.cameraInstance = null;
 
-        // if the component is destroyed before `cameraInstance` resolves a
-        // `beforeDestroy` hook has no chance to clear the remaining camera
-        // stream.
-        if (this.destroyed) {
-          this.cameraInstance.stop();
+          return {
+            capabilities: {}
+          };
+        } else {
+          this.cameraInstance = await Camera(
+            this.constraints,
+            this.$refs.video,
+            {
+              torch: this.torch
+            }
+          );
+
+          const capabilities = this.cameraInstance.getCapabilities();
+
+          // if the component is destroyed before `cameraInstance` resolves a
+          // `beforeDestroy` hook has no chance to clear the remaining camera
+          // stream.
+          if (this.destroyed) {
+            this.cameraInstance.stop();
+          }
+
+          return {
+            capabilities
+          };
         }
-      }
+      })();
+
+      this.$emit("init", promise);
     },
 
     startScanning() {

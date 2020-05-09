@@ -16,6 +16,12 @@ class Camera {
   captureFrame() {
     return imageDataFromVideo(this.videoEl);
   }
+
+  getCapabilities() {
+    const [track] = this.stream.getVideoTracks();
+
+    return track.getCapabilities();
+  }
 }
 
 const INSECURE_CONTEXT = window.isSecureContext !== true;
