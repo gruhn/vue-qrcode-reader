@@ -53,12 +53,12 @@ methods: {
 }
 ```
 
-### `init` <Badge text="deprecated" type="warn" />
-* **Payload Type:** `Promise<void>`
+### `init`
+* **Payload Type:** `Promise<MediaTrackCapabilities>`
 
 It might take a while before the component is ready and the scanning process starts. The user has to be asked for camera access permission first and the camera stream has to be loaded.
 
-If you want to show a loading indicator, you can listen for the `init` event. It's emitted as soon as the component is mounted and carries a promise which resolves when everything is ready. The promise is rejected if initialization fails. This can have [a couple of reasons](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Exceptions).
+If you want to show a loading indicator, you can listen for the `init` event. It's emitted as soon as the component is mounted. It carries a promise which resolves with the cameras [MediaTrackCapabilities](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/getCapabilities) when everything is ready. The promise is rejected if initialization fails. This can have [a couple of reasons](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Exceptions).
 
 ::: warning
 In Chrome you can't prompt users for permissions a second time. Once denied, users can only manually grant them. Make sure your users understand why you need access to their camera **before** you mount this component. Otherwise they might panic and deny and then get frustrated because they don't know how to change their decision.
@@ -73,7 +73,7 @@ methods: {
     // show loading indicator
 
     try {
-      await promise
+      const { capabilities } = await promise
 
       // successfully initialized
     } catch (error) {
@@ -194,15 +194,28 @@ methods: {
 
 With the `torch` prop you can turn a devices flashlight on/off.
 This is not consistently supported by all devices and browsers.
-Obviously, especially devices without the required hardware.
+Support can even vary on the same device with the same browser.
+For example the rear camera often has a flashlight but the front camera doesn't.
+We can only tell if flashlight control is supported once the camera is loaded and the `init` event has been emitted.
 At the moment, `torch` silently fails on unsupported devices.
+But from the `init` events payload you can access the [MediaTrackCapabilities](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/getCapabilities) object.
+This will tell you whether or not `torch` is supported.
 
 Due to API limitations the camera stream must be reloaded when turning the torch on/off.
 That means the `init` event will be emitted again.
 
 
 ```html
-<qrcode-stream :torch="true"></qrcode-stream>
+<qrcode-stream :torch="true" @init="onInit"></qrcode-stream>
+```
+```js
+methods: {
+  async onInit (promise) {
+    const { capabilities } = await promise
+
+    const TORCH_IS_SUPPORTED = !!capabilities.torch
+  }
+}
 ```
 
 ### `worker` <Badge text="experimental" type="error" />

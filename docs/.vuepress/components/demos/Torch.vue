@@ -1,7 +1,11 @@
 <template>
   <div>
-    <qrcode-stream :torch="torchActive" @init="logErrors">
-      <button @click="torchActive = !torchActive">
+    <p v-if="torchNotSupported" class="error">
+      Torch not supported for active camera
+    </p>
+
+    <qrcode-stream :torch="torchActive" @init="onInit">
+      <button @click="torchActive = !torchActive" :disabled="torchNotSupported">
         <img :src="$withBase(icon)" alt="toggle torch">
       </button>
     </qrcode-stream>
@@ -17,7 +21,8 @@ export default {
 
   data () {
     return {
-      torchActive: true
+      torchActive: false,
+      torchNotSupported: false
     }
   },
 
@@ -31,8 +36,16 @@ export default {
   },
 
   methods: {
-    logErrors (promise) {
-      promise.catch(console.error)
+    async onInit (promise) {
+      try {
+        const { capabilities } = await promise
+
+        console.log(capabilities);
+
+        this.torchNotSupported = !capabilities.torch
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 }
@@ -43,5 +56,9 @@ button {
   position: absolute;
   left: 10px;
   top: 10px;
+}
+.error {
+  color: red;
+  font-weight: bold;
 }
 </style>
