@@ -1,5 +1,5 @@
 language: node_js
-node_js: "8.11"
+node_js: lts/*
 
 install:
   - npm install
@@ -10,9 +10,15 @@ script:
 cache: npm
 
 deploy:
-  provider: script
-  skip_cleanup: true
-  on:
-    branch: master
-  script:
-    - npx semantic-release --branch master
+  - provider: script
+    skip_cleanup: true
+    on:
+      branch: master
+    script:
+      - npx semantic-release
+  - provider: script
+    skip_cleanup: true
+    on:
+      branch: alpha
+    script:
+      - npx semantic-release
