@@ -64,7 +64,7 @@
     "inject-loader": "^3.0.0",
     "lint-staged": "^8.1.4",
     "prettier": "1.16.4",
-    "semantic-release": "^15.9.9",
+    "semantic-release": "^17.0.7",
     "vue-loader": "^10.0.0",
     "vue-template-compiler": "^2.1.6",
     "webpack": "^3.0.0",
