@@ -1,7 +1,7 @@
 import adapterFactory from "webrtc-adapter/src/js/adapter_factory.js";
 import { StreamApiNotSupportedError, InsecureContextError } from "./errors.js";
 import { imageDataFromVideo } from "./image-data.js";
-import { eventOn } from "callforth";
+import { eventOn, timeout } from "callforth";
 
 class Camera {
   constructor(videoEl, stream) {
@@ -19,7 +19,6 @@ class Camera {
 
   getCapabilities() {
     const [track] = this.stream.getVideoTracks();
-
     return track.getCapabilities();
   }
 }
@@ -121,12 +120,18 @@ export default async function(videoEl, { camera, torch }) {
 
   await eventOn(videoEl, "loadeddata");
 
+  // According to: https://oberhofer.co/mediastreamtrack-and-its-capabilities/#queryingcapabilities
+  // On some devices, getCapabilities only returns a non-empty object after
+  // some delay. There is no appropriate event so we have to add a constant timeout
+  await timeout(500);
+
   if (torch) {
     const [track] = stream.getVideoTracks();
+    const capabilities = track.getCapabilities();
 
-    try {
-      await track.applyConstraints({ advanced: [{ torch: true }] });
-    } catch (error) {
+    if (capabilities.torch) {
+      track.applyConstraints({ advanced: [{ torch: true }] });
+    } else {
       console.warn("device does not support torch capability");
     }
   }

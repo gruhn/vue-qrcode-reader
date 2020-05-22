@@ -33,7 +33,9 @@
         {{ errorMessage }}
       </p>
 
-      <qrcode-stream @decode="onDecode" camera="rear" @init="onInit"></qrcode-stream>
+      <qrcode-stream @decode="onDecode" :torch="torch" @init="onInit"></qrcode-stream>
+
+      <button @click="torch=!torch">Torch On/Off</button>
     </div>
   </body>
   <script>
@@ -43,7 +45,8 @@
       data() {
         return {
           decodedContent: '',
-          errorMessage: ''
+          errorMessage: '',
+          torch: false
         }
       },
 
