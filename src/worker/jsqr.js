@@ -9,9 +9,8 @@ const inlineWorker = func => {
   );
 };
 
-export default () => {
-  /* eslint-disable no-undef */
-  return inlineWorker(function() {
+const jsqrWorker = () => {
+  return inlineWorker(function(self) {
     self.importScripts(
       "https://cdn.jsdelivr.net/npm/jsqr@1.3.1/dist/jsQR.min.js"
     );
@@ -20,7 +19,9 @@ export default () => {
       const imageData = event.data;
       let result = null;
       try {
-        result = jsQR(imageData.data, imageData.width, imageData.height);
+        result = self.jsQR(imageData.data, imageData.width, imageData.height, {
+          inversionAttempts: "dontInvert"
+        });
       } catch (error) {
         if (!(error instanceof RangeError)) {
           throw error;
@@ -39,5 +40,58 @@ export default () => {
       self.postMessage(message, [imageData.data.buffer]);
     });
   });
-  /* eslint-enable */
 };
+
+const nativeWorker = () => {
+  const workerCode = `
+    const detector = new BarcodeDetector({ formats: ["qr_code"] });
+
+    const detect = async imageData => {
+      try {
+        const [ result ] = await detector.detect(imageData);
+
+        if (result === undefined) {
+          return { content: null, location: null };
+        } else {
+          const [
+            topLeftCorner,
+            topRightCorner,
+            bottomRightCorner,
+            bottomLeftCorner
+          ] = result.cornerPoints;
+
+          return {
+            content: result.rawValue,
+            location: {
+              topLeftCorner,
+              topRightCorner,
+              bottomRightCorner,
+              bottomLeftCorner,
+
+              // not supported by native API
+              topRightFinderPattern: {},
+              topLeftFinderPattern: {},
+              bottomLeftFinderPattern: {}
+            }
+          };
+        }
+      } catch (error) {
+        console.error("Boo, BarcodeDetection failed: " + error);
+      }
+    };
+
+    self.addEventListener("message", async event => {
+      const imageData = event.data;
+
+      const { content, location } = await detect(imageData);
+
+      self.postMessage({ content, location, imageData }, [imageData.data.buffer]);
+    });
+  `;
+
+  return new Worker(
+    URL.createObjectURL(new Blob([workerCode], { type: "text/javascript" }))
+  );
+};
+
+export default "BarcodeDetector" in window ? nativeWorker : jsqrWorker;

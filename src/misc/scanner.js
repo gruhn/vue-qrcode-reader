@@ -10,7 +10,7 @@ export const scan = async (spawnWorker, imageData) => {
   worker.terminate();
 
   return event.data;
-}
+};
 
 /**
  * Continuously extracts frames from camera stream and tries to read
@@ -72,4 +72,4 @@ export const keepScanning = (spawnWorker, camera, options) => {
   return () => {
     shouldContinue = false;
   };
-}
+};
