@@ -24,6 +24,32 @@ class Camera {
   }
 }
 
+const narrowDownFacingMode = async facingMode => {
+  // Modern phones often have multipe front/rear cameras.
+  // Sometimes special purpose cameras like the wide-angle camera are picked
+  // by default. Those are not optimal for scanning QR codes but standard
+  // media constraints don't allow us to specify which camera we want exactly.
+  // However, explicitly picking the first entry in the list of all videoinput
+  // devices for as the default front camera and the last entry as the default
+  // rear camera seems to be a workaround.
+  const devices = (await navigator.mediaDevices.enumerateDevices()).filter(
+    ({ kind }) => kind === "videoinput"
+  );
+
+  if (devices.length > 2) {
+    const frontCamera = devices[0];
+    const rearCamera = devices[devices.length - 1];
+
+    if (facingMode === "front") {
+      return { deviceId: { exact: frontCamera } };
+    } else {
+      return { deviceId: { exact: rearCamera } };
+    }
+  } else {
+    return { facingMode };
+  }
+};
+
 const INSECURE_CONTEXT = window.isSecureContext !== true;
 
 const STREAM_API_NOT_SUPPORTED = !(
@@ -34,13 +60,13 @@ const STREAM_API_NOT_SUPPORTED = !(
 
 let streamApiShimApplied = false;
 
-export default async function(constraints, videoEl, advancedConstraints) {
+export default async function(videoEl, { facingMode, torch }) {
   // At least in Chrome `navigator.mediaDevices` is undefined when the page is
   // loaded using HTTP rather than HTTPS. Thus `STREAM_API_NOT_SUPPORTED` is
   // initialized with `false` although the API might actually be supported.
-  // So although `getUserMedia` already should have a build-in mechanism to
+  // So although `getUserMedia` already should have a built-in mechanism to
   // detect insecure context (by throwing `NotAllowedError`), we have to do a
-  // manual check before even calling `getUserMedia`.
+  // manual check before even calling `getUserMedia`.
   if (INSECURE_CONTEXT) {
     throw new InsecureContextError();
   }
@@ -49,10 +75,21 @@ export default async function(constraints, videoEl, advancedConstraints) {
     throw new StreamApiNotSupportedError();
   }
 
+  // This is a brower API only shim. It patches the global window object which
+  // is not available during SSR. So we lazily apply this shim at runtime.
   if (streamApiShimApplied === false) {
     adapterFactory({ window });
     streamApiShimApplied = true;
   }
+
+  const constraints = {
+    audio: false,
+    video: {
+      width: { min: 360, ideal: 640, max: 1920 },
+      height: { min: 240, ideal: 480, max: 1080 },
+      ...(await narrowDownFacingMode(facingMode))
+    }
+  };
 
   const stream = await navigator.mediaDevices.getUserMedia(constraints);
 
@@ -70,7 +107,7 @@ export default async function(constraints, videoEl, advancedConstraints) {
 
   await eventOn(videoEl, "loadeddata");
 
-  if (advancedConstraints.torch) {
+  if (torch) {
     const [track] = stream.getVideoTracks();
 
     try {

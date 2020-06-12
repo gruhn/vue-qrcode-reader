@@ -102,34 +102,10 @@ export default {
       }
     },
 
-    constraints() {
-      const base = {
-        audio: false,
-        video: {
-          width: { min: 360, ideal: 640, max: 1920 },
-          height: { min: 240, ideal: 480, max: 1080 }
-        }
-      };
-
-      switch (this.camera) {
-        case "auto":
-          base.video.facingMode = { ideal: "environment" };
-
-          return base;
-        case "rear":
-          base.video.facingMode = { exact: "environment" };
-
-          return base;
-        case "front":
-          base.video.facingMode = { exact: "user" };
-
-          return base;
-        case "off":
-          return undefined;
-
-        default:
-          return undefined;
-      }
+    facingMode() {
+      if (this.camera === "front") return "user";
+      else if (this.camera === "rear") return "environment";
+      else return undefined;
     }
   },
 
@@ -175,20 +151,17 @@ export default {
       const promise = (async () => {
         this.beforeResetCamera();
 
-        if (this.constraints === undefined) {
+        if (this.camera === "off") {
           this.cameraInstance = null;
 
           return {
             capabilities: {}
           };
         } else {
-          this.cameraInstance = await Camera(
-            this.constraints,
-            this.$refs.video,
-            {
-              torch: this.torch
-            }
-          );
+          this.cameraInstance = await Camera(this.$refs.video, {
+            facingMode: this.facingMode,
+            torch: this.torch
+          });
 
           const capabilities = this.cameraInstance.getCapabilities();
 

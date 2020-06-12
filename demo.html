@@ -8,8 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <script src="https://unpkg.com/vue@2/dist/vue.min.js"></script>
-    <script src="https://unpkg.com/vue-qrcode-reader@2/dist/vue-qrcode-reader.browser.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/vue-qrcode-reader@2/dist/vue-qrcode-reader.css">
+    <script src="./dist/vue-qrcode-reader.browser.js"></script>
+    <link rel="stylesheet" href="./dist/vue-qrcode-reader.css">
 
     <style>
       p {
@@ -33,7 +33,7 @@
         {{ errorMessage }}
       </p>
 
-      <qrcode-stream :torch="true" @init="onInit"></qrcode-stream>
+      <qrcode-stream @decode="onDecode" @init="onInit"></qrcode-stream>
     </div>
   </body>
   <script>
