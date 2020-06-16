@@ -100,12 +100,6 @@ export default {
       } else {
         return this.track;
       }
-    },
-
-    facingMode() {
-      if (this.camera === "front") return "user";
-      else if (this.camera === "rear") return "environment";
-      else return undefined;
     }
   },
 
@@ -159,7 +153,7 @@ export default {
           };
         } else {
           this.cameraInstance = await Camera(this.$refs.video, {
-            facingMode: this.facingMode,
+            camera: this.camera,
             torch: this.torch
           });
 

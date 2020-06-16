@@ -33,7 +33,7 @@
         {{ errorMessage }}
       </p>
 
-      <qrcode-stream @decode="onDecode" @init="onInit"></qrcode-stream>
+      <qrcode-stream @decode="onDecode" camera="rear" @init="onInit"></qrcode-stream>
     </div>
   </body>
   <script>

@@ -24,7 +24,7 @@ class Camera {
   }
 }
 
-const narrowDownFacingMode = async facingMode => {
+const narrowDownFacingMode = async camera => {
   // Modern phones often have multipe front/rear cameras.
   // Sometimes special purpose cameras like the wide-angle camera are picked
   // by default. Those are not optimal for scanning QR codes but standard
@@ -36,17 +36,32 @@ const narrowDownFacingMode = async facingMode => {
     ({ kind }) => kind === "videoinput"
   );
 
-  if (devices.length > 2) {
+  // if (devices.length > 2) {
+  if (false) {
     const frontCamera = devices[0];
     const rearCamera = devices[devices.length - 1];
 
-    if (facingMode === "front") {
-      return { deviceId: { exact: frontCamera } };
-    } else {
-      return { deviceId: { exact: rearCamera } };
+    switch (camera) {
+      case "auto":
+        return { deviceId: { exact: rearCamera.deviceId } };
+      case "rear":
+        return { deviceId: { exact: rearCamera.deviceId } };
+      case "front":
+        return { deviceId: { exact: frontCamera.deviceId } };
+      default:
+        return undefined;
     }
   } else {
-    return { facingMode };
+    switch (camera) {
+      case "auto":
+        return { facingMode: { ideal: "environment" } };
+      case "rear":
+        return { facingMode: { exact: "environment" } };
+      case "front":
+        return { facingMode: { exact: "user" } };
+      default:
+        return undefined;
+    }
   }
 };
 
@@ -60,7 +75,7 @@ const STREAM_API_NOT_SUPPORTED = !(
 
 let streamApiShimApplied = false;
 
-export default async function(videoEl, { facingMode, torch }) {
+export default async function(videoEl, { camera, torch }) {
   // At least in Chrome `navigator.mediaDevices` is undefined when the page is
   // loaded using HTTP rather than HTTPS. Thus `STREAM_API_NOT_SUPPORTED` is
   // initialized with `false` although the API might actually be supported.
@@ -87,7 +102,7 @@ export default async function(videoEl, { facingMode, torch }) {
     video: {
       width: { min: 360, ideal: 640, max: 1920 },
       height: { min: 240, ideal: 480, max: 1080 },
-      ...(await narrowDownFacingMode(facingMode))
+      ...(await narrowDownFacingMode(camera))
     }
   };
 
