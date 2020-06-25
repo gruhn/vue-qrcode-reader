@@ -13,12 +13,7 @@ deploy:
   - provider: script
     skip_cleanup: true
     on:
-      branch: master
-    script:
-      - npx semantic-release
-  - provider: script
-    skip_cleanup: true
-    on:
-      branch: alpha
+      all_branches: true
+      condition: $TRAVIS_BRANCH =~ ^(master|alpha)$
     script:
       - npx semantic-release
