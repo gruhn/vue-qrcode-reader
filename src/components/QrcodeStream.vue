@@ -125,7 +125,7 @@ export default {
       this.init();
     },
 
-    constraints() {
+    camera() {
       this.init();
     }
   },
