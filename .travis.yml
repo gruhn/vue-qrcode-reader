@@ -24,4 +24,4 @@ deploy:
     github_token: $GH_TOKEN
     on:
       branch: master
-    local_dir: /docs/.vuepress/dist
+    local_dir: docs/.vuepress/dist
