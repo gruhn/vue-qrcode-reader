@@ -1,4 +1,5 @@
 {
+  "name": "vue-qrcode-reader",
   "description": "A set of Vue.js components for detecting and decoding QR codes.",
   "version": "0.0.0-development",
   "author": {
