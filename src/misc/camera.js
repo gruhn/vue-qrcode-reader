@@ -1,7 +1,9 @@
-import adapterFactory from "webrtc-adapter/src/js/adapter_factory.js";
+import adapterFactory from "../../node_modules/webrtc-adapter/src/js/adapter_factory.js";
 import { StreamApiNotSupportedError, InsecureContextError } from "./errors.js";
 import { imageDataFromVideo } from "./image-data.js";
 import { eventOn, timeout } from "callforth";
+import { indempotent } from "./util.js"
+import { shimAddTrackRemoveTrackWithNative } from "webrtc-adapter/src/js/chrome/chrome_shim";
 
 class Camera {
   constructor(videoEl, stream) {
@@ -71,7 +73,7 @@ const STREAM_API_NOT_SUPPORTED = !(
     (navigator.mediaDevices && navigator.mediaDevices.getUserMedia))
 );
 
-let streamApiShimApplied = false;
+const applyWebRTCShim = indempotent(() => import("webrtc-adapter"))
 
 export default async function(videoEl, { camera, torch }) {
   // At least in Chrome `navigator.mediaDevices` is undefined when the page is
@@ -88,19 +90,16 @@ export default async function(videoEl, { camera, torch }) {
     throw new StreamApiNotSupportedError();
   }
 
-  // This is a brower API only shim. It patches the global window object which
+  // This is a browser API only shim. It patches the global window object which
   // is not available during SSR. So we lazily apply this shim at runtime.
-  if (streamApiShimApplied === false) {
-    adapterFactory({ window });
-    streamApiShimApplied = true;
-  }
+  await applyWebRTCShim()
 
   const constraints = {
     audio: false,
     video: {
       width: { min: 360, ideal: 640, max: 1920 },
       height: { min: 240, ideal: 480, max: 1080 },
-      ...(await narrowDownFacingMode(camera))
+      ...(await narrowDownFacingMode(camera)),
     }
   };
 

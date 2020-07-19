@@ -118,15 +118,15 @@ The newest API these components depend on is the [FileReader API](https://canius
 
 # Installation :package:
 
-## Module import
+## With NPM
 
-Run:
+Run
 
 ```bash
 npm install vue-qrcode-reader
 ```
 
-Either import the components independantly for local registration:
+You can import the components independantly
 
 ```javascript
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader'
@@ -143,7 +143,7 @@ const MyComponent = {
 ))
 ```
 
-Or register all of them globally right away:
+or register all of them globally right away
 
 ```javascript
 import Vue from "vue";
@@ -152,14 +152,35 @@ import VueQrcodeReader from "vue-qrcode-reader";
 Vue.use(VueQrcodeReader);
 ```
 
-**⚠️ A css file is included when importing the package. You may have to setup your bundler to embed the css in your page.**
+## Without NPM
 
-## Classic import
+<!--
+CHANGE NEXT RELEASE:
 
-Vue itself must be included first. Then add the following CSS and JS file:
+Include the following JS files:
 
-- `<link href="`[vue-qrcode-reader.css](https://unpkg.com/vue-qrcode-reader/dist/vue-qrcode-reader.css)`" rel="stylesheet">`
-- `<script src="`[vue-qrcode-reader.browser.js](https://unpkg.com/vue-qrcode-reader/dist/vue-qrcode-reader.browser.js)`"></script>`
+https://unpkg.com/vue-qrcode-reader/dist/VueQrcodeReader.umd.min.js
+https://unpkg.com/vue-qrcode-reader/dist/VueQrcodeReader.umd.min.1.js
+
+Make sure to include them after Vue:
+
+```html
+<script src="./vue.js"></script>
+<script src="./VueQrcodeReader.umd.min.js"></script>
+<script src="./VueQrcodeReader.umd.min.1.js"></script>
+```
+-->
+
+Include the following JS file:
+
+https://unpkg.com/vue-qrcode-reader/dist/vue-qrcode-reader.browser.js
+
+Make sure to include it after Vue:
+
+```html
+<script src="./vue.js"></script>
+<script src="./vue-qrcode-reader.browser.js"></script>
+```
 
 All components are automatically registered globally.
 Use kebab-case to reference them in your templates:
