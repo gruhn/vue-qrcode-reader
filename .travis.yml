@@ -12,13 +12,13 @@ cache: npm
 
 deploy:
   - provider: script
-    cleanup: false
+    skip_cleanup: true
     on:
       all_branches: true
       condition: $TRAVIS_BRANCH =~ ^(master|alpha)$
     script: npx semantic-release
   - provider: pages
-    cleanup: false
+    skip_cleanup: true
     keep_history: true
     github_token: $GH_TOKEN
     on:

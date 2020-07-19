@@ -11,6 +11,7 @@
   "homepage": "https://gruhn.github.io/vue-qrcode-reader",
   "main": "dist/VueQrcodeReader.common.js",
   "unpkg": "dist/VueQrcodeReader.umd.min.js",
+  "browser": "dist/VueQrcodeReader.umd.min.js",
   "keywords": [
     "vue",
     "vuejs",
