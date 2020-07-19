@@ -1,9 +1,7 @@
-import adapterFactory from "../../node_modules/webrtc-adapter/src/js/adapter_factory.js";
 import { StreamApiNotSupportedError, InsecureContextError } from "./errors.js";
 import { imageDataFromVideo } from "./image-data.js";
 import { eventOn, timeout } from "callforth";
 import { indempotent } from "./util.js"
-import { shimAddTrackRemoveTrackWithNative } from "webrtc-adapter/src/js/chrome/chrome_shim";
 
 class Camera {
   constructor(videoEl, stream) {
