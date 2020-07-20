@@ -71,7 +71,14 @@ const STREAM_API_NOT_SUPPORTED = !(
     (navigator.mediaDevices && navigator.mediaDevices.getUserMedia))
 );
 
-const applyWebRTCShim = indempotent(() => import("webrtc-adapter"))
+const applyWebRTCShim = indempotent(() => {
+  const script = document.createElement("script");
+  script.src = "https://webrtc.github.io/adapter/adapter-7.6.3.js";
+
+  document.head.appendChild(script);
+
+  return eventOn(script, "load");
+});
 
 export default async function(videoEl, { camera, torch }) {
   // At least in Chrome `navigator.mediaDevices` is undefined when the page is
