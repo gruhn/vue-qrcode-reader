@@ -1,5 +1,20 @@
 # QrcodeStream
 
+## Browser Support
+
+This component fundamentally depends on the [Stream API](https://caniuse.com/#feat=stream).
+
+| ![Internet Explorer](/ie_32x32.png) | ![Edge](/edge2019_32x32.png) | ![Firefox](/firefox_32x32.png) | ![Chrome](/chrome_32x32.png) | ![Safari](/safari_32x32.png) |
+| :---------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
+|                                                     No                                                      |                                               Yes                                                |                                                  Yes                                                   |                                                 Yes¹                                                 |                                                 Yes²                                                  |
+
+1. Chrome requires [HTTPS or localhost](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins) (see _Troubleshooting_ for help)
+2. Safari also requires HTTPS **even** on localhost (see [#48](../../issues/48)). It also won't work in:
+   - _Chrome for iOS_, _Firefox for iOS_, ... (see [#29](../../issues/29))
+   - WkWebView component of native iOS apps
+   - web apps added to home screen (PWA mode) **prior to iOS 13.4** (see [#76](../../issues/76))
+
+
 ## Events
 
 ### `decode`

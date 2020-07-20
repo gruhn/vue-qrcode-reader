@@ -1,5 +1,15 @@
 # QrcodeCapture
 
+## Browser Support
+
+The newest API this component depend on is the [FileReader API](https://caniuse.com/#feat=filereader).
+
+| ![Internet Explorer](/ie_32x32.png) | ![Edge](/edge2019_32x32.png) | ![Firefox](/firefox_32x32.png) | ![Chrome](/chrome_32x32.png) | ![Safari](/safari_32x32.png) |
+| :---------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
+|                                                     10+                                                     |                                               Yes                                                |                                                  Yes                                                   |                                                 Yes                                                  |                                                 Yes¹                                                 |
+
+1. It doesn't work in web apps added to home screen (PWA mode) on iOS prior to 11.3 (see [this StackOverflow question](https://stackoverflow.com/questions/46228218/how-to-access-camera-on-ios11-home-screen-web-app))
+
 ## Events
 
 ### `decode`

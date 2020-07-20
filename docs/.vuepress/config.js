@@ -34,8 +34,8 @@ module.exports = {
     },
 
     nav: [
-      { text: 'Demos', link: '/demos/DecodeAll' },
-      { text: 'Component APIs', link: '/api/QrcodeStream' }
+      { text: 'Live Demos', link: '/demos/DecodeAll' },
+      { text: 'API Reference', link: '/api/QrcodeStream' }
     ]
   }
 }

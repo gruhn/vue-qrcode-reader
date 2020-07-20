@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/logo.png" alt="Logo" width="240" height="240" style="max-width: 100%;">
+  <img src="https://gruhn.github.io/vue-qrcode-reader/logo.png" alt="Logo" width="240" height="240" style="max-width: 100%;">
 
   <br>
   <br>
@@ -57,8 +57,8 @@
 
   <br>
   <br>
-  <a href="https://gruhn.github.io/vue-qrcode-reader/api/QrcodeStream.html">documentation</a> |
-  <a href="https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html">live demos</a>
+  <a href="https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html">live demos</a> |
+  <a href="https://gruhn.github.io/vue-qrcode-reader/api/QrcodeStream.html">api reference</a>
 </p>
 
 A set of Vue.js components, allowing you to detect and decode QR codes, without leaving the browser.
@@ -88,33 +88,6 @@ methods: {
   <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/screenshot2.png" height="500" alt="Screenshot 2">
   <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/screenshot3.png" height="500" alt="Screenshot 3">
 </p>
-
-# Browser support :chart_with_upwards_trend:
-
-#### `QrcodeStream`
-
-This component fundamentally depends on the [Stream API](https://caniuse.com/#feat=stream).
-
-| ![Internet Explorer](https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/ie_32x32.png) | ![Edge](https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/edge2019_32x32.png) | ![Firefox](https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/firefox_32x32.png) | ![Chrome](https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/chrome_32x32.png) | ![Safari](https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/safari_32x32.png) |
-| :---------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
-|                                                     No                                                      |                                               Yes                                                |                                                  Yes                                                   |                                                 Yes¹                                                 |                                                 Yes²                                                  |
-
-1. Chrome requires [HTTPS or localhost](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins) (see _Troubleshooting_ for help)
-2. Safari also requires HTTPS **even** on localhost (see [#48](../../issues/48)). It also won't work in:
-   - _Chrome for iOS_, _Firefox for iOS_, ... (see [#29](../../issues/29))
-   - WkWebView component of native iOS apps
-   - web apps added to home screen (PWA mode) **prior to iOS 13.4** (see [#76](../../issues/76))
-
-#### `QrcodeDropZone` and `QrcodeCapture`
-
-The newest API these components depend on is the [FileReader API](https://caniuse.com/#feat=filereader).
-
-| ![Internet Explorer](https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/ie_32x32.png) | ![Edge](https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/edge2019_32x32.png) | ![Firefox](https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/firefox_32x32.png) | ![Chrome](https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/chrome_32x32.png) | ![Safari](https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/safari_32x32.png) |
-| :---------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
-|                                                     10+                                                     |                                               Yes                                                |                                                  Yes                                                   |                                                 Yes                                                  |                                                 Yes¹                                                 |
-
-1. `QrcodeCapture` doesn't work in web apps added to home screen (PWA mode) on iOS prior to 11.3 (see [this StackOverflow question](https://stackoverflow.com/questions/46228218/how-to-access-camera-on-ios11-home-screen-web-app))
-
 
 # Installation :package:
 
@@ -154,32 +127,15 @@ Vue.use(VueQrcodeReader);
 
 ## Without NPM
 
-<!--
-CHANGE NEXT RELEASE:
-
-Include the following JS files:
-
-https://unpkg.com/vue-qrcode-reader/dist/VueQrcodeReader.umd.min.js
-https://unpkg.com/vue-qrcode-reader/dist/VueQrcodeReader.umd.min.1.js
-
-Make sure to include them after Vue:
-
-```html
-<script src="./vue.js"></script>
-<script src="./VueQrcodeReader.umd.min.js"></script>
-<script src="./VueQrcodeReader.umd.min.1.js"></script>
-```
--->
-
 Include the following JS file:
 
-https://unpkg.com/vue-qrcode-reader/dist/vue-qrcode-reader.browser.js
+https://unpkg.com/vue-qrcode-reader/dist/VueQrcodeReader.umd.min.js
 
 Make sure to include it after Vue:
 
 ```html
 <script src="./vue.js"></script>
-<script src="./vue-qrcode-reader.browser.js"></script>
+<script src="./VueQrcodeReader.umd.min.js"></script>
 ```
 
 All components are automatically registered globally.
