@@ -13,7 +13,7 @@ export default () => {
   /* eslint-disable no-undef */
   return inlineWorker(function() {
     self.importScripts(
-      "https://cdn.jsdelivr.net/npm/jsqr@1.2.0/dist/jsQR.min.js"
+      "https://cdn.jsdelivr.net/npm/jsqr@1.3.1/dist/jsQR.min.js"
     );
 
     self.addEventListener("message", function(event) {
