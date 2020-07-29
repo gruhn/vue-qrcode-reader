@@ -4,7 +4,7 @@
   "version": "0.0.0-development",
   "author": {
     "name": "Niklas Gruhn",
-    "email": "niklas.gruhn@gmail.com"
+    "email": "niklas@gruhn.me"
   },
   "repository": "github:gruhn/vue-qrcode-reader",
   "bugs": "https://github.com/gruhn/vue-qrcode-reader/issues",
