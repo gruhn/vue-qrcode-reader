@@ -1,7 +1,10 @@
-import adapterFactory from "webrtc-adapter/src/js/adapter_factory.js";
 import { StreamApiNotSupportedError, InsecureContextError } from "./errors.js";
 import { imageDataFromVideo } from "./image-data.js";
 import { eventOn, timeout } from "callforth";
+<<<<<<< HEAD
+=======
+import { indempotent } from "./util.js"
+>>>>>>> master
 
 class Camera {
   constructor(videoEl, stream) {
@@ -19,7 +22,8 @@ class Camera {
 
   getCapabilities() {
     const [track] = this.stream.getVideoTracks();
-    return track.getCapabilities();
+    // Firefox does not yet support getCapabilities as of August 2020
+    return track?.getCapabilities?.() ?? {};
   }
 }
 
@@ -63,15 +67,14 @@ const narrowDownFacingMode = async camera => {
   }
 };
 
-const INSECURE_CONTEXT = window.isSecureContext !== true;
+const applyWebRTCShim = indempotent(() => {
+  const script = document.createElement("script");
+  script.src = "https://webrtc.github.io/adapter/adapter-7.6.3.js";
 
-const STREAM_API_NOT_SUPPORTED = !(
-  navigator &&
-  (navigator.getUserMedia ||
-    (navigator.mediaDevices && navigator.mediaDevices.getUserMedia))
-);
+  document.head.appendChild(script);
 
-let streamApiShimApplied = false;
+  return eventOn(script, "load");
+});
 
 export default async function(videoEl, { camera, torch }) {
   // At least in Chrome `navigator.mediaDevices` is undefined when the page is
@@ -80,27 +83,24 @@ export default async function(videoEl, { camera, torch }) {
   // So although `getUserMedia` already should have a built-in mechanism to
   // detect insecure context (by throwing `NotAllowedError`), we have to do a
   // manual check before even calling `getUserMedia`.
-  if (INSECURE_CONTEXT) {
+  if (window.isSecureContext !== true) {
     throw new InsecureContextError();
   }
 
-  if (STREAM_API_NOT_SUPPORTED) {
+  if (navigator?.mediaDevices?.getUserMedia === undefined) {
     throw new StreamApiNotSupportedError();
   }
 
-  // This is a brower API only shim. It patches the global window object which
+  // This is a browser API only shim. It patches the global window object which
   // is not available during SSR. So we lazily apply this shim at runtime.
-  if (streamApiShimApplied === false) {
-    adapterFactory({ window });
-    streamApiShimApplied = true;
-  }
+  await applyWebRTCShim()
 
   const constraints = {
     audio: false,
     video: {
       width: { min: 360, ideal: 640, max: 1920 },
       height: { min: 240, ideal: 480, max: 1080 },
-      ...(await narrowDownFacingMode(camera))
+      ...(await narrowDownFacingMode(camera)),
     }
   };
 
