@@ -19,7 +19,8 @@ class Camera {
 
   getCapabilities() {
     const [track] = this.stream.getVideoTracks();
-    return track.getCapabilities();
+    // Firefox does not yet support getCapabilities as of August 2020
+    return track?.getCapabilities?.() ?? {};
   }
 }
 
@@ -63,14 +64,6 @@ const narrowDownFacingMode = async camera => {
   }
 };
 
-const INSECURE_CONTEXT = window.isSecureContext !== true;
-
-const STREAM_API_NOT_SUPPORTED = !(
-  navigator &&
-  (navigator.getUserMedia ||
-    (navigator.mediaDevices && navigator.mediaDevices.getUserMedia))
-);
-
 const applyWebRTCShim = indempotent(() => {
   const script = document.createElement("script");
   script.src = "https://webrtc.github.io/adapter/adapter-7.6.3.js";
@@ -87,11 +80,11 @@ export default async function(videoEl, { camera, torch }) {
   // So although `getUserMedia` already should have a built-in mechanism to
   // detect insecure context (by throwing `NotAllowedError`), we have to do a
   // manual check before even calling `getUserMedia`.
-  if (INSECURE_CONTEXT) {
+  if (window.isSecureContext !== true) {
     throw new InsecureContextError();
   }
 
-  if (STREAM_API_NOT_SUPPORTED) {
+  if (navigator?.mediaDevices?.getUserMedia === undefined) {
     throw new StreamApiNotSupportedError();
   }
 
