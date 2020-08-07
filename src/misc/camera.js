@@ -1,10 +1,7 @@
 import { StreamApiNotSupportedError, InsecureContextError } from "./errors.js";
 import { imageDataFromVideo } from "./image-data.js";
 import { eventOn, timeout } from "callforth";
-<<<<<<< HEAD
-=======
 import { indempotent } from "./util.js"
->>>>>>> master
 
 class Camera {
   constructor(videoEl, stream) {
