@@ -1,7 +1,7 @@
 import { StreamApiNotSupportedError, InsecureContextError } from "./errors.js";
 import { imageDataFromVideo } from "./image-data.js";
 import { eventOn, timeout } from "callforth";
-import { indempotent } from "./util.js"
+import shimGetUserMedia from "./shimGetUserMedia"
 
 class Camera {
   constructor(videoEl, stream) {
@@ -64,15 +64,6 @@ const narrowDownFacingMode = async camera => {
   }
 };
 
-const applyWebRTCShim = indempotent(() => {
-  const script = document.createElement("script");
-  script.src = "https://webrtc.github.io/adapter/adapter-7.6.3.js";
-
-  document.head.appendChild(script);
-
-  return eventOn(script, "load");
-});
-
 export default async function(videoEl, { camera, torch }) {
   // At least in Chrome `navigator.mediaDevices` is undefined when the page is
   // loaded using HTTP rather than HTTPS. Thus `STREAM_API_NOT_SUPPORTED` is
@@ -90,7 +81,7 @@ export default async function(videoEl, { camera, torch }) {
 
   // This is a browser API only shim. It patches the global window object which
   // is not available during SSR. So we lazily apply this shim at runtime.
-  await applyWebRTCShim()
+  await shimGetUserMedia()
 
   const constraints = {
     audio: false,

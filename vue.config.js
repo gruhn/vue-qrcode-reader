@@ -1,5 +1,7 @@
 module.exports = {
   css: { extract: false },
 
-  lintOnSave: false
+  lintOnSave: false,
+
+  transpileDependencies: ['webrtc-adapter']
 };
