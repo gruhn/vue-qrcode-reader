@@ -1,7 +1,7 @@
 import { StreamApiNotSupportedError, InsecureContextError } from "./errors.js";
 import { imageDataFromVideo } from "./image-data.js";
 import { eventOn, timeout } from "callforth";
-import shimGetUserMedia from "./shimGetUserMedia"
+import shimGetUserMedia from "./shimGetUserMedia";
 
 class Camera {
   constructor(videoEl, stream) {
@@ -81,14 +81,14 @@ export default async function(videoEl, { camera, torch }) {
 
   // This is a browser API only shim. It patches the global window object which
   // is not available during SSR. So we lazily apply this shim at runtime.
-  await shimGetUserMedia()
+  await shimGetUserMedia();
 
   const constraints = {
     audio: false,
     video: {
       width: { min: 360, ideal: 640, max: 1920 },
       height: { min: 240, ideal: 480, max: 1080 },
-      ...(await narrowDownFacingMode(camera)),
+      ...(await narrowDownFacingMode(camera))
     }
   };
 
