@@ -44,6 +44,7 @@ The `detect` event is basically a verbose version of `decode`. `decode` only giv
 
 * is always emitted before `decode`
 * gives you the unprocessed raw image data
+* gives you the raw bytes of the QR code.
 * gives you the coordinates of the QR code in the camera frame
 * does NOT silently fail in case of errors
 
@@ -57,6 +58,7 @@ methods: {
       const {
         imageData,    // raw image data of image/frame
         content,      // decoded String
+        binaryData,   // The raw bytes of the QR code
         location      // QR code coordinates
       } = await promise
 

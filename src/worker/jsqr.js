@@ -22,13 +22,15 @@ export default () => {
 
       let content = null;
       let location = null;
+      let binaryData = null;
 
       if (result !== null) {
         content = result.data;
         location = result.location;
+        binaryData = result.binaryData;
       }
 
-      const message = { content, location, imageData };
+      const message = { content, location, imageData, binaryData };
       self.postMessage(message, [imageData.data.buffer]);
     });
   });
