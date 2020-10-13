@@ -4,7 +4,6 @@
     type="file"
     name="image"
     accept="image/*"
-    capture="environment"
     multiple
   />
 </template>
