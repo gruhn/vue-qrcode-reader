@@ -40,11 +40,12 @@ export default {
   props: {
     camera: {
       type: String,
-      default: "auto",
+      default: "auto"
+    },
 
-      validator(camera) {
-        return ["auto", "rear", "front", "off"].includes(camera);
-      }
+    callbackDevices: {
+      type: [Function, Boolean],
+      default: false
     },
 
     torch: {
@@ -154,7 +155,8 @@ export default {
         } else {
           this.cameraInstance = await Camera(this.$refs.video, {
             camera: this.camera,
-            torch: this.torch
+            torch: this.torch,
+            callbackDevices: this.callbackDevices
           });
 
           const capabilities = this.cameraInstance.getCapabilities();
