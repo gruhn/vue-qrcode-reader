@@ -8,7 +8,10 @@
       You don't seem to have a rear camera on your device
     </p>
 
-    <qrcode-stream :camera="camera" @init="onInit">
+    <qrcode-stream :camera="camera" @init="onInit" :callback-devices="callbackDevices">
+      <select class="devices" @change="switchCamera" :value="camera">
+        <option v-for="device in devices" v-bind:key="device.value" :value="device.value" >{{ device.text }}</option>
+      </select>
       <button @click="switchCamera">
         <img :src="$withBase('/camera-switch.svg')" alt="switch camera">
       </button>
@@ -33,6 +36,9 @@ export default {
   },
 
   methods: {
+    callbackDevices() {
+
+    },
     switchCamera () {
       switch (this.camera) {
         case 'front':
