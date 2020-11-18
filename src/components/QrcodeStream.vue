@@ -29,7 +29,7 @@ import { keepScanning } from "../misc/scanner.js";
 import { thinSquare } from "../misc/track-func.js";
 import Camera from "../misc/camera.js";
 import CommonAPI from "../mixins/CommonAPI.vue";
-import Worker from "../worker/jsqr.js";
+import spawnWorker from "../worker/jsqr.js";
 
 export default {
   name: "qrcode-stream",
@@ -58,7 +58,7 @@ export default {
 
     worker: {
       type: Function,
-      default: Worker
+      default: spawnWorker
     }
   },
 
