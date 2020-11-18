@@ -1,7 +1,7 @@
 import { eventOn } from "callforth";
 
-export async function scan(Worker, imageData) {
-  const worker = new Worker();
+export const scan = async (spawnWorker, imageData) => {
+  const worker = spawnWorker();
 
   worker.postMessage(imageData, [imageData.data.buffer]);
 
@@ -16,14 +16,14 @@ export async function scan(Worker, imageData) {
  * Continuously extracts frames from camera stream and tries to read
  * potentially pictured QR codes.
  */
-export function keepScanning(Worker, camera, options) {
+export const keepScanning = (spawnWorker, camera, options) => {
   const { detectHandler, locateHandler, minDelay } = options;
 
   let contentBefore = null;
   let locationBefore = null;
   let lastScanned = performance.now();
 
-  const worker = new Worker();
+  const worker = spawnWorker();
 
   // If worker can't process frames fast enough, memory will quickly full up.
   // Make sure to process only one frame at a time.

@@ -3,5 +3,5 @@ module.exports = {
 
   lintOnSave: false,
 
-  transpileDependencies: ['webrtc-adapter']
+  transpileDependencies: ["webrtc-adapter"]
 };

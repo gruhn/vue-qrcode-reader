@@ -1,25 +1,24 @@
 <template lang="html">
-  <div class="wrapper">
+  <div class="qrcode-stream-wrapper">
     <!--
-    Note that the order of DOM elements matters.
-    It defines the stacking order.
-    The first element is at the very bottom, the last element is on top.
-    This eliminates the need for `z-index`.
+    Note, the following DOM elements are not styled with z-index.
+    If z-index is not defined, elements are stacked in the order they appear in the DOM.
+    The first element is at the very bottom and subsequent elements are added on top.
     -->
     <video
       ref="video"
       v-show="shouldScan"
-      class="camera"
+      class="qrcode-stream-camera"
       autoplay
       muted
       playsinline
     ></video>
 
-    <canvas ref="pauseFrame" v-show="!shouldScan" class="pause-frame"></canvas>
+    <canvas ref="pauseFrame" v-show="!shouldScan" class="qrcode-stream-camera"></canvas>
 
-    <canvas ref="trackingLayer" class="tracking-layer"></canvas>
+    <canvas ref="trackingLayer" class="qrcode-stream-overlay"></canvas>
 
-    <div class="overlay">
+    <div class="qrcode-stream-overlay">
       <slot></slot>
     </div>
   </div>
@@ -30,7 +29,7 @@ import { keepScanning } from "../misc/scanner.js";
 import { thinSquare } from "../misc/track-func.js";
 import Camera from "../misc/camera.js";
 import CommonAPI from "../mixins/CommonAPI.vue";
-import Worker from "../worker/jsqr.js";
+import spawnWorker from "../worker/jsqr.js";
 
 export default {
   name: "qrcode-stream",
@@ -59,7 +58,7 @@ export default {
 
     worker: {
       type: Function,
-      default: Worker
+      default: spawnWorker
     }
   },
 
@@ -285,27 +284,28 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.wrapper {
+.qrcode-stream-wrapper {
+  width: 100%;
+  height: 100%;
+
   position: relative;
   z-index: 0;
-  width: 100%;
-  height: 100%;
 }
 
-.overlay,
-.tracking-layer {
-  position: absolute;
+.qrcode-stream-overlay {
   width: 100%;
   height: 100%;
+
+  position: absolute;
   top: 0;
   left: 0;
 }
 
-.camera,
-.pause-frame {
-  display: block;
-  object-fit: cover;
+.qrcode-stream-camera {
   width: 100%;
   height: 100%;
+
+  display: block;
+  object-fit: cover;
 }
 </style>
