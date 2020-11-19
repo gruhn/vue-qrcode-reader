@@ -1,4 +1,4 @@
 branches:
   - name: master
-  - name: alpha
+  - name: beta
     prerelease: true

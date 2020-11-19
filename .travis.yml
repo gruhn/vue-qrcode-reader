@@ -15,7 +15,7 @@ deploy:
     skip_cleanup: true
     on:
       all_branches: true
-      condition: $TRAVIS_BRANCH =~ ^(master|alpha)$
+      condition: $TRAVIS_BRANCH =~ ^(master|beta)$
     script: npx semantic-release
   - provider: pages
     skip_cleanup: true
