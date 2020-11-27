@@ -2,7 +2,7 @@
 
 ## Browser Support
 
-The newest API this component depend on is the [FileReader API](https://caniuse.com/#feat=filereader).
+The newest API this component depend on is the [FileReader API](https://caniuse.com/#feat=filereader). Vue Native is not supported (see [#206](https://github.com/gruhn/vue-qrcode-reader/issues/206)).
 
 | ![Internet Explorer](./ie_32x32.png) | ![Edge](./edge2019_32x32.png) | ![Firefox](./firefox_32x32.png) | ![Chrome](./chrome_32x32.png) | ![Safari](./safari_32x32.png) |
 | :---------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
