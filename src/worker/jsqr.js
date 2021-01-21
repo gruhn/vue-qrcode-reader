@@ -18,7 +18,14 @@ export default () => {
 
     self.addEventListener("message", function(event) {
       const imageData = event.data;
-      const result = jsQR(imageData.data, imageData.width, imageData.height);
+      let result = null;
+      try {
+        result = jsQR(imageData.data, imageData.width, imageData.height);
+      } catch (error) {
+        if (!(error instanceof RangeError)) {
+          throw error;
+        }
+      }
 
       let content = null;
       let location = null;
