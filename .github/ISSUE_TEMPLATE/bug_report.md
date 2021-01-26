@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Describe the bug**
-A clear and concise description of what the bug is.
+A clear and concise description of what the bug is. Can you reproduce this issue with [one of the demos](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html)?
 
 **To Reproduce**
 Please provide a link to a minimal reproduction of the bug. For example on jsFiddle, CodePen, etc. Please don't attach a ZIP file with your entire code base. I know this is additional effort but if it takes too much time to reproduce your issue you'll likely won't get help at all.
