@@ -10,10 +10,10 @@ Vue Native is not supported (see [#206](https://github.com/gruhn/vue-qrcode-read
 |                                                     No                                                      |                                               Yes                                                |                                                  Yes                                                   |                                                 Yes¹                                                 |                                                 Yes²                                                  |
 
 1. Chrome requires [HTTPS or localhost](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins) (see _Troubleshooting_ for help)
-2. Safari also requires HTTPS **even** on localhost (see [#48](https://github.com/gruhn/vue-qrcode-reader/issues/48)). It also won't work in:
-   - _Chrome for iOS_, _Firefox for iOS_, ... (see [#29](https://github.com/gruhn/vue-qrcode-reader/issues/29))
-   - WkWebView component of native iOS apps
-   - web apps added to home screen (PWA mode) **prior to iOS 13.4** (see [#76](https://github.com/gruhn/vue-qrcode-reader/issues/76))
+2. Safari also requires HTTPS **even** on localhost (see [#48](https://github.com/gruhn/vue-qrcode-reader/issues/48)). Support is limited for:
+   - web apps added to home screen (PWA mode): at least **iOS 13.4** (see [#76](https://github.com/gruhn/vue-qrcode-reader/issues/76))
+   - iOS browsers other than Safari (_Chrome for iOS_, _Firefox for iOS_, ...): at least **iOS 14.3** (see [#29](https://github.com/gruhn/vue-qrcode-reader/issues/29))
+   - WkWebView component in native iOS apps: at least **iOS 14.3** (see [#29](https://github.com/gruhn/vue-qrcode-reader/issues/29))
 
 
 ## Events
