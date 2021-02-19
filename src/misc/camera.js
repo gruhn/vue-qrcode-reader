@@ -10,7 +10,12 @@ class Camera {
   }
 
   stop() {
-    this.stream.getTracks().forEach(track => track.stop());
+    this.videoEl.srcObject = null;
+
+    this.stream.getTracks().forEach(track => {
+      this.stream.removeTrack(track);
+      track.stop();
+    });
   }
 
   captureFrame() {
