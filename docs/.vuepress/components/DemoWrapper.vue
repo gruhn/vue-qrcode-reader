@@ -13,6 +13,7 @@ import Fullscreen from './demos/Fullscreen.vue'
 import LoadingIndicator from './demos/LoadingIndicator.vue'
 import Torch from './demos/Torch.vue'
 import Validate from './demos/Validate.vue'
+import ScanSameQrcodeMoreThanOnce from './demos/ScanSameQrcodeMoreThanOnce.vue'
 
 export default {
   components: {
@@ -25,7 +26,8 @@ export default {
     Fullscreen,
     LoadingIndicator,
     Torch,
-    Validate
+    Validate,
+    ScanSameQrcodeMoreThanOnce
   },
 
   props: {

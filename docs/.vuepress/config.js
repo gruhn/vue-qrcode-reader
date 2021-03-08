@@ -17,6 +17,7 @@ module.exports = {
         'DecodeAll',
         'CustomTracking',
         'LoadingIndicator',
+        'ScanSameQrcodeMoreThanOnce',
         'Validate',
         'SwitchCamera',
         'Fullscreen',
