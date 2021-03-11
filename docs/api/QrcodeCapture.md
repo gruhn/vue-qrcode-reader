@@ -33,7 +33,7 @@ methods: {
 ### `detect`
 * **Payload Type:** `Promise<Object>`
 
-The `detect` event is basically a verbose version of `decode`. `detect` is emitted as soon as you confirm your file selection or the foto you took with your camera. `detect` carries a Promise which resolves when scanning the images has finished. The Promise rejects in case of errors. Additionally, `detect` gives you the unprocessed raw image data and the coordinates of the QR code in the image.
+The `detect` event is basically a verbose version of `decode`. `detect` is emitted as soon as you confirm your file selection or the foto you took with your camera. `detect` carries a Promise which resolves when scanning the images has finished. The Promise rejects in case of errors. Additionally, `detect` gives you the unprocessed raw image data, the raw bytes of the QR code and the coordinates of the QR code in the image.
 
 ```html
 <qrcode-capture @detect="onDetect" />
@@ -45,6 +45,7 @@ methods: {
       const {
         imageData,    // raw image data of image/frame
         content,      // decoded String or null
+        binaryData,   // The raw bytes of the QR code
         location      // QR code coordinates or null
       } = await promise
 
