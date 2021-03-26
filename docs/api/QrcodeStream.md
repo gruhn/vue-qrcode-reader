@@ -234,7 +234,7 @@ methods: {
 }
 ```
 
-### `worker` <Badge text="experimental" type="error" />
+### `worker` <Badge text="deprecated" type="warning" />
 
 ::: tip
 So far *vue-qrcode-reader* could only process QR codes.

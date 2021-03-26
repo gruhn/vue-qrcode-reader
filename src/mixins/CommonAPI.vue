@@ -1,5 +1,13 @@
 <script>
+import BarcodeDetector from "barcode-detector"
+
 export default {
+  beforeMount() {
+    if (!('BarcodeDetector' in window)) {
+      window.BarcodeDetector = BarcodeDetector
+    }
+  },
+
   methods: {
     async onDetect(resultPromise) {
       this.$emit("detect", resultPromise);
