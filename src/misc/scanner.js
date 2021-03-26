@@ -1,75 +1,124 @@
+import { DropImageFetchError, DropImageDecodeError } from "./errors.js";
 import { eventOn } from "callforth";
 
-export const scan = async (spawnWorker, imageData) => {
-  const worker = spawnWorker();
+const adaptOldFormat = detectedCodes => {
+  if (detectedCodes.length > 0) {
+    const [ firstCode ] = detectedCodes;
 
-  worker.postMessage(imageData, [imageData.data.buffer]);
+    const [
+      topLeftCorner,
+      topRightCorner,
+      bottomRightCorner,
+      bottomLeftCorner
+    ] = firstCode.cornerPoints
 
-  const event = await eventOn(worker, "message");
+    return {
+      content: firstCode.rawValue,
+      location: {
+        topLeftCorner,
+        topRightCorner,
+        bottomRightCorner,
+        bottomLeftCorner,
 
-  worker.terminate();
-
-  return event.data;
-};
+        // not supported by native API:
+        topLeftFinderPattern: {},
+        topRightFinderPattern: {},
+        bottomLeftFinderPattern: {}
+      },
+      imageData: null
+    }
+  } else {
+    return {
+      content: null,
+      location: null,
+      imageData: null
+    }
+  }
+}
 
 /**
  * Continuously extracts frames from camera stream and tries to read
  * potentially pictured QR codes.
  */
-export const keepScanning = (spawnWorker, camera, options) => {
+export const keepScanning = (videoElement, options) => {
+  const barcodeDetector = new BarcodeDetector({ formats: ["qr_code"] });
+
   const { detectHandler, locateHandler, minDelay } = options;
 
-  let contentBefore = null;
-  let locationBefore = null;
-  let lastScanned = performance.now();
-
-  const worker = spawnWorker();
-
-  // If worker can't process frames fast enough, memory will quickly full up.
-  // Make sure to process only one frame at a time.
-  let workerBusy = false;
-  let shouldContinue = true;
-
-  worker.onmessage = event => {
-    workerBusy = false;
-
-    const { content, location } = event.data;
-
-    if (content !== null && content !== contentBefore) {
-      detectHandler(event.data);
-    }
-
-    if (location !== locationBefore) {
-      locateHandler(location);
-    }
-
-    contentBefore = content || contentBefore;
-    locationBefore = location;
-  };
-
-  const processFrame = timeNow => {
-    if (shouldContinue) {
-      window.requestAnimationFrame(processFrame);
+  const processFrame = state => async timeNow => {
+    if (videoElement.readyState > 1) {
+      const { lastScanned, contentBefore, locationBefore } = state
 
       if (timeNow - lastScanned >= minDelay) {
-        lastScanned = timeNow;
+        const detectedCodes = await barcodeDetector.detect(videoElement);
+        const { content, location, imageData } = adaptOldFormat(detectedCodes)
 
-        if (workerBusy === false) {
-          workerBusy = true;
-
-          const imageData = camera.captureFrame();
-
-          worker.postMessage(imageData, [imageData.data.buffer]);
+        if (content !== null && content !== contentBefore) {
+          detectHandler({ content, location, imageData });
         }
+
+        if (location !== locationBefore) {
+          locateHandler(location);
+        }
+
+        window.requestAnimationFrame(processFrame({
+          lastScanned: timeNow,
+          contentBefore: content ?? contentBefore,
+          locationBefore: location
+        }))
+      } else {
+        window.requestAnimationFrame(processFrame(state))
       }
-    } else {
-      worker.terminate();
     }
   };
 
-  processFrame();
-
-  return () => {
-    shouldContinue = false;
-  };
+  processFrame({
+    contentBefore: null,
+    locationBefore: null,
+    lastScanned: performance.now()
+  })();
 };
+
+const imageElementFromUrl = async url => {
+  if (url.startsWith("http") && url.includes(location.host) === false) {
+    throw new DropImageFetchError();
+  }
+
+  const image = document.createElement("img");
+  image.src = url;
+
+  await eventOn(image, "load");
+
+  return image;
+}
+
+const imageElementFromFile = async file => {
+  if (/image.*/.test(file.type)) {
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    const result = await eventOn(reader, "load");
+    const dataURL = result.target.result;
+
+    return imageElementFromUrl(dataURL);
+  } else {
+    throw new DropImageDecodeError();
+  }
+}
+
+export const processFile = async file => {
+  const barcodeDetector = new BarcodeDetector({ formats: ["qr_code"] })
+  const image = await imageElementFromFile(file);
+  const detectedCodes = await barcodeDetector.detect(image)
+
+  return adaptOldFormat(detectedCodes)
+}
+
+export const processUrl = async url => {
+  const barcodeDetector = new BarcodeDetector({ formats: ["qr_code"] })
+  const image = await imageElementFromUrl(url);
+  const detectedCodes = await barcodeDetector.detect(image)
+
+  return adaptOldFormat(detectedCodes)
+}

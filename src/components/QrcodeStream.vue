@@ -33,7 +33,6 @@ import { keepScanning } from "../misc/scanner.js";
 import { thinSquare } from "../misc/track-func.js";
 import Camera from "../misc/camera.js";
 import CommonAPI from "../mixins/CommonAPI.vue";
-import spawnWorker from "../worker/jsqr.js";
 
 export default {
   name: "qrcode-stream",
@@ -58,19 +57,13 @@ export default {
     track: {
       type: [Function, Boolean],
       default: true
-    },
-
-    worker: {
-      type: Function,
-      default: spawnWorker
     }
   },
 
   data() {
     return {
       cameraInstance: null,
-      destroyed: false,
-      stopScanning: () => {}
+      destroyed: false
     };
   },
 
@@ -109,18 +102,22 @@ export default {
   watch: {
     shouldStream(shouldStream) {
       if (!shouldStream) {
-        const frame = this.cameraInstance.captureFrame();
-        this.paintPauseFrame(frame);
+        const canvas = this.$refs.pauseFrame;
+        const ctx = canvas.getContext("2d");
+        const video = this.$refs.video;
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
       }
     },
 
     shouldScan(shouldScan) {
       if (shouldScan) {
-        this.clearPauseFrame();
-        this.clearTrackingLayer();
+        this.clearCanvas(this.$refs.pauseFrame);
+        this.clearCanvas(this.$refs.trackingLayer);
         this.startScanning();
-      } else {
-        this.stopScanning();
       }
     },
 
@@ -139,7 +136,6 @@ export default {
 
   beforeDestroy() {
     this.beforeResetCamera();
-    this.stopScanning();
     this.destroyed = true;
   },
 
@@ -183,8 +179,7 @@ export default {
         this.onDetect(Promise.resolve(result));
       };
 
-      // this.stopScanning()
-      this.stopScanning = keepScanning(this.worker, this.cameraInstance, {
+      keepScanning(this.$refs.video, {
         detectHandler,
         locateHandler: this.onLocate,
         minDelay: this.scanInterval
@@ -200,15 +195,18 @@ export default {
 
     onLocate(location) {
       if (this.trackRepaintFunction === undefined || location === null) {
-        this.clearTrackingLayer();
+        this.clearCanvas(this.$refs.trackingLayer);
       } else {
-        this.repaintTrackingLayer(location);
+        const video = this.$refs.video;
+        const canvas = this.$refs.trackingLayer;
+
+        if (video !== undefined && canvas !== undefined) {
+          this.repaintTrackingLayer(video, canvas, location);
+        }
       }
     },
 
-    repaintTrackingLayer(location) {
-      const video = this.$refs.video;
-      const canvas = this.$refs.trackingLayer;
+    repaintTrackingLayer(video, canvas, location) {
       const ctx = canvas.getContext("2d");
 
       // The visually occupied area of the video element.
@@ -254,35 +252,11 @@ export default {
       });
     },
 
-    clearTrackingLayer() {
-      const canvas = this.$refs.trackingLayer;
+    clearCanvas(canvas) {
       const ctx = canvas.getContext("2d");
-
-      window.requestAnimationFrame(() => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      });
-    },
-
-    paintPauseFrame(imageData) {
-      const canvas = this.$refs.pauseFrame;
-      const ctx = canvas.getContext("2d");
-
-      window.requestAnimationFrame(() => {
-        canvas.width = imageData.width;
-        canvas.height = imageData.height;
-
-        ctx.putImageData(imageData, 0, 0);
-      });
-    },
-
-    clearPauseFrame() {
-      const canvas = this.$refs.pauseFrame;
-      const ctx = canvas.getContext("2d");
-
-      window.requestAnimationFrame(() => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      });
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
+
   }
 };
 </script>

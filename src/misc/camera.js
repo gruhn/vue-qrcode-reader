@@ -1,5 +1,4 @@
 import { StreamApiNotSupportedError, InsecureContextError } from "./errors.js";
-import { imageDataFromVideo } from "./image-data.js";
 import { eventOn, timeout } from "callforth";
 import shimGetUserMedia from "./shimGetUserMedia";
 
@@ -16,10 +15,6 @@ class Camera {
       this.stream.removeTrack(track);
       track.stop();
     });
-  }
-
-  captureFrame() {
-    return imageDataFromVideo(this.videoEl);
   }
 
   getCapabilities() {
