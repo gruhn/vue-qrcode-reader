@@ -44,7 +44,6 @@ If you scan the same QR code multiple times in a row, `decode` is still only emi
 The `detect` event is basically a verbose version of `decode`. `decode` only gives you the string encoded by QR codes. `detect` on the other hand ...
 
 * is always emitted before `decode`
-* gives you the unprocessed raw image data
 * gives you the coordinates of the QR code in the camera frame
 * does NOT silently fail in case of errors
 
@@ -56,7 +55,6 @@ methods: {
   async onDetect (promise) {
     try {
       const {
-        imageData,    // raw image data of image/frame
         content,      // decoded String
         location      // QR code coordinates
       } = await promise
@@ -116,49 +114,26 @@ methods: {
 ## Props
 
 ### `track`
-* **Input Type:** `Boolean`, `Function`
-* **Default:** `true`
+* **Input Type:** `Function`
+* **Default:** `undefined`
 
-By default detected QR codes are visually highlighted. A transparent canvas overlays the camera stream. When a QR code is detected, its location is painted to the canvas. You can enable/disable this feature by passing `true`/`false` via the `track` prop. If tracking is disabled the camera stream is scanned much less frequently. So if you encounter performance problems on your target device, this might help.
+You can visually highlight detected QR codes in real-time.
+A transparent canvas overlays the camera stream.
+When a QR code is detected, its location is painted to the canvas.
 
-You can also pass a function with `track` to customize the way the location is painted. This function is called to produce each frame. It receives the location object as the first argument and a `CanvasRenderingContext2D` instance as the second argument.
+To enable this feature, pass a function to `track` that defines how this should look like.
+This function is called to produce each frame.
+It receives the location object as the first argument and a `CanvasRenderingContext2D` instance as the second argument.
+
+For example check out the [Custom Tracking Demo](../demos/CustomTracking.md)
+
+Note that this scanning frequency has to be increased.
+So if you want to go easy on your target device you might not want to enable tracking.
 
 ::: danger
 Avoid access to reactive properties in this function (like stuff in `data`, `computed` or your Vuex store). The function is called several times a second and might cause memory leaks. To be safe don't access `this` at all.
 :::
 
-Say you want to paint in a different color that better fits your overall page theme.
-
-```html
-<qrcode-stream :track="repaint"></qrcode-stream>
-```
-```javascript
-methods: {
-  repaint (location, ctx) {
-    const {
-      topLeftCorner,
-      topRightCorner,
-      bottomLeftCorner,
-      bottomRightCorner,
-      // topLeftFinderPattern,
-      // topRightFinderPattern,
-      // bottomLeftFinderPattern
-    } = location
-
-    ctx.strokeStyle = 'blue' // instead of red
-
-    ctx.beginPath()
-    ctx.moveTo(topLeftCorner.x, topLeftCorner.y)
-    ctx.lineTo(bottomLeftCorner.x, bottomLeftCorner.y)
-    ctx.lineTo(bottomRightCorner.x, bottomRightCorner.y)
-    ctx.lineTo(topRightCorner.x, topRightCorner.y)
-    ctx.lineTo(topLeftCorner.x, topLeftCorner.y)
-    ctx.closePath()
-
-    ctx.stroke()
-  }
-}
-```
 
 ### `camera`
 * **Input Type:** `String`
@@ -234,56 +209,9 @@ methods: {
 }
 ```
 
-### `worker` <Badge text="deprecated" type="warning" />
+### `worker` <Badge text="removed in v3.0.0" type="error" />
 
-::: tip
-So far *vue-qrcode-reader* could only process QR codes.
-However, many people requested support for different code types
-(bar codes, data matrix, color inverted QR codes, ...) though.
-With this prop we try to meet these demands.
-
-Please share your successful or unsuccessful implementation attempts at
-[#109](https://github.com/gruhn/vue-qrcode-reader/issues/109).
-Your feedback is greatly appreciated.
-:::
-
-By default, *QrcodeStream* will only detect QR codes.
-Processing image data is expensive so a web worker is doing the heavy lifting.
-Because the worker is the only QR code specific part of the library though,
-you can replace the default worker and get a component that can scan whatever you want.
-
-First of all you need to create a custom worker class:
-
-```js
-class MyWorkerClass extends Worker {
-  constructor() {
-    super("path/to/worker.js")
-  }
-}
-```
-(Internally, *vue-qrcode-reader* leverages [worker-loader](https://github.com/webpack-contrib/worker-loader)
-to makes this slightly more convenient)
-
-To get your `worker.js` right, check out [the default implementation](https://github.com/gruhn/vue-qrcode-reader/blob/91ee3fc8bf2f7fab96ac3f0a5d84d2d4c09b012f/src/worker/jsqr.js).
-
-Now, pass the worker class via the `worker` prop.
-Don't pass a class instance, we need the class itself!
-
-```html
-<qrcode-stream :worker="Worker"></qrcode-stream>
-```
-```js
-data() {
-  return {
-    Worker: MyWorkerClass // Don't do: new MyWorkerClass()
-  }
-}
-```
-
-:::tip
-`QrcodeCapture` and `QrcodeDropZone` too expose the `worker` prop.
-Dedicated API documentation is missing so far but usage should be similar.
-:::
+[old documentation](https://github.com/gruhn/vue-qrcode-reader/blob/3608e0e04b0fbc8d2b57a5713fef92eef1e84c41/docs/api/QrcodeStream.md#worker-)
 
 ## Slots
 

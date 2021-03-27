@@ -8,7 +8,6 @@ import DecodeAll from './demos/DecodeAll.vue'
 import SwitchCamera from './demos/SwitchCamera.vue'
 import DragDrop from './demos/DragDrop.vue'
 import Upload from './demos/Upload.vue'
-import Fallback from './demos/Fallback.vue'
 import Fullscreen from './demos/Fullscreen.vue'
 import LoadingIndicator from './demos/LoadingIndicator.vue'
 import Torch from './demos/Torch.vue'
@@ -22,7 +21,6 @@ export default {
     SwitchCamera,
     DragDrop,
     Upload,
-    Fallback,
     Fullscreen,
     LoadingIndicator,
     Torch,

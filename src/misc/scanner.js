@@ -57,8 +57,8 @@ export const keepScanning = (videoElement, options) => {
           detectHandler({ content, location, imageData });
         }
 
-        if (location !== locationBefore) {
-          locateHandler(location);
+        if (location !== null || locationBefore !== null) {
+          locateHandler(detectedCodes);
         }
 
         window.requestAnimationFrame(processFrame({
