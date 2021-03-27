@@ -92,25 +92,9 @@ const imageElementFromUrl = async url => {
   return image;
 }
 
-const imageElementFromFile = async file => {
-  if (/image.*/.test(file.type)) {
-    const reader = new FileReader();
-
-    reader.readAsDataURL(file);
-
-    const result = await eventOn(reader, "load");
-    const dataURL = result.target.result;
-
-    return imageElementFromUrl(dataURL);
-  } else {
-    throw new DropImageDecodeError();
-  }
-}
-
 export const processFile = async file => {
   const barcodeDetector = new BarcodeDetector({ formats: ["qr_code"] })
-  const image = await imageElementFromFile(file);
-  const detectedCodes = await barcodeDetector.detect(image)
+  const detectedCodes = await barcodeDetector.detect(file)
 
   return adaptOldFormat(detectedCodes)
 }
