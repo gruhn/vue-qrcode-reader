@@ -23,8 +23,7 @@ module.exports = {
         'Fullscreen',
         'Torch',
         'DragDrop',
-        'Upload',
-        'Fallback'
+        'Upload'
       ],
 
       '/api/': [
@@ -35,7 +34,7 @@ module.exports = {
     },
 
     nav: [
-      { text: 'Live Demos', link: '/demos/DecodeAll' },
+      { text: 'Live Demos', link: '/demos/CustomTracking' },
       { text: 'API Reference', link: '/api/QrcodeStream' }
     ]
   }

@@ -30,7 +30,6 @@
 
 <script>
 import { keepScanning } from "../misc/scanner.js";
-import { thinSquare } from "../misc/track-func.js";
 import Camera from "../misc/camera.js";
 import CommonAPI from "../mixins/CommonAPI.vue";
 
@@ -55,8 +54,7 @@ export default {
     },
 
     track: {
-      type: [Function, Boolean],
-      default: true
+      type: Function
     }
   },
 
@@ -81,20 +79,10 @@ export default {
      * so often when visual tracking is disabled to improve performance.
      */
     scanInterval() {
-      if (this.track === false) {
+      if (this.track === undefined) {
         return 500;
       } else {
         return 40; // ~ 25fps
-      }
-    },
-
-    trackRepaintFunction() {
-      if (this.track === true) {
-        return thinSquare({ color: "#ff0000" });
-      } else if (this.track === false) {
-        return undefined;
-      } else {
-        return this.track;
       }
     }
   },
@@ -206,43 +194,80 @@ export default {
       }
     },
 
+    onLocate(detectedCodes) {
+      const canvas = this.$refs.trackingLayer;
+      const video = this.$refs.video;
+
+      if (canvas !== undefined) {
+        if (detectedCodes.length > 0 && this.track !== undefined && video !== undefined) {
+
+          const adjustPoint = ({ x, y }) => {
+            // The visually occupied area of the video element.
+            // Because the component is responsive and fills the available space,
+            // this can be more or less than the actual resolution of the camera.
+            const displayWidth = video.offsetWidth;
+            const displayHeight = video.offsetHeight;
+
+            // The actual resolution of the camera.
+            // These values are fixed no matter the screen size.
+            const resolutionWidth = video.videoWidth;
+            const resolutionHeight = video.videoHeight;
+
+            // Dimensions of the video element as if there would be no
+            //   object-fit: cover;
+            // Thus, the ratio is the same as the cameras resolution but it's
+            // scaled down to the size of the visually occupied area.
+            const largerRatio = Math.max(
+              displayWidth / resolutionWidth,
+              displayHeight / resolutionHeight
+            );
+            const uncutWidth = resolutionWidth * largerRatio;
+            const uncutHeight = resolutionHeight * largerRatio;
+
+            const xScalar = uncutWidth / resolutionWidth;
+            const yScalar = uncutHeight / resolutionHeight;
+            const xOffset = (displayWidth - uncutWidth) / 2;
+            const yOffset = (displayHeight - uncutHeight) / 2;
+
+            return {
+              x: Math.floor(x * xScalar + xOffset),
+              y: Math.floor(y * yScalar + yOffset)
+            };
+          }
+
+          const adjustedCodes = detectedCodes.map(detectedCode => {
+            const { boundingBox, cornerPoints } = detectedCode
+            const { x, y } = adjustPoint({
+              x: boundingBox.x,
+              y: boundingBox.y
+            })
+            const { x: width, y: height } = adjustPoint({
+              x: boundingBox.width,
+              y: boundingBox.height
+            })
+
+            return {
+              ...detectedCode,
+              cornerPoints: cornerPoints.map(adjustPoint),
+              boundingBox: DOMRectReadOnly.fromRect({ x, y, width, height })
+            }
+          })
+
+          canvas.width = video.offsetWidth;
+          canvas.height = video.offsetHeight;
+
+          const ctx = canvas.getContext('2d');
+
+          this.track(adjustedCodes, ctx);
+        } else {
+          this.clearCanvas(canvas);
+        }
+      }
+    },
+
     repaintTrackingLayer(video, canvas, location) {
       const ctx = canvas.getContext("2d");
 
-      // The visually occupied area of the video element.
-      // Because the component is responsive and fills the available space,
-      // this can be more or less than the actual resolution of the camera.
-      const displayWidth = video.offsetWidth;
-      const displayHeight = video.offsetHeight;
-
-      // The actual resolution of the camera.
-      // These values are fixed no matter the screen size.
-      const resolutionWidth = video.videoWidth;
-      const resolutionHeight = video.videoHeight;
-
-      // Dimensions of the video element as if there would be no
-      //   object-fit: cover;
-      // Thus, the ratio is the same as the cameras resolution but it's
-      // scaled down to the size of the visually occupied area.
-      const largerRatio = Math.max(
-        displayWidth / resolutionWidth,
-        displayHeight / resolutionHeight
-      );
-      const uncutWidth = resolutionWidth * largerRatio;
-      const uncutHeight = resolutionHeight * largerRatio;
-
-      const xScalar = uncutWidth / resolutionWidth;
-      const yScalar = uncutHeight / resolutionHeight;
-      const xOffset = (displayWidth - uncutWidth) / 2;
-      const yOffset = (displayHeight - uncutHeight) / 2;
-
-      const coordinatesAdjusted = {};
-      for (const key in location) {
-        coordinatesAdjusted[key] = {
-          x: Math.floor(location[key].x * xScalar + xOffset),
-          y: Math.floor(location[key].y * yScalar + yOffset)
-        };
-      }
 
       window.requestAnimationFrame(() => {
         canvas.width = displayWidth;

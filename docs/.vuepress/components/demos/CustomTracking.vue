@@ -3,17 +3,13 @@
     <p>
       Track function:
       <select v-model="selected">
-        <option v-for="option in options" :value="option">
+        <option v-for="option in options" :key="option.text" :value="option">
           {{ option.text }}
         </option>
       </select>
     </p>
 
-    <p class="decode-result">
-      Last result: <b>{{ result }}</b>
-    </p>
-
-    <qrcode-stream :key="_uid" :track="selected.value" @decode="onDecode" @init="logErrors" />
+    <qrcode-stream :key="_uid" :track="selected.value" @init="logErrors" />
   </div>
 </template>
 
@@ -26,69 +22,65 @@ export default {
 
   data () {
     const options = [
-      { text: "None", value: false },
-      { text: "Red square (default)", value: true },
-      { text: "Green text", value: this.paintGreenText },
-      { text: "Blue dots", value: this.paintBlueDots },
+      { text: "nothing (default)", value: undefined },
+      { text: "outline", value: this.paintOutline },
+      { text: "centered text", value: this.paintCenterText },
+      { text: "bounding box", value: this.paintBoundingBox },
     ]
 
-    const selected = options[2]
+    const selected = options[1]
 
-    return { selected, options, result: null }
+    return { selected, options }
   },
 
   methods: {
-    paintBlueDots (location, ctx) {
-      const {
-        topLeftFinderPattern,
-        topRightFinderPattern,
-        bottomLeftFinderPattern
-      } = location
+    paintOutline (detectedCodes, ctx) {
+      for (const detectedCode of detectedCodes) {
+        const [ firstPoint, ...otherPoints ] = detectedCode.cornerPoints
 
-      const pointArray = [
-        topLeftFinderPattern,
-        topRightFinderPattern,
-        bottomLeftFinderPattern
-      ]
+        ctx.strokeStyle = "red";
 
-      ctx.fillStyle = '#007bff'
-
-      pointArray.forEach(({ x, y }) => {
-        ctx.fillRect(x - 5, y - 5, 10, 10)
-      })
+        ctx.beginPath();
+        ctx.moveTo(firstPoint.x, firstPoint.y);
+        for (const { x, y } of otherPoints) {
+          ctx.lineTo(x, y);
+        }
+        ctx.lineTo(firstPoint.x, firstPoint.y);
+        ctx.closePath();
+        ctx.stroke();
+      }
     },
 
-    paintGreenText (location, ctx) {
-      const {
-        topLeftCorner,
-        topRightCorner,
-        bottomLeftCorner,
-        bottomRightCorner
-      } = location
+    paintBoundingBox (detectedCodes, ctx) {
+      for (const detectedCode of detectedCodes) {
+        const { boundingBox: { x, y, width, height } } = detectedCode
 
-      const pointArray = [
-        topLeftCorner,
-        topRightCorner,
-        bottomLeftCorner,
-        bottomRightCorner
-      ]
-
-      const centerX = pointArray.reduce((sum, { x }) => x + sum, 0) / 4
-      const centerY = pointArray.reduce((sum, { y }) => y + sum, 0) / 4
-
-      ctx.font = "bold 24px sans-serif"
-      ctx.textAlign = "center"
-
-      ctx.lineWidth = 3
-      ctx.strokeStyle = '#35495e'
-      ctx.strokeText(this.result, centerX, centerY)
-
-      ctx.fillStyle = '#5cb984'
-      ctx.fillText(this.result, centerX, centerY)
+        ctx.lineWidth = 2
+        ctx.strokeStyle = '#007bff'
+        ctx.strokeRect(x, y, width, height)
+      }
     },
 
-    onDecode (result) {
-      this.result = result
+    paintCenterText (detectedCodes, ctx) {
+      for (const detectedCode of detectedCodes) {
+        const { boundingBox, rawValue } = detectedCode
+
+        const centerX = boundingBox.x + boundingBox.width/ 2
+        const centerY = boundingBox.y + boundingBox.height/ 2
+
+        const fontSize = Math.max(12, 50 * boundingBox.width/ctx.canvas.width)
+        console.log(boundingBox.width, ctx.canvas.width)
+
+        ctx.font = `bold ${fontSize}px sans-serif`
+        ctx.textAlign = "center"
+
+        ctx.lineWidth = 3
+        ctx.strokeStyle = '#35495e'
+        ctx.strokeText(detectedCode.rawValue, centerX, centerY)
+
+        ctx.fillStyle = '#5cb984'
+        ctx.fillText(rawValue, centerX, centerY)
+      }
     },
 
     logErrors (promise) {
