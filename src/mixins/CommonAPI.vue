@@ -3,9 +3,9 @@ import BarcodeDetector from "barcode-detector"
 
 export default {
   beforeMount() {
-    if (!('BarcodeDetector' in window)) {
-      window.BarcodeDetector = BarcodeDetector
-    }
+    // if (!('BarcodeDetector' in window)) {
+    window.BarcodeDetector = BarcodeDetector
+    // }
   },
 
   methods: {
