@@ -5,7 +5,7 @@
   <br>
 
   <a href="https://vuejs.org/">
-    <img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg" alt="for Vue.js 2">
+    <img src="https://img.shields.io/badge/vue-2%20&%203-brightgreen.svg" alt="for Vue 2 and 3">
   </a>
 
   <a href="https://www.npmjs.com/package/vue-qrcode-reader">
