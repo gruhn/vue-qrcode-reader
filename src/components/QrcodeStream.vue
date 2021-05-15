@@ -61,13 +61,13 @@ export default {
   data() {
     return {
       cameraInstance: null,
-      destroyed: false
+      mounted: false
     };
   },
 
   computed: {
     shouldStream() {
-      return this.destroyed === false && this.camera !== "off";
+      return this.mounted && this.camera !== "off";
     },
 
     shouldScan() {
@@ -120,11 +120,12 @@ export default {
 
   mounted() {
     this.init();
+    this.mounted = true;
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     this.beforeResetCamera();
-    this.destroyed = true;
+    this.mounted = false;
   },
 
   methods: {
@@ -149,7 +150,7 @@ export default {
           // if the component is destroyed before `cameraInstance` resolves a
           // `beforeDestroy` hook has no chance to clear the remaining camera
           // stream.
-          if (this.destroyed) {
+          if (!this.mounted) {
             this.cameraInstance.stop();
           }
 
