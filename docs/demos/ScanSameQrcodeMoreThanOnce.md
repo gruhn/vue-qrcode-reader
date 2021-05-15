@@ -9,9 +9,14 @@ However this cache is reset when you change the `camera` prop.
 We can exploit that to scan same QR codes multiple times in a row.
 
 <ClientOnly>
-  <DemoWrapper component="ScanSameQrcodeMoreThanOnce" />
+  <DemoWrapper :component="ScanSameQrcodeMoreThanOnce" />
 </ClientOnly>
+
+<script setup lang="ts">
+import DemoWrapper from '@/components/DemoWrapper.vue'
+import ScanSameQrcodeMoreThanOnce from '@/components/demos/ScanSameQrcodeMoreThanOnce.vue'
+</script>
 
 ### Source
 
-<<< @/docs/.vuepress/components/demos/ScanSameQrcodeMoreThanOnce.vue
+<<< @/.vitepress/components/demos/ScanSameQrcodeMoreThanOnce.vue

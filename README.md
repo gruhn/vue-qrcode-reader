@@ -5,7 +5,7 @@
   <br>
 
   <a href="https://vuejs.org/">
-    <img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg" alt="for Vue.js 2">
+    <img src="https://img.shields.io/badge/vue-3-brightgreen.svg" alt="for Vue 3">
   </a>
 
   <a href="https://www.npmjs.com/package/vue-qrcode-reader">
@@ -173,11 +173,8 @@ Please create a GitHub issue from the [wrong camera selected](https://github.com
 #### Some of my QR codes are not being detected.
 
 - Make sure, there is some white border around the QR code.
-- Color inverted QR codes are not supported (dark background, light foreground).
-- [Model 1 QR codes](https://en.wikipedia.org/wiki/QR_code#Model_1) are also not supported.
+- [Model 1 QR codes](https://en.wikipedia.org/wiki/QR_code#Model_1) are not supported.
 
-# Thanks :pray:
+#### How to make it work with Vue 2?
 
-<a href="https://browserstack.com">
-  <img height="38" src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/browserstack-logo.png" alt="BrowserStack Logo">
-</a>
+Support is dropped but you can downgrade to vue-qrcode-reader v3.* or lower.

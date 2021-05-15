@@ -1,16 +1,69 @@
 {
   "name": "vue-qrcode-reader",
-  "description": "A set of Vue.js components for detecting and decoding QR codes.",
   "version": "0.0.0-development",
+  "description": "A set of Vue.js components for detecting and decoding QR codes.",
   "author": {
     "name": "Niklas Gruhn",
     "email": "niklas@gruhn.me"
   },
-  "repository": "github:gruhn/vue-qrcode-reader",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "packageManager": "pnpm@8.3.1",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm rimraf dist && vite build",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
+    "prepack": "pnpm run build",
+    "prepare": "husky install"
+  },
+  "main": "./dist/vue-qrcode-reader.js",
+  "module": "./dist/vue-qrcode-reader.js",
+  "unpkg": "./dist/vue-qrcode-reader.umd.cjs",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-qrcode-reader.js",
+      "require": "./dist/vue-qrcode-reader.umd.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@sec-ant/barcode-detector": "^0.1.5",
+    "webrtc-adapter": "^8.2.2"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "1.0.1",
+    "@types/node": "20.3.1",
+    "@vitejs/plugin-vue": "4.2.3",
+    "@vue/compiler-sfc": "3.3.4",
+    "@vue/eslint-config-prettier": "7.1.0",
+    "@vue/eslint-config-typescript": "11.0.3",
+    "@vue/tsconfig": "0.4.0",
+    "eslint": "8.42.0",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-vue": "9.14.1",
+    "husky": "8.0.3",
+    "lint-staged": "13.2.2",
+    "prettier": "2.8.8",
+    "rimraf": "5.0.1",
+    "semantic-release": "21.0.5",
+    "typescript": "5.1.3",
+    "vite": "4.3.9",
+    "vite-plugin-dts": "2.3.0",
+    "vitepress": "1.0.0-beta.2",
+    "vue": "3.3.4",
+    "vue-tsc": "1.6.5"
+  },
   "bugs": "https://github.com/gruhn/vue-qrcode-reader/issues",
   "homepage": "https://gruhn.github.io/vue-qrcode-reader",
-  "main": "dist/VueQrcodeReader.common.js",
-  "unpkg": "dist/VueQrcodeReader.umd.min.js",
   "keywords": [
     "vue",
     "vuejs",
@@ -21,43 +74,5 @@
     "webrtc"
   ],
   "license": "MIT",
-  "types": "./src/types/vue-qrcode-reader.d.ts",
-  "scripts": {
-    "dev": "vuepress dev docs",
-    "build:docs": "vuepress build docs",
-    "build": "vue-cli-service build --target lib --name VueQrcodeReader src/index.js",
-    "lint": "vue-cli-service lint"
-  },
-  "dependencies": {
-    "barcode-detector": "^1.0.3",
-    "callforth": "^0.3.1",
-    "core-js": "^3.6.5",
-    "vue": "^2.6.11",
-    "webrtc-adapter": "7.7.0"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.4.0",
-    "@vue/cli-plugin-eslint": "~4.4.0",
-    "@vue/cli-service": "~4.4.0",
-    "@vue/eslint-config-prettier": "^6.0.0",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-prettier": "^3.1.3",
-    "eslint-plugin-vue": "^6.2.2",
-    "husky": "^4.2.5",
-    "lint-staged": "^9.5.0",
-    "prettier": "^1.19.1",
-    "semantic-release": "^17.1.1",
-    "vue-template-compiler": "^2.6.11",
-    "vuepress": "^1.5.2"
-  },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,jsx,vue}": [
-      "vue-cli-service lint",
-      "git add"
-    ]
-  }
+  "repository": "github:gruhn/vue-qrcode-reader"
 }

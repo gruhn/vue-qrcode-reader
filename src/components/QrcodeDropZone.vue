@@ -9,34 +9,33 @@
   </div>
 </template>
 
-<script>
-import { processFile, processUrl } from "../misc/scanner.js";
-import CommonAPI from "../mixins/CommonAPI.vue";
+<script setup lang="ts">
+import { processFile, processUrl } from '../misc/scanner'
+import { useCommonApi } from '../composables/useCommonApi'
 
-export default {
-  name: "qrcode-drop-zone",
+const emit = defineEmits(['detect', 'decode', 'dragover'])
 
-  mixins: [CommonAPI],
+const { onDetect } = useCommonApi(emit)
 
-  methods: {
-    onDragOver(isDraggingOver) {
-      this.$emit("dragover", isDraggingOver);
-    },
+// methods
+const onDragOver = (isDraggingOver: boolean) => {
+  emit('dragover', isDraggingOver)
+}
 
-    onDrop({ dataTransfer }) {
-      this.onDragOver(false);
+const onDrop = ({ dataTransfer }: DragEvent) => {
+  if (!dataTransfer) return
 
-      const droppedFiles = [...dataTransfer.files];
-      const droppedUrl = dataTransfer.getData("text/uri-list");
+  onDragOver(false)
 
-      droppedFiles.forEach(file => {
-        this.onDetect(processFile(file));
-      });
+  const droppedFiles = [...Array.from(dataTransfer.files)]
+  const droppedUrl = dataTransfer.getData('text/uri-list')
 
-      if (droppedUrl !== "") {
-        this.onDetect(processUrl(droppedUrl));
-      }
-    }
+  droppedFiles.forEach((file: File) => {
+    onDetect(processFile(file))
+  })
+
+  if (droppedUrl !== '') {
+    onDetect(processUrl(droppedUrl))
   }
-};
+}
 </script>

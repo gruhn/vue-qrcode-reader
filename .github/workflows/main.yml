@@ -1,8 +1,11 @@
 name: Release
+
 on:
   push:
     branches:
       - master
+      - vue3-compatibility
+
 jobs:
   release:
     name: Release
@@ -12,20 +15,22 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - run: corepack enable
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 18
+          cache: pnpm
       - name: Install & Build
         run: |
-          npm ci
-          npm run build
-          npm run build:docs
+          pnpm install
+          pnpm run build
+          pnpm run docs:build
       - name: Deploy Docs
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
-          folder: docs/.vuepress/dist
+          folder: docs/.vitepress/dist
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
