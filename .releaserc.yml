@@ -1,4 +1,4 @@
 branches:
   - name: master
-  - name: beta
+  - name: vue3-compatibility
     prerelease: true
