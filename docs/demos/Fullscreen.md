@@ -5,9 +5,14 @@ Not more, not less.
 So to go fullscreen, simply put the component in a wrapper element that occupies the entire screen.
 
 <ClientOnly>
-  <DemoWrapper component="Fullscreen" />
+  <DemoWrapper :component="Fullscreen" />
 </ClientOnly>
+
+<script setup lang="ts">
+import DemoWrapper from '@/components/DemoWrapper.vue'
+import Fullscreen from '@/components/demos/Fullscreen.vue'
+</script>
 
 ### Source
 
-<<< @/docs/.vuepress/components/demos/Fullscreen.vue
+<<< @/.vitepress/components/demos/Fullscreen.vue
