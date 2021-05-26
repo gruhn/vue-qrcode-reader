@@ -200,55 +200,62 @@ export default {
 
       if (canvas !== undefined) {
         if (detectedCodes.length > 0 && this.track !== undefined && video !== undefined) {
+          // The visually occupied area of the video element.
+          // Because the component is responsive and fills the available space,
+          // this can be more or less than the actual resolution of the camera.
+          const displayWidth = video.offsetWidth;
+          const displayHeight = video.offsetHeight;
 
-          const adjustPoint = ({ x, y }) => {
-            // The visually occupied area of the video element.
-            // Because the component is responsive and fills the available space,
-            // this can be more or less than the actual resolution of the camera.
-            const displayWidth = video.offsetWidth;
-            const displayHeight = video.offsetHeight;
+          // The actual resolution of the camera.
+          // These values are fixed no matter the screen size.
+          const resolutionWidth = video.videoWidth;
+          const resolutionHeight = video.videoHeight;
 
-            // The actual resolution of the camera.
-            // These values are fixed no matter the screen size.
-            const resolutionWidth = video.videoWidth;
-            const resolutionHeight = video.videoHeight;
+          // Dimensions of the video element as if there would be no
+          //   object-fit: cover;
+          // Thus, the ratio is the same as the cameras resolution but it's
+          // scaled down to the size of the visually occupied area.
+          const largerRatio = Math.max(
+            displayWidth / resolutionWidth,
+            displayHeight / resolutionHeight
+          );
+          const uncutWidth = resolutionWidth * largerRatio;
+          const uncutHeight = resolutionHeight * largerRatio;
 
-            // Dimensions of the video element as if there would be no
-            //   object-fit: cover;
-            // Thus, the ratio is the same as the cameras resolution but it's
-            // scaled down to the size of the visually occupied area.
-            const largerRatio = Math.max(
-              displayWidth / resolutionWidth,
-              displayHeight / resolutionHeight
-            );
-            const uncutWidth = resolutionWidth * largerRatio;
-            const uncutHeight = resolutionHeight * largerRatio;
+          const xScalar = uncutWidth / resolutionWidth;
+          const yScalar = uncutHeight / resolutionHeight;
+          const xOffset = (displayWidth - uncutWidth) / 2;
+          const yOffset = (displayHeight - uncutHeight) / 2;
 
-            const xScalar = uncutWidth / resolutionWidth;
-            const yScalar = uncutHeight / resolutionHeight;
-            const xOffset = (displayWidth - uncutWidth) / 2;
-            const yOffset = (displayHeight - uncutHeight) / 2;
-
+          const scale = ({ x, y }) => {
             return {
-              x: Math.floor(x * xScalar + xOffset),
-              y: Math.floor(y * yScalar + yOffset)
+              x: Math.floor(x * xScalar),
+              y: Math.floor(y * yScalar)
+            };
+          }
+
+          const translate = ({ x, y }) => {
+            return {
+              x: Math.floor(x + xOffset),
+              y: Math.floor(y + yOffset)
             };
           }
 
           const adjustedCodes = detectedCodes.map(detectedCode => {
             const { boundingBox, cornerPoints } = detectedCode
-            const { x, y } = adjustPoint({
+
+            const { x, y } = translate(scale({
               x: boundingBox.x,
               y: boundingBox.y
-            })
-            const { x: width, y: height } = adjustPoint({
+            }))
+            const { x: width, y: height } = scale({
               x: boundingBox.width,
               y: boundingBox.height
             })
 
             return {
               ...detectedCode,
-              cornerPoints: cornerPoints.map(adjustPoint),
+              cornerPoints: cornerPoints.map(point => translate(scale(point))),
               boundingBox: DOMRectReadOnly.fromRect({ x, y, width, height })
             }
           })
