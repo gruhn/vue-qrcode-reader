@@ -36,7 +36,7 @@ const narrowDownFacingMode = async camera => {
     ({ kind }) => kind === "videoinput"
   );
 
-  if (devices.length > 2) {
+  if (devices.length >= 2) {
     const frontCamera = devices[0];
     const rearCamera = devices[devices.length - 1];
 
