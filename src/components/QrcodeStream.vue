@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="qrcode-stream-wrapper">
     <!--
     Note, the following DOM elements are not styled with z-index.

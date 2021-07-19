@@ -61,8 +61,6 @@ methods: {
       if (error.name === 'DropImageFetchError') {
         // drag-and-dropped URL (probably just an <img> element) from different
         // domain without CORS header caused same-origin-policy violation
-      } else if (error.name === 'DropImageDecodeError') {
-        // drag-and-dropped file is not of type image and can't be decoded
       } else {
         // idk, open an issue ¯\_(ツ)_/¯
       }

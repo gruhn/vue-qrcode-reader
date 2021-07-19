@@ -1,3 +1,7 @@
+<script setup>
+import DemoWrapper from '../.vitepress/components/DemoWrapper.vue'
+</script>
+
 # Visual Tracking
 
 Hold a QR code into view of the camera.
@@ -10,4 +14,4 @@ Use the track function select below to change the flavor.
 
 ### Source
 
-<<< @/docs/.vuepress/components/demos/CustomTracking.vue
+<<< @/.vitepress/components/demos/CustomTracking.vue

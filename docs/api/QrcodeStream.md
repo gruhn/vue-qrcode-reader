@@ -209,9 +209,9 @@ methods: {
 }
 ```
 
-### `worker` <Badge text="removed in v3.0.0" type="error" />
+<!-- ### `worker` <Badge text="removed in v3.0.0" type="error" />
 
-[old documentation](https://github.com/gruhn/vue-qrcode-reader/blob/3608e0e04b0fbc8d2b57a5713fef92eef1e84c41/docs/api/QrcodeStream.md#worker-)
+[old documentation](https://github.com/gruhn/vue-qrcode-reader/blob/3608e0e04b0fbc8d2b57a5713fef92eef1e84c41/docs/api/QrcodeStream.md#worker-) -->
 
 ## Slots
 
