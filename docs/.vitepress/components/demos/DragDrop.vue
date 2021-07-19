@@ -39,8 +39,6 @@ export default {
       } catch (error) {
         if (error.name === 'DropImageFetchError') {
           this.error = 'Sorry, you can\'t load cross-origin images :/'
-        } else if (error.name === 'DropImageDecodeError') {
-          this.error = 'Ok, that\'s not an image. That can\'t be decoded.'
         } else {
           this.error = 'Ups, what kind of error is this?! ' + error.message
         }
