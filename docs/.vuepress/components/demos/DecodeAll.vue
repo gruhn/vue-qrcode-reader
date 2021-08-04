@@ -32,7 +32,7 @@ export default {
         await promise
       } catch (error) {
         if (error.name === 'NotAllowedError') {
-          this.error = "ERROR: you need to grant camera access permisson"
+          this.error = "ERROR: you need to grant camera access permission"
         } else if (error.name === 'NotFoundError') {
           this.error = "ERROR: no camera on this device"
         } else if (error.name === 'NotSupportedError') {
@@ -43,6 +43,10 @@ export default {
           this.error = "ERROR: installed cameras are not suitable"
         } else if (error.name === 'StreamApiNotSupportedError') {
           this.error = "ERROR: Stream API is not supported in this browser"
+        } else if (error.name === 'InsecureContextError') {
+          this.error = 'ERROR: Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP.';
+        } else {
+          this.error = `ERROR: Camera error (${error.name})`;
         }
       }
     }
