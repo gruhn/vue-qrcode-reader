@@ -12,10 +12,6 @@
     <img src="https://img.shields.io/npm/dm/vue-qrcode-reader.svg" alt="npm monthly downloads">
   </a>
 
-  <a href="https://travis-ci.org/gruhn/vue-qrcode-reader">
-    <img src="https://travis-ci.org/gruhn/vue-qrcode-reader.svg?branch=master" alt="Travis CI: build status">
-  </a>
-
   <br>
 
   <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" alt="is maintained? yes">
