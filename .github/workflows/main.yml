@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - vue3-compatibility
 jobs:
   release:
     name: Release
@@ -20,12 +21,12 @@ jobs:
         run: |
           npm ci
           npm run build
-          npm run build:docs
-      - name: Deploy Docs
-        uses: JamesIves/github-pages-deploy-action@4.1.4
-        with:
-          branch: gh-pages
-          folder: docs/.vuepress/dist
+      #     npm run build:docs
+      # - name: Deploy Docs
+      #   uses: JamesIves/github-pages-deploy-action@4.1.4
+      #   with:
+      #     branch: gh-pages
+      #     folder: docs/.vuepress/dist
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
