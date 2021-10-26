@@ -30,11 +30,12 @@ class Camera {
 // media constraints don't allow us to specify which camera we want exactly.
 const narrowDownFacingMode = async camera => {
   // Filter some devices, known to be bad choices.
-  const deviceBlackList = ["OBS Virtual Camera"];
+  const deviceBlackList = ["OBS Virtual Camera", "OBS-Camera"];
 
   const devices = (await navigator.mediaDevices.enumerateDevices())
     .filter(({ kind }) => kind === "videoinput")
-    .filter(({ label }) => !deviceBlackList.includes(label));
+    .filter(({ label }) => !deviceBlackList.includes(label))
+    .filter(({ label }) => !label.includes("infrared"));
 
   if (devices.length > 2) {
     // Explicitly picking the first entry in the list of all videoinput
