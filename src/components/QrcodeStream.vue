@@ -55,6 +55,11 @@ export default {
 
     track: {
       type: Function
+    },
+
+    inverted: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -170,7 +175,8 @@ export default {
       keepScanning(this.$refs.video, {
         detectHandler,
         locateHandler: this.onLocate,
-        minDelay: this.scanInterval
+        minDelay: this.scanInterval,
+        inverted: this.inverted
       });
     },
 

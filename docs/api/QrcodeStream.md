@@ -195,7 +195,6 @@ This will tell you whether or not `torch` is supported.
 Due to API limitations the camera stream must be reloaded when turning the torch on/off.
 That means the `init` event will be emitted again.
 
-
 ```html
 <qrcode-stream :torch="true" @init="onInit"></qrcode-stream>
 ```
@@ -207,6 +206,19 @@ methods: {
     const TORCH_IS_SUPPORTED = !!capabilities.torch
   }
 }
+```
+
+
+### `inverted`
+* **Input Type:** `Boolean`
+* **Default:** `false`
+
+With the `inverted` prop you can enable support for scanning inverted QR codes..
+This can be a bit resource intensive, since the videoframe is rendered to a canvas,
+and then inverted in software.
+
+```html
+<qrcode-stream :inverted="true"></qrcode-stream>
 ```
 
 ### `worker` <Badge text="removed in v3.0.0" type="error" />

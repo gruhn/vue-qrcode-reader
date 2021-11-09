@@ -3,7 +3,7 @@ import { eventOn } from "callforth";
 
 const adaptOldFormat = detectedCodes => {
   if (detectedCodes.length > 0) {
-    const [ firstCode ] = detectedCodes;
+    const [firstCode] = detectedCodes;
 
     const [
       topLeftCorner,
@@ -42,15 +42,37 @@ const adaptOldFormat = detectedCodes => {
  */
 export const keepScanning = (videoElement, options) => {
   const barcodeDetector = new BarcodeDetector({ formats: ["qr_code"] });
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
 
-  const { detectHandler, locateHandler, minDelay } = options;
+  const { detectHandler, locateHandler, minDelay, inverted } = options;
+
+  const detectedInvertedCodes = async (videoElement) => {
+    if (canvas.width !== videoElement.videoWidth || canvas.height !== videoElement.videoHeight) {
+      canvas.width = videoElement.videoWidth;
+      canvas.height = videoElement.videoHeight;
+    }
+
+    context.save();
+    context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+    context.globalCompositeOperation = 'difference';
+    context.fillStyle = 'white';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.restore();
+
+    return await barcodeDetector.detect(context.getImageData(0, 0, canvas.width, canvas.height));
+  }
 
   const processFrame = state => async timeNow => {
     if (videoElement.readyState > 1) {
       const { lastScanned, contentBefore, locationBefore } = state
 
       if (timeNow - lastScanned >= minDelay) {
-        const detectedCodes = await barcodeDetector.detect(videoElement);
+        const detectedCodes = [
+          ...await barcodeDetector.detect(videoElement),
+          ...(inverted ? await detectedInvertedCodes(videoElement) : [])
+        ];
+
         const { content, location, imageData } = adaptOldFormat(detectedCodes)
 
         if (content !== null && content !== contentBefore) {
