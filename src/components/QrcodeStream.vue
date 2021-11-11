@@ -44,7 +44,7 @@ export default {
       default: "auto",
 
       validator(camera) {
-        return ["auto", "rear", "front", "off"].includes(camera);
+        return ["auto", "rear", "front", "off"].includes(camera) || /^.+=$/.test(camera);
       }
     },
 
