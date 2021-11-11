@@ -52,7 +52,7 @@ const narrowDownFacingMode = async camera => {
       case "front":
         return { deviceId: { exact: frontCamera.deviceId } };
       default:
-        return undefined;
+        return devices.find(d => d.deviceId === camera) ? { deviceId: { exact: camera } } : undefined
     }
   } else {
     switch (camera) {
