@@ -21,6 +21,7 @@
     "webrtc"
   ],
   "license": "MIT",
+  "types": "./src/types/vue-qrcode-reader.d.ts",
   "scripts": {
     "dev": "vuepress dev docs",
     "build:docs": "vuepress build docs",
