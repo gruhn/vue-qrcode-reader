@@ -1,4 +1,4 @@
-import { DropImageFetchError, DropImageDecodeError } from "./errors.js";
+import { DropImageFetchError } from "./errors.js";
 import { eventOn } from "callforth";
 
 const adaptOldFormat = detectedCodes => {
