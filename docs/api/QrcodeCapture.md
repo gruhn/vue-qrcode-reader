@@ -66,7 +66,7 @@ methods: {
 However, checkout the components template:
 
 ```html
-<template lang="html">
+<template>
   <input
     @change="onChangeInput"
     type="file"
