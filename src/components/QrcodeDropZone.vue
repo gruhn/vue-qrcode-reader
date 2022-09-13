@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     @drop.prevent.stop="onDrop"
     @dragenter.prevent.stop="onDragOver(true)"
