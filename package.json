@@ -53,6 +53,7 @@
     "webrtc"
   ],
   "license": "MIT",
+  "types": "./src/types/vue-qrcode-reader.d.ts",
   "lint-staged": {
     "*.{js,jsx,vue}": [
       "vue-cli-service lint",
