@@ -7,7 +7,7 @@
     -->
     <video
       ref="video"
-      v-show="shouldScan"
+      :class="{ 'qrcode-stream-camera--hidden': !shouldScan }"
       class="qrcode-stream-camera"
       autoplay
       muted
@@ -182,19 +182,6 @@ export default {
       }
     },
 
-    onLocate(location) {
-      if (this.trackRepaintFunction === undefined || location === null) {
-        this.clearCanvas(this.$refs.trackingLayer);
-      } else {
-        const video = this.$refs.video;
-        const canvas = this.$refs.trackingLayer;
-
-        if (video !== undefined && canvas !== undefined) {
-          this.repaintTrackingLayer(video, canvas, location);
-        }
-      }
-    },
-
     onLocate(detectedCodes) {
       const canvas = this.$refs.trackingLayer;
       const video = this.$refs.video;
@@ -318,5 +305,21 @@ export default {
 
   display: block;
   object-fit: cover;
+}
+/* When a camera stream is loaded, we assign the stream to the `video`
+ * element via `video.srcObject`. At this point the element used to be
+ * hidden with `v-show="false"` aka. `display: none`. We do that because
+ * at this point the videos dimensions are not known yet. We have to
+ * wait for the `loadeddata` event first. Only after that event we
+ * display the video element. Otherwise the elements size awkwardly flickers.
+ *
+ * However, it appears in iOS 15 all iOS browsers won't properly render
+ * the video element if the `video.srcObject` was assigned *while* the
+ * element was hidden with `display: none`. Using `visibility: hidden`
+ * instead seems to have fixed the problem though.
+ */
+.qrcode-stream-camera--hidden {
+  visibility: hidden;
+  position: absolute;
 }
 </style>
