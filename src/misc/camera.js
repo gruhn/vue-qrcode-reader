@@ -24,19 +24,23 @@ class Camera {
   }
 }
 
+// Modern phones often have multipe front/rear cameras.
+// Sometimes special purpose cameras like the wide-angle camera are picked
+// by default. Those are not optimal for scanning QR codes but standard
+// media constraints don't allow us to specify which camera we want exactly.
 const narrowDownFacingMode = async camera => {
-  // Modern phones often have multipe front/rear cameras.
-  // Sometimes special purpose cameras like the wide-angle camera are picked
-  // by default. Those are not optimal for scanning QR codes but standard
-  // media constraints don't allow us to specify which camera we want exactly.
-  // However, explicitly picking the first entry in the list of all videoinput
-  // devices for as the default front camera and the last entry as the default
-  // rear camera seems to be a workaround.
-  const devices = (await navigator.mediaDevices.enumerateDevices()).filter(
-    ({ kind }) => kind === "videoinput"
-  );
+  // Filter some devices, known to be bad choices.
+  const deviceBlackList = ["OBS Virtual Camera", "OBS-Camera"];
+
+  const devices = (await navigator.mediaDevices.enumerateDevices())
+    .filter(({ kind }) => kind === "videoinput")
+    .filter(({ label }) => !deviceBlackList.includes(label))
+    .filter(({ label }) => !label.includes("infrared"));
 
   if (devices.length > 2) {
+    // Explicitly picking the first entry in the list of all videoinput
+    // devices for as the default front camera and the last entry as the default
+    // rear camera seems to be a good heuristic on some devices.
     const frontCamera = devices[0];
     const rearCamera = devices[devices.length - 1];
 
