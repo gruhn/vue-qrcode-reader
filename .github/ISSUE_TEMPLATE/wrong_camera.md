@@ -1,6 +1,6 @@
 ---
 name: Wrong camera selected
-about:
+about: Report a device that uses a bad default camera (wide-angle, infra-red, ...)
 title: ''
 labels: ''
 assignees: ''
