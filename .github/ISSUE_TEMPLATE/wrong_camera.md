@@ -17,3 +17,9 @@ FaceTime HD Camera (Built-in)     [DEFAULT]
 A different Camera                [PREFERRED]
 Another different Camera
 ```
+
+Or even better, copy the name of the bad camera and add it to: 
+
+https://github.com/gruhn/vue-qrcode-reader/blob/f7fd9cc812e2a6b3f3dfcff2b418b06b270fc374/src/misc/camera.js#L33
+
+yourself. Then open a pull request.
