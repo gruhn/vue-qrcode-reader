@@ -30,7 +30,20 @@ class Camera {
 // media constraints don't allow us to specify which camera we want exactly.
 const narrowDownFacingMode = async camera => {
   // Filter some devices, known to be bad choices.
-  const deviceBlackList = ["OBS Virtual Camera", "OBS-Camera", "Desk View Camera", "Schreibtischansicht-Kamera", "Caméra Desk View", "Fotocamera di Panoramica Scrivania", "Rückseitige Ultra-Weitwinkelkamera", "Rückseitige Telefotokamera"];
+  const deviceBlackList = [
+    "OBS Virtual Camera",
+    "OBS-Camera",
+    "Desk View Camera",
+    "Schreibtischansicht-Kamera",
+    "Caméra Desk View",
+    "Fotocamera di Panoramica Scrivania",
+    "Rückseitige Ultra-Weitwinkelkamera",
+    "Rückseitige Telefotokamera",
+    "Rückseitige Dual-Weitwinkelkamera",
+    "Rückseitige Triple-Kamera",
+    "Back Dual Wide Camera",
+    "Back Triple Camera",
+  ];
 
   const devices = (await navigator.mediaDevices.enumerateDevices())
     .filter(({ kind }) => kind === "videoinput")
