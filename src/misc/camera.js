@@ -39,6 +39,10 @@ const narrowDownFacingMode = async camera => {
     "Fotocamera di Panoramica Scrivania",
     "Rückseitige Ultra-Weitwinkelkamera",
     "Rückseitige Telefotokamera",
+    "Rückseitige Dual-Weitwinkelkamera",
+    "Rückseitige Triple-Kamera",
+    "Back Dual Wide Camera",
+    "Back Triple Camera",
   ];
 
   const devices = (await navigator.mediaDevices.enumerateDevices())
