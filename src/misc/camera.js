@@ -43,6 +43,7 @@ const narrowDownFacingMode = async camera => {
     "Rückseitige Triple-Kamera",
     "Back Dual Wide Camera",
     "Back Triple Camera",
+    "Back Ultra Wide Camera",
   ];
 
   const devices = (await navigator.mediaDevices.enumerateDevices())
