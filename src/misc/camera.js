@@ -44,6 +44,10 @@ const narrowDownFacingMode = async camera => {
     "Back Dual Wide Camera",
     "Back Triple Camera",
     "Back Ultra Wide Camera",
+    "Cámara frontal",
+    "Cámara de Vista Cenital",
+    "Cámara frontal con ultra gran angular",
+    "Cámara trasera con ultra gran angular",
   ];
 
   const devices = (await navigator.mediaDevices.enumerateDevices())
