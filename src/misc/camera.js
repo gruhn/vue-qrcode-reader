@@ -45,7 +45,11 @@ const narrowDownFacingMode = async camera => {
     "Back Triple Camera",
     "Back Ultra Wide Camera",
     "Zadní ultra širokoúhlý fotoaparát",
-    "Stolní kamera"
+    "Stolní kamera",
+    //Tuong.TT 2023-04-17: Update camera.js vietnamese camera
+    "Camera Desk View",
+    "Camera chụp xa mặt sau",
+    "Camera cực rộng mặt sau"
   ];
 
   const devices = (await navigator.mediaDevices.enumerateDevices())
