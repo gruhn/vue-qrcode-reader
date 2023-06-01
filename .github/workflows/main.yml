@@ -19,14 +19,14 @@ jobs:
           node-version: 16
       - name: Install & Build
         run: |
-          npm ci
-          npm run build
+          pnpm install
+          pnpm run build
       #     npm run build:docs
       # - name: Deploy Docs
       #   uses: JamesIves/github-pages-deploy-action@4.1.4
       #   with:
       #     branch: gh-pages
-      #     folder: docs/.vuepress/dist
+      #     folder: .vitepress/dist
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -9,22 +9,20 @@
   />
 </template>
 
-<script>
-import { processFile } from "../misc/scanner.js";
-import CommonAPI from "../mixins/CommonAPI.vue";
+<script setup lang="ts">
+import { processFile } from '../misc/scanner'
+import { useCommonApi } from '../composables/useCommonApi'
 
-export default {
-  name: "qrcode-capture",
+const emit = defineEmits(['detect', 'decode'])
 
-  mixins: [CommonAPI],
+const { onDetect } = useCommonApi(emit)
 
-  methods: {
-    onChangeInput(event) {
-      const files = [...event.target.files];
-      const resultPromises = files.map(processFile);
+// methods
+const onChangeInput = (event: Event) => {
+  if (!(event.target instanceof HTMLInputElement) || !event.target.files) return
+  const files = [...event.target.files]
+  const resultPromises = files.map(processFile)
 
-      resultPromises.forEach(this.onDetect);
-    }
-  }
-};
+  resultPromises.forEach(onDetect)
+}
 </script>
