@@ -32,6 +32,9 @@
     }
   },
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "barcode-detector": "^1.0.0",
     "webrtc-adapter": "^8.2.2"
