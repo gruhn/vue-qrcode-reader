@@ -10,8 +10,7 @@ export default defineConfig({
       pattern: 'https://github.com/gruhn/vue-qrcode-reader/edit/main/docs/:path'
     },
     footer: {
-      message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2019-present Jonas Thelemann'
+      message: 'Released under the MIT License.'
     },
     nav: [
       { text: 'Home', link: '/' },
