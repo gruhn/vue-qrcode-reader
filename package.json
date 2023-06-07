@@ -12,7 +12,7 @@
   "packageManager": "pnpm@8.3.1",
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "pnpm rimraf dist && vite build",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
@@ -54,6 +54,7 @@
     "husky": "8.0.3",
     "lint-staged": "13.2.2",
     "prettier": "2.8.8",
+    "rimraf": "5.0.1",
     "semantic-release": "21.0.2",
     "typescript": "5.0.4",
     "vite": "4.3.9",
