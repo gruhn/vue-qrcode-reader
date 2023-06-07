@@ -48,9 +48,8 @@ export const keepScanning = async (
     minDelay
   }: { detectHandler: any; locateHandler: any; minDelay: any }
 ) => {
-  const barcodeDetector = new (
-    await import('@undecaf/barcode-detector-polyfill')
-  ).BarcodeDetectorPolyfill({ formats: ['qr_code'] })
+  // @ts-ignore https://github.com/gruhn/barcode-detector/pull/7
+  const barcodeDetector = new (await import('barcode-detector')).default({ formats: ['qr_code'] })
 
   const processFrame =
     (state: {
@@ -116,18 +115,20 @@ const imageElementFromUrl = async (url: string) => {
 }
 
 export const processFile = async (file: File) => {
-  const barcodeDetector = new (
-    await import('@undecaf/barcode-detector-polyfill')
-  ).BarcodeDetectorPolyfill({ formats: ['qr_code'] })
+  // @ts-ignore https://github.com/gruhn/barcode-detector/pull/7
+  const barcodeDetector = new (await import('barcode-detector')).default({
+    formats: ['qr_code']
+  })
   const detectedCodes = await barcodeDetector.detect(file)
 
   return adaptOldFormat(detectedCodes)
 }
 
 export const processUrl = async (url: string) => {
-  const barcodeDetector = new (
-    await import('@undecaf/barcode-detector-polyfill')
-  ).BarcodeDetectorPolyfill({ formats: ['qr_code'] })
+  // @ts-ignore https://github.com/gruhn/barcode-detector/pull/7
+  const barcodeDetector = new (await import('barcode-detector')).default({
+    formats: ['qr_code']
+  })
   const image = await imageElementFromUrl(url)
   const detectedCodes = await barcodeDetector.detect(image)
 
