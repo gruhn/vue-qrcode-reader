@@ -21,9 +21,17 @@
     "prepack": "pnpm run build",
     "prepare": "husky install"
   },
-  "main": "dist/VueQrcodeReader.common.js",
-  "unpkg": "dist/VueQrcodeReader.umd.min.js",
-  "types": "./src/types/vue-qrcode-reader.d.ts",
+  "main": "./dist/vue-qrcode-reader.js",
+  "module": "./dist/vue-qrcode-reader.js",
+  "unpkg": "./dist/vue-qrcode-reader.umd.cjs",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-qrcode-reader.js",
+      "require": "./dist/vue-qrcode-reader.umd.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "types": "./dist/index.d.ts",
   "dependencies": {
     "barcode-detector": "^1.0.0",
     "webrtc-adapter": "^8.2.2"
@@ -46,6 +54,7 @@
     "semantic-release": "21.0.2",
     "typescript": "5.0.4",
     "vite": "4.3.9",
+    "vite-plugin-dts": "2.3.0",
     "vitepress": "1.0.0-beta.1",
     "vue": "3.3.4",
     "vue-tsc": "1.6.5"

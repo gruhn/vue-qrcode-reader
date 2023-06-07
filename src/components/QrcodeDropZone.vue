@@ -27,7 +27,7 @@ const onDrop = ({ dataTransfer }: DragEvent) => {
 
   onDragOver(false)
 
-  const droppedFiles = [...dataTransfer.files]
+  const droppedFiles = [...Array.from(dataTransfer.files)]
   const droppedUrl = dataTransfer.getData('text/uri-list')
 
   droppedFiles.forEach((file: File) => {

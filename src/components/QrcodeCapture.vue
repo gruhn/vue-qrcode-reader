@@ -20,7 +20,7 @@ const { onDetect } = useCommonApi(emit)
 // methods
 const onChangeInput = (event: Event) => {
   if (!(event.target instanceof HTMLInputElement) || !event.target.files) return
-  const files = [...event.target.files]
+  const files = [...Array.from(event.target.files)]
   const resultPromises = files.map(processFile)
 
   resultPromises.forEach(onDetect)
