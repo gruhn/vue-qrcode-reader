@@ -1,27 +1,27 @@
 // @ts-ignore
-import { shimGetUserMedia as chromeShim } from 'webrtc-adapter/src/js/chrome/getusermedia'
+import { shimGetUserMedia as chromeShim } from 'webrtc-adapter/dist/chrome/getusermedia'
 // @ts-ignore
-import { shimGetUserMedia as firefoxShim } from 'webrtc-adapter/src/js/firefox/getusermedia'
+import { shimGetUserMedia as firefoxShim } from 'webrtc-adapter/dist/firefox/getusermedia'
 // @ts-ignore
-import { shimGetUserMedia as safariShim } from 'webrtc-adapter/src/js/safari/safari_shim'
+import { shimGetUserMedia as safariShim } from 'webrtc-adapter/dist/safari/safari_shim'
 // @ts-ignore
-import { detectBrowser } from 'webrtc-adapter/src/js/utils'
+import { detectBrowser } from 'webrtc-adapter/dist/utils'
 
 import { StreamApiNotSupportedError } from './errors'
 import { indempotent } from './util'
 
 export default indempotent(() => {
-  const result = detectBrowser(window)
+  const browserDetails = detectBrowser(window)
 
-  switch (result.browser) {
+  switch (browserDetails.browser) {
     case 'chrome':
-      chromeShim(window, result)
+      chromeShim(window, browserDetails)
       break
     case 'firefox':
-      firefoxShim(window, result)
+      firefoxShim(window, browserDetails)
       break
     case 'safari':
-      safariShim(window, result)
+      safariShim(window, browserDetails)
       break
     default:
       throw new StreamApiNotSupportedError()
