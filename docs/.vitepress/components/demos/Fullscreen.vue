@@ -1,14 +1,16 @@
 <template>
-  <div :class="{ 'fullscreen': fullscreen }" ref="wrapper" @fullscreenchange="onFullscreenChange">
+  <div :class="{ fullscreen: fullscreen }" ref="wrapper" @fullscreenchange="onFullscreenChange">
     <qrcode-stream @init="logErrors">
       <button @click="fullscreen = !fullscreen" class="fullscreen-button">
-        <img :src="fullscreenIcon" alt="toggle fullscreen" />
+        <img :src="withBase(fullscreenIcon)" alt="toggle fullscreen" />
       </button>
     </qrcode-stream>
   </div>
 </template>
 
 <script>
+import { withBase } from 'vitepress'
+
 import { QrcodeStream } from '../../../../src'
 
 // NOTE: calling `requestFullscreen` might prompt the user with another
@@ -20,10 +22,9 @@ import { QrcodeStream } from '../../../../src'
 // implementation.
 
 export default {
-
   components: { QrcodeStream },
 
-  data () {
+  data() {
     return {
       fullscreen: false
     }
@@ -32,9 +33,9 @@ export default {
   computed: {
     fullscreenIcon() {
       if (this.fullscreen) {
-        return "/fullscreen-exit.svg"
+        return '/fullscreen-exit.svg'
       } else {
-        return "/fullscreen.svg"
+        return '/fullscreen.svg'
       }
     }
   },
@@ -62,33 +63,40 @@ export default {
       const elem = this.$refs.wrapper
 
       if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-      } else if (elem.mozRequestFullScreen) { /* Firefox */
-        elem.mozRequestFullScreen();
-      } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-        elem.webkitRequestFullscreen();
-      } else if (elem.msRequestFullscreen) { /* IE/Edge */
-        elem.msRequestFullscreen();
+        elem.requestFullscreen()
+      } else if (elem.mozRequestFullScreen) {
+        /* Firefox */
+        elem.mozRequestFullScreen()
+      } else if (elem.webkitRequestFullscreen) {
+        /* Chrome, Safari and Opera */
+        elem.webkitRequestFullscreen()
+      } else if (elem.msRequestFullscreen) {
+        /* IE/Edge */
+        elem.msRequestFullscreen()
       }
     },
 
     exitFullscreen() {
       if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.mozCancelFullScreen) { /* Firefox */
-        document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) { /* IE/Edge */
-        document.msExitFullscreen();
+        document.exitFullscreen()
+      } else if (document.mozCancelFullScreen) {
+        /* Firefox */
+        document.mozCancelFullScreen()
+      } else if (document.webkitExitFullscreen) {
+        /* Chrome, Safari and Opera */
+        document.webkitExitFullscreen()
+      } else if (document.msExitFullscreen) {
+        /* IE/Edge */
+        document.msExitFullscreen()
       }
     },
 
-    logErrors (promise) {
+    logErrors(promise) {
       promise.catch(console.error)
-    }
-  }
+    },
 
+    withBase
+  }
 }
 </script>
 

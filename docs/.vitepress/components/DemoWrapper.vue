@@ -3,20 +3,20 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, markRaw } from "vue";
+import { onMounted, ref, markRaw } from 'vue'
 
 const props = defineProps({
-  component: Object,
-});
+  component: Object
+})
 
 // data
-const currentDemo = ref();
+const currentDemo = ref()
 
 onMounted(() => {
   if (props.component) {
-    currentDemo.value = markRaw(props.component);
+    currentDemo.value = markRaw(props.component)
   }
-});
+})
 </script>
 
 <style>

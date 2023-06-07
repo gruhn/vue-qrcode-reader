@@ -1,29 +1,26 @@
 <template>
   <div>
-    <p class="error" v-if="noFrontCamera">
-      You don't seem to have a front camera on your device
-    </p>
+    <p class="error" v-if="noFrontCamera">You don't seem to have a front camera on your device</p>
 
-    <p class="error" v-if="noRearCamera">
-      You don't seem to have a rear camera on your device
-    </p>
+    <p class="error" v-if="noRearCamera">You don't seem to have a rear camera on your device</p>
 
     <qrcode-stream :camera="camera" @init="onInit">
       <button @click="switchCamera">
-        <img src="/camera-switch.svg" alt="switch camera">
+        <img :src="withBase('/camera-switch.svg')" alt="switch camera" />
       </button>
     </qrcode-stream>
   </div>
 </template>
 
 <script>
+import { withBase } from 'vitepress'
+
 import { QrcodeStream } from '../../../../src'
 
 export default {
-
   components: { QrcodeStream },
 
-  data () {
+  data() {
     return {
       camera: 'rear',
 
@@ -33,7 +30,7 @@ export default {
   },
 
   methods: {
-    switchCamera () {
+    switchCamera() {
       switch (this.camera) {
         case 'front':
           this.camera = 'rear'
@@ -44,7 +41,7 @@ export default {
       }
     },
 
-    async onInit (promise) {
+    async onInit(promise) {
       try {
         await promise
       } catch (error) {
@@ -63,7 +60,9 @@ export default {
 
         console.error(error)
       }
-    }
+    },
+
+    withBase
   }
 }
 </script>

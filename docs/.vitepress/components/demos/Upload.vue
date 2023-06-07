@@ -4,14 +4,16 @@
       Capture:
       <select v-model="selected">
         <option v-for="option in options" :key="option.text" :value="option">
-          {{ option.text }}
+          {{ option.text }}
         </option>
       </select>
     </p>
 
-    <hr/>
+    <hr />
 
-    <p class="decode-result">Last result: <b>{{ result }}</b></p>
+    <p class="decode-result">
+      Last result: <b>{{ result }}</b>
+    </p>
 
     <qrcode-capture @decode="onDecode" :capture="selected.value" />
   </div>
@@ -21,14 +23,13 @@
 import { QrcodeCapture } from '../../../../src'
 
 export default {
-
   components: { QrcodeCapture },
 
-  data () {
+  data() {
     const options = [
-      { text: "rear camera (default)", value: "environment" },
-      { text: "front camera", value: "user" },
-      { text: "force file dialog", value: false },
+      { text: 'rear camera (default)', value: 'environment' },
+      { text: 'front camera', value: 'user' },
+      { text: 'force file dialog', value: false }
     ]
 
     return {
@@ -39,7 +40,7 @@ export default {
   },
 
   methods: {
-    onDecode (result) {
+    onDecode(result) {
       this.result = result
     }
   }

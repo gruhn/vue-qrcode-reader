@@ -1,24 +1,26 @@
 <template>
   <div>
-    <p class="decode-result">Last result: <b>{{ result }}</b></p>
-
+    <p class="decode-result">
+      Last result: <b>{{ result }}</b>
+    </p>
 
     <qrcode-stream :camera="camera" @decode="onDecode" @init="onInit">
       <div v-show="showScanConfirmation" class="scan-confirmation">
-        <img src="/checkmark.svg" alt="Checkmark" width="128px" />
+        <img :src="withBase('/checkmark.svg')" alt="Checkmark" width="128px" />
       </div>
     </qrcode-stream>
   </div>
 </template>
 
 <script>
+import { withBase } from 'vitepress'
+
 import { QrcodeStream } from '../../../../src'
 
 export default {
-
   components: { QrcodeStream },
 
-  data () {
+  data() {
     return {
       camera: 'auto',
       result: null,
@@ -27,18 +29,17 @@ export default {
   },
 
   methods: {
-
-    async onInit (promise) {
+    async onInit(promise) {
       try {
         await promise
       } catch (e) {
         console.error(e)
       } finally {
-        this.showScanConfirmation = this.camera === "off"
+        this.showScanConfirmation = this.camera === 'off'
       }
     },
 
-    async onDecode (content) {
+    async onDecode(content) {
       this.result = content
 
       this.pause()
@@ -46,19 +47,21 @@ export default {
       this.unpause()
     },
 
-    unpause () {
+    unpause() {
       this.camera = 'auto'
     },
 
-    pause () {
+    pause() {
       this.camera = 'off'
     },
 
-    timeout (ms) {
-      return new Promise(resolve => {
+    timeout(ms) {
+      return new Promise((resolve) => {
         window.setTimeout(resolve, ms)
       })
-    }
+    },
+
+    withBase
   }
 }
 </script>
@@ -69,7 +72,7 @@ export default {
   width: 100%;
   height: 100%;
 
-  background-color: rgba(255, 255, 255, .8);
+  background-color: rgba(255, 255, 255, 0.8);
 
   display: flex;
   flex-flow: row nowrap;
