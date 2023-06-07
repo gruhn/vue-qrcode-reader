@@ -18,6 +18,7 @@
     "docs:preview": "vitepress preview docs",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
+    "prepack": "pnpm run build",
     "prepare": "husky install"
   },
   "main": "dist/VueQrcodeReader.common.js",
