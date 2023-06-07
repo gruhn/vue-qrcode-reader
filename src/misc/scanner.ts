@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 
 import { eventOn } from './callforth'
 import { DropImageFetchError } from './errors'
-import type { Point } from '@/types/types'
+import type { Point } from '../types/types'
 
 export const adaptOldFormat = (detectedCodes: DetectedBarcode[]) => {
   if (detectedCodes.length > 0) {
