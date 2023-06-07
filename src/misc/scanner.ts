@@ -48,7 +48,6 @@ export const keepScanning = async (
     minDelay
   }: { detectHandler: any; locateHandler: any; minDelay: any }
 ) => {
-  // @ts-ignore https://github.com/gruhn/barcode-detector/pull/7
   const barcodeDetector = new (await import('barcode-detector')).default({ formats: ['qr_code'] })
 
   const processFrame =
@@ -115,7 +114,6 @@ const imageElementFromUrl = async (url: string) => {
 }
 
 export const processFile = async (file: File) => {
-  // @ts-ignore https://github.com/gruhn/barcode-detector/pull/7
   const barcodeDetector = new (await import('barcode-detector')).default({
     formats: ['qr_code']
   })
@@ -125,7 +123,6 @@ export const processFile = async (file: File) => {
 }
 
 export const processUrl = async (url: string) => {
-  // @ts-ignore https://github.com/gruhn/barcode-detector/pull/7
   const barcodeDetector = new (await import('barcode-detector')).default({
     formats: ['qr_code']
   })
