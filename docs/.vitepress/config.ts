@@ -1,30 +1,28 @@
-import { defineConfig } from "vitepress";
+import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  base: "/vue-qrcode-reader/",
-  description:
-    "A set of Vue.js components for detecting and decoding QR codes.",
-    lang: "en-US",
+  base: '/vue-qrcode-reader/',
+  description: 'A set of Vue.js components for detecting and decoding QR codes.',
+  lang: 'en-US',
   lastUpdated: true,
   themeConfig: {
     editLink: {
-      pattern:
-        "https://github.com/gruhn/vue-qrcode-reader/edit/main/docs/:path",
+      pattern: 'https://github.com/gruhn/vue-qrcode-reader/edit/main/docs/:path'
     },
     footer: {
-      message: "Released under the MIT License.",
-      copyright: "Copyright © 2019-present Jonas Thelemann",
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2019-present Jonas Thelemann'
     },
     nav: [
-      { text: "Home", link: "/" },
-      { text: "Live Demos", link: "/demos/CustomTracking" },
-      { text: "API Reference", link: "/api/QrcodeStream" },
+      { text: 'Home', link: '/' },
+      { text: 'Live Demos', link: '/demos/CustomTracking' },
+      { text: 'API Reference', link: '/api/QrcodeStream' }
     ],
     search: {
-      provider: "local",
+      provider: 'local'
     },
     sidebar: {
-      "/demos/": [
+      '/demos/': [
         {
           text: 'Simple',
           link: '/demos/Simple'
@@ -68,9 +66,9 @@ export default defineConfig({
         {
           text: 'Decode by Upload',
           link: '/demos/Upload'
-        },
+        }
       ],
-      "/api/": [
+      '/api/': [
         {
           text: 'QrcodeStream',
           link: '/api/QrcodeStream'
@@ -82,14 +80,12 @@ export default defineConfig({
         {
           text: 'QrcodeCapture',
           link: '/api/QrcodeCapture'
-        },
-      ],
+        }
+      ]
     },
-    socialLinks: [
-      { icon: "github", link: "https://github.com/gruhn/vue-qrcode-reader" },
-    ],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/gruhn/vue-qrcode-reader' }]
   },
-  title: "Vue Qrcode Reader",
+  title: 'Vue Qrcode Reader',
   vite: {
     // build: {
     //   rollupOptions: {
@@ -103,8 +99,8 @@ export default defineConfig({
     // },
     resolve: {
       alias: {
-        "@": __dirname,
-      },
-    },
+        '@': __dirname
+      }
+    }
   }
-});
+})
