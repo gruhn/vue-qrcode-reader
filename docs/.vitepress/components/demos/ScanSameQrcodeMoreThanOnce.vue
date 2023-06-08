@@ -6,7 +6,7 @@
 
     <qrcode-stream :camera="camera" @decode="onDecode" @init="onInit">
       <div v-show="showScanConfirmation" class="scan-confirmation">
-        <img :src="withBase('/checkmark.svg')" alt="Checkmark" width="128px" />
+        <img :src="withBase('/checkmark.svg')" alt="Checkmark" width="128" />
       </div>
     </qrcode-stream>
   </div>
