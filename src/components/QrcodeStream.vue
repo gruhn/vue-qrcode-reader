@@ -63,11 +63,10 @@ const cameraInstance = ref<Awaited<ReturnType<typeof Camera>>>()
 const isMounted = ref(false)
 
 // computations
-const shouldStream = computed(() => isMounted.value && props.camera !== 'off')
-
 const shouldScan = computed(
   () =>
-    shouldStream.value === true &&
+    isMounted.value &&
+    props.camera !== 'off' &&
     cameraInstance.value &&
     videoRef.value &&
     videoRef.value.readyState > 1
@@ -86,19 +85,6 @@ const scanInterval = () => {
 }
 
 //lifecycle
-watch(shouldStream, (shouldStream) => {
-  if (!shouldStream && pauseFrameRef.value && videoRef.value) {
-    const canvas = pauseFrameRef.value
-    const ctx = canvas.getContext('2d')
-    const video = videoRef.value
-
-    canvas.width = video.videoWidth
-    canvas.height = video.videoHeight
-
-    ctx?.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
-  }
-})
-
 watch(shouldScan, (shouldScan) => {
   if (shouldScan && pauseFrameRef.value && trackingLayerRef.value) {
     clearCanvas(pauseFrameRef.value)
@@ -130,7 +116,7 @@ onBeforeUnmount(() => {
 // methods
 const init = () => {
   const promise = (async () => {
-    beforeResetCamera()
+    beforeResetCamera({ freeze: props.camera === 'off' })
 
     if (props.camera === 'off') {
       cameraInstance.value = undefined
@@ -181,7 +167,20 @@ const startScanning = () => {
   })
 }
 
-const beforeResetCamera = () => {
+const beforeResetCamera = (options?: { freeze?: boolean }) => {
+  const { freeze } = options || { freeze: false }
+
+  if (freeze && pauseFrameRef.value && videoRef.value) {
+    const canvas = pauseFrameRef.value
+    const ctx = canvas.getContext('2d')
+    const video = videoRef.value
+
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+
+    ctx?.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
+  }
+
   if (cameraInstance.value) {
     cameraInstance.value.stop()
     cameraInstance.value = undefined
