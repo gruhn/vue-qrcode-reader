@@ -1,4 +1,5 @@
 import { type DetectedBarcode } from '@undecaf/barcode-detector-polyfill'
+import BarcodeDetector from 'barcode-detector'
 import type { Ref } from 'vue'
 
 import { eventOn } from './callforth'
@@ -48,7 +49,7 @@ export const keepScanning = async (
     minDelay
   }: { detectHandler: any; locateHandler: any; minDelay: any }
 ) => {
-  const barcodeDetector = new (await import('barcode-detector')).default({ formats: ['qr_code'] })
+  const barcodeDetector = new BarcodeDetector({ formats: ['qr_code'] })
 
   const processFrame =
     (state: {
@@ -114,7 +115,7 @@ const imageElementFromUrl = async (url: string) => {
 }
 
 export const processFile = async (file: File) => {
-  const barcodeDetector = new (await import('barcode-detector')).default({
+  const barcodeDetector = new BarcodeDetector({
     formats: ['qr_code']
   })
   const detectedCodes = await barcodeDetector.detect(file)
@@ -123,7 +124,7 @@ export const processFile = async (file: File) => {
 }
 
 export const processUrl = async (url: string) => {
-  const barcodeDetector = new (await import('barcode-detector')).default({
+  const barcodeDetector = new BarcodeDetector({
     formats: ['qr_code']
   })
   const image = await imageElementFromUrl(url)
