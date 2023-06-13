@@ -1,5 +1,6 @@
-import { type DetectedBarcode } from '@undecaf/barcode-detector-polyfill'
-import BarcodeDetector from 'barcode-detector'
+import '@sec-ant/barcode-detector'
+
+import { type DetectedBarcode } from '@sec-ant/barcode-detector'
 import type { Ref } from 'vue'
 
 import { eventOn } from './callforth'

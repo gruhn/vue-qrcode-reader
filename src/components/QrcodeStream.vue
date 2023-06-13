@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DetectedBarcode } from '@undecaf/barcode-detector-polyfill'
+import type { DetectedBarcode } from '@sec-ant/barcode-detector'
 import { onBeforeUnmount, computed, onMounted, ref, watch } from 'vue'
 
 import { adaptOldFormat, keepScanning } from '../misc/scanner'
