@@ -63,14 +63,7 @@ const cameraInstance = ref<Awaited<ReturnType<typeof Camera>>>()
 const isMounted = ref(false)
 
 // computations
-const shouldScan = computed(
-  () =>
-    isMounted.value &&
-    props.camera !== 'off' &&
-    cameraInstance.value &&
-    videoRef.value &&
-    videoRef.value.readyState > 1
-)
+const shouldScan = computed(() => isMounted.value && props.camera !== 'off' && cameraInstance.value)
 
 /**
  * Minimum delay in milliseconds between frames to be scanned. Don't scan
