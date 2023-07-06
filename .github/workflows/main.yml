@@ -43,10 +43,3 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v1
-
-      #     npm run build:docs
-      # - name: Deploy Docs
-      #   uses: JamesIves/github-pages-deploy-action@4.1.4
-      #   with:
-      #     branch: gh-pages
-      #     folder: .vitepress/dist
