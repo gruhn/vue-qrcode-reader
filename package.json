@@ -7,7 +7,7 @@
     "email": "niklas@gruhn.me"
   },
   "engines": {
-    "node": "20"
+    "node": ">=18.0.0"
   },
   "packageManager": "pnpm@8.3.1",
   "type": "module",

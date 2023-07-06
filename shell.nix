@@ -3,7 +3,7 @@
 pkgs.mkShell {
 
   buildInputs = with pkgs; [
-    nodejs_20
+    nodejs_18
     nodePackages.pnpm
     nodePackages.typescript-language-server
     nodePackages.vls
