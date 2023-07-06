@@ -18,54 +18,64 @@ Vue Native is not supported (see [#206](https://github.com/gruhn/vue-qrcode-read
 
 ## Events
 
-### `decode`
-* **Payload Type:** `String`
 
-Once a stream from the users camera is loaded, it's displayed and continuously scanned for QR codes. Results are indicated by the `decode` event.
+### `detect` 
+* **Payload Type:** `Promise<DetectedBarcode[]>`
 
-```html
-<qrcode-stream @decode="onDecode"></qrcode-stream>
-```
-```javascript
-methods: {
-  onDecode (decodedString) {
-    // ...
-  }
-}
-```
-
-::: tip
-If you scan the same QR code multiple times in a row, `decode` is still only emitted once. When you hold a QR code in the camera, frames are actually decoded multiple times a second but you don't want to be flooded with `decode` events that often. That's why the last decoded QR code is always cached and only new results are propagated. However changing the value of `camera` resets this internal cache.
-:::
-
-### `detect`
-* **Payload Type:** `Promise<Object>`
-
-The `detect` event is basically a verbose version of `decode`. `decode` only gives you the string encoded by QR codes. `detect` on the other hand ...
-
-* is always emitted before `decode`
-* gives you the coordinates of the QR code in the camera frame
-* does NOT silently fail in case of errors
+Once a stream from the users camera is loaded, it's displayed and continuously scanned for QR codes. 
+Results are indicated by the `detect` event.
 
 ```html
 <qrcode-stream @detect="onDetect"></qrcode-stream>
 ```
 ```javascript
 methods: {
-  async onDetect (promise) {
-    try {
-      const {
-        content,      // decoded String
-        location      // QR code coordinates
-      } = await promise
-
-      // ...
-    } catch (error) {
-      // ...
-    }
+  onDetect (detectedCodes) {
+    // ...
   }
 }
 ```
+The payload is an array of one or multiple detected codes (only QR codes supported at the moment).
+The structure of the array items is accroding to the [Barcode Detection API spec](https://wicg.github.io/shape-detection-api/#detectedbarcode-section).
+Here is an example:
+
+```json
+[
+  {
+    "boundingBox": { "x": 82, "y": 70, "width": 178, "height": 188, "top": 70, "right": 260, "bottom": 258, "left": 82 },
+    "rawValue": "https://wikipedia.org",
+    "format": "qr_code",
+    "cornerPoints": [
+      { "x": 82, "y": 91 },
+      { "x": 244, "y": 70 },
+      { "x": 260, "y": 240 },
+      { "x": 94, "y": 258 }
+    ]
+  }, {
+    "boundingBox": { "x": 322, "y": 135, "width": 244, "height": 240, "top": 135, "right": 566, "bottom": 375, "left": 322 },
+    "rawValue": "Hello, world!",
+    "format": "qr_code",
+    "cornerPoints": [
+      { "x": 322, "y": 160 },
+      { "x": 542, "y": 135 },
+      { "x": 566, "y": 359 },
+      { "x": 342, "y": 375 }
+    ]
+  }
+] 
+```
+
+::: tip
+If you scan the same QR code multiple times in a row, `detect` is still only emitted once. 
+When you hold a QR code in the camera, frames are actually decoded multiple times a second but you don't want to be flooded with `detect` events that often. 
+That's why the last decoded QR code is always cached and only new results are propagated. 
+However changing the value of `camera` resets this internal cache.
+:::
+
+
+For example:
+
+
 ### `camera-on` <Badge text="since v5.0.0" type="info" />
 * **Payload Type:** `Promise<MediaTrackCapabilities>`
 
@@ -131,10 +141,13 @@ methods: {
 }
 ```
 
-### `init` <Badge text="removed in v5.0.0" type="danger" />
+### `decode` <Badge text="removed in v5.0.0" type="danger" />
 
 TODO: link old docs
 
+### `init` <Badge text="removed in v5.0.0" type="danger" />
+
+TODO: link old docs
 
 ## Props
 

@@ -15,7 +15,7 @@
       Last result: <b>{{ result }}</b>
     </p>
 
-    <qrcode-capture @decode="onDecode" :capture="selected.value" />
+    <qrcode-capture @detect="onDetect" :capture="selected.value" />
   </div>
 </template>
 
@@ -40,8 +40,12 @@ export default {
   },
 
   methods: {
-    onDecode(result) {
-      this.result = result
+    onDetect(detectedCodes) {
+      console.log(detectedCodes)
+
+      this.result = JSON.stringify(
+        detectedCodes.map(code => code.rawValue)
+      )
     }
   }
 }

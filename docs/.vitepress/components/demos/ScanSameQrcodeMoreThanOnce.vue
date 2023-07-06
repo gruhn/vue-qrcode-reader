@@ -4,7 +4,7 @@
       Last result: <b>{{ result }}</b>
     </p>
 
-    <qrcode-stream :camera="camera" @decode="onDecode" @camera-on="onCameraOn" @camera-off="onCameraOff" @error="onError">
+    <qrcode-stream :camera="camera" @detect="onDetect" @camera-on="onCameraOn" @camera-off="onCameraOff" @error="onError">
       <div v-show="showScanConfirmation" class="scan-confirmation">
         <img :src="withBase('/checkmark.svg')" alt="Checkmark" width="128" />
       </div>
@@ -23,7 +23,7 @@ export default {
   data() {
     return {
       camera: 'auto',
-      result: null,
+      result: "",
       showScanConfirmation: false
     }
   },
@@ -39,8 +39,10 @@ export default {
 
     onError: console.error,
 
-    async onDecode(content) {
-      this.result = content
+    async onDetect(detectedCodes) {
+      this.result = JSON.stringify(
+        detectedCodes.map(code => code.rawValue)
+      )
 
       this.pause()
       await this.timeout(500)

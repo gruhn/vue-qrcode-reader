@@ -6,7 +6,7 @@
       Last result: <b>{{ result }}</b>
     </p>
 
-    <qrcode-stream @decode="onDecode" @error="onError" />
+    <qrcode-stream @detect="onDetect" @error="onError" />
   </div>
 </template>
 
@@ -20,7 +20,12 @@ const result = ref('')
 const error = ref('')
 
 // methods
-const onDecode = (data) => (result.value = data)
+const onDetect = detectedCodes => {
+  console.log(detectedCodes)
+
+  const [ firstCode ] = detectedCodes
+  result.value = firstCode.rawValue
+}
 
 const onError = err => {
   if (err.name === 'NotAllowedError') {

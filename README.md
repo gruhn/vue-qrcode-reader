@@ -66,12 +66,12 @@ A set of Vue.js components, allowing you to detect and decode QR codes, without 
 All components are responsive. Beyond that, close to zero styling. Make them fit your layout. Usage is simple and straight forward:
 
 ```html
-<qrcode-stream @decode="onDecode"></qrcode-stream>
+<qrcode-stream @detect="onDetect"></qrcode-stream>
 ```
 
 ```js
 methods: {
-  onDecode (decodedString) {
+  onDetect (detectedCodes) {
     // ...
   }
 }

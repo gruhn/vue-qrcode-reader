@@ -8,7 +8,7 @@
       {{ error }}
     </p>
 
-    <qrcode-drop-zone @detect="onDetect" @dragover="onDragOver" @init="logErrors">
+    <qrcode-drop-zone @detect="onDetect" @dragover="onDragOver" @error="logErrors">
       <div class="drop-area" :class="{ dragover: dragover }">DROP SOME IMAGES HERE</div>
     </qrcode-drop-zone>
   </div>
@@ -29,25 +29,22 @@ export default {
   },
 
   methods: {
-    async onDetect(promise) {
-      try {
-        const { content } = await promise
+    onDetect(detectedCodes) {
+      console.log(detectedCodes)
 
-        this.result = content
-        this.error = null
-      } catch (error) {
-        if (error.name === 'DropImageFetchError') {
-          this.error = "Sorry, you can't load cross-origin images :/"
-        } else if (error.name === 'DropImageDecodeError') {
-          this.error = "Ok, that's not an image. That can't be decoded."
-        } else {
-          this.error = 'Ups, what kind of error is this?! ' + error.message
-        }
-      }
+      this.result = JSON.stringify(
+        detectedCodes.map(code => code.rawValue)
+      )
     },
 
-    logErrors(promise) {
-      promise.catch(console.error)
+    logErrors(error) {
+      if (error.name === 'DropImageFetchError') {
+        this.error = "Sorry, you can't load cross-origin images :/"
+      } else if (error.name === 'DropImageDecodeError') {
+        this.error = "Ok, that's not an image. That can't be decoded."
+      } else {
+        this.error = 'Ups, what kind of error is this?! ' + error.message
+      }
     },
 
     onDragOver(isDraggingOver) {
