@@ -25,16 +25,6 @@ export function stop() {
   }
 }
 
-export function getCapabilities() : MediaTrackCapabilities {
-  if (cameraState.isActive) {
-    const [track] = cameraState.stream.getVideoTracks()
-    // Firefox does not yet support getCapabilities as of August 2020
-    return track?.getCapabilities?.() ?? {}
-  } else {
-    return {}
-  }
-}
-
 // Modern phones often have multipe front/rear cameras.
 // Sometimes special purpose cameras like the wide-angle camera are picked
 // by default. Those are not optimal for scanning QR codes but standard
@@ -97,7 +87,7 @@ const narrowDownFacingMode = async (camera: string) => {
 
 export async function start(
   videoEl: HTMLVideoElement, { camera, torch }: { camera: string; torch: string }
-) {
+) : Promise<MediaTrackCapabilities> {
   // At least in Chrome `navigator.mediaDevices` is undefined when the page is
   // loaded using HTTP rather than HTTPS. Thus `STREAM_API_NOT_SUPPORTED` is
   // initialized with `false` although the API might actually be supported.
@@ -164,4 +154,8 @@ export async function start(
   }
 
   cameraState = { videoEl, stream, isActive: true }
+
+  // Firefox does not yet support getCapabilities as of August 2020
+  const [track] = cameraState.stream.getVideoTracks()
+  return track?.getCapabilities?.() ?? {}
 }

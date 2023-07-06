@@ -4,7 +4,7 @@
 
     <p class="error" v-if="noRearCamera">You don't seem to have a rear camera on your device</p>
 
-    <qrcode-stream :camera="camera" @init="onInit">
+    <qrcode-stream :camera="camera" @error="onError">
       <button @click="switchCamera">
         <img :src="withBase('/camera-switch.svg')" alt="switch camera" />
       </button>
@@ -41,25 +41,21 @@ export default {
       }
     },
 
-    async onInit(promise) {
-      try {
-        await promise
-      } catch (error) {
-        const triedFrontCamera = this.camera === 'front'
-        const triedRearCamera = this.camera === 'rear'
+    onError(error) {
+      const triedFrontCamera = this.camera === 'front'
+      const triedRearCamera = this.camera === 'rear'
 
-        const cameraMissingError = error.name === 'OverconstrainedError'
+      const cameraMissingError = error.name === 'OverconstrainedError'
 
-        if (triedRearCamera && cameraMissingError) {
-          this.noRearCamera = true
-        }
-
-        if (triedFrontCamera && cameraMissingError) {
-          this.noFrontCamera = true
-        }
-
-        console.error(error)
+      if (triedRearCamera && cameraMissingError) {
+        this.noRearCamera = true
       }
+
+      if (triedFrontCamera && cameraMissingError) {
+        this.noFrontCamera = true
+      }
+
+      console.error(error)
     },
 
     withBase

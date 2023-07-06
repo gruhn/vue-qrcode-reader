@@ -4,7 +4,7 @@
       Last result: <b>{{ result }}</b>
     </p>
 
-    <qrcode-stream :camera="camera" @decode="onDecode" @init="onInit">
+    <qrcode-stream :camera="camera" @decode="onDecode" @error="onError" @camera-on="resetValidationState">
       <div v-if="validationSuccess" class="validation-success">This is a URL</div>
 
       <div v-if="validationFailure" class="validation-failure">This is NOT a URL!</div>
@@ -43,9 +43,7 @@ export default {
   },
 
   methods: {
-    onInit(promise) {
-      promise.catch(console.error).then(this.resetValidationState)
-    },
+    onError: console.error,
 
     resetValidationState() {
       this.isValid = undefined

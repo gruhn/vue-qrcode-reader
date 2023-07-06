@@ -26,10 +26,10 @@
 
 <script setup lang="ts">
 import type { DetectedBarcode } from '@sec-ant/barcode-detector'
-import { onBeforeUnmount, computed, onMounted, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, computed, onMounted, ref, watch } from 'vue'
 
 import { adaptOldFormat, keepScanning } from '../misc/scanner'
-import * as camera from '../misc/camera'
+import * as cameraController from '../misc/camera'
 import { useCommonApi } from '../composables/useCommonApi'
 import type { Point } from '../types/types'
 
@@ -50,7 +50,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['detect', 'decode', 'init'])
+const emit = defineEmits(['detect', 'decode', 'camera-on', 'camera-off', 'error'])
 const { onDetect } = useCommonApi(emit)
 
 // refs
@@ -60,107 +60,52 @@ const videoRef = ref<HTMLVideoElement>()
 
 // data
 const cameraActive = ref(false)
+
+// `isMounted` sensitively influences many other reactive values but we make sure
+// to strictly only modify it with the corresponding lifecycle hooks.
 const isMounted = ref(false)
 
-// computations
-const shouldScan = computed(() => isMounted.value && props.camera !== 'off' && cameraActive.value)
-
-/**
- * Minimum delay in milliseconds between frames to be scanned. Don't scan
- * so often when visual tracking is disabled to improve performance.
- */
-const scanInterval = () => {
-  if (props.track === undefined) {
-    return 500
-  } else {
-    return 40 // ~ 25fps
-  }
-}
-
-//lifecycle
-watch(shouldScan, (shouldScan) => {
-  if (shouldScan && pauseFrameRef.value && trackingLayerRef.value) {
-    clearCanvas(pauseFrameRef.value)
-    clearCanvas(trackingLayerRef.value)
-    startScanning()
-  }
-})
-
-watch(
-  () => props.torch,
-  () => init()
-)
-
-watch(
-  () => props.camera,
-  () => init()
-)
-
 onMounted(() => {
-  init()
   isMounted.value = true
 })
 
 onBeforeUnmount(() => {
-  beforeResetCamera()
   isMounted.value = false
 })
 
-// methods
-const init = () => {
-  const promise = (async () => {
-    beforeResetCamera({ freeze: props.camera === 'off' })
+// Collect all reactive values together that incluence the camera to have a
+// single source of truth for when EXACTLY to start/stop/restart the camera.
+// The watcher on this computed value should be the only function to interact 
+// with the camera directly and it should only interact with it in response to 
+// changes of this computed value.
+const cameraSettings = computed(() => {
+  return {
+    torch: props.torch,
+    camera: props.camera,
+    shouldStream: isMounted.value && props.camera !== 'off'
+  }
+})
 
-    if (props.camera === 'off') {
-      cameraActive.value = false
+watch(cameraSettings, async cameraSettings => {
+  if (cameraSettings.shouldStream) { // start camera
+    try {
+      const capabilities = await cameraController.start(videoRef.value, cameraSettings)
 
-      return {
-        capabilities: {}
-      }
-    } else {
-      await camera.start(videoRef.value, {
-        camera: props.camera,
-        // @ts-ignore
-        torch: props.torch
-      })
-
-      cameraActive.value = true
-
-      const capabilities = camera.getCapabilities()
-
-      // if the component is destroyed before `camera.start` resolves a
-      // `beforeDestroy` hook has no chance to clear the remaining camera
+      // if the component is destroyed before `camera.start` resolves the
+      // `onBeforeUnmount` hook has no chance to clear the remaining camera
       // stream, so we check here right after `camera.start` resolves whether
       // the component is still mounted.
       if (!isMounted.value) {
-        camera.stop()
+        cameraController.stop()
+      } else {
+        cameraActive.value = true
+        emit('camera-on', capabilities)
       }
-
-      return {
-        capabilities
-      }
+    } catch (error) {
+      emit('error', error)
     }
-  })()
-
-  emit('init', promise)
-}
-
-const startScanning = () => {
-  const detectHandler = (result: ReturnType<typeof adaptOldFormat>) => {
-    onDetect(Promise.resolve(result))
-  }
-
-  keepScanning(videoRef, {
-    detectHandler,
-    locateHandler: onLocate,
-    minDelay: scanInterval()
-  })
-}
-
-const beforeResetCamera = (options?: { freeze?: boolean }) => {
-  const { freeze } = options || { freeze: false }
-
-  if (freeze && pauseFrameRef.value && videoRef.value) {
+  } else { // stop camera
+    // paint pause frame
     const canvas = pauseFrameRef.value
     const ctx = canvas.getContext('2d')
     const video = videoRef.value
@@ -169,14 +114,48 @@ const beforeResetCamera = (options?: { freeze?: boolean }) => {
     canvas.height = video.videoHeight
 
     ctx?.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
-  }
 
-  if (cameraActive.value) {
-    camera.stop()
+    await nextTick()
+    cameraController.stop()
     cameraActive.value = false
+    emit('camera-off')
   }
-}
+}, { deep: true })
 
+// The single source of truth when EXACTLY to start/stop scanning the camera stream.
+// The watcher on this computed property should be the only function to interact with
+// the scanner.
+const shouldScan = computed(() => cameraSettings.value.shouldStream && cameraActive.value)
+
+watch(shouldScan, shouldScan => {
+  if (shouldScan) {
+    clearCanvas(pauseFrameRef.value)
+    clearCanvas(trackingLayerRef.value)
+
+   
+    const detectHandler = (result: ReturnType<typeof adaptOldFormat>) => {
+      onDetect(Promise.resolve(result))
+    }
+
+    // Minimum delay in milliseconds between frames to be scanned. Don't scan
+    // so often when visual tracking is disabled to improve performance.
+    const scanInterval = () => {
+      if (props.track === undefined) {
+        return 500
+      } else {
+        return 40 // ~ 25fps
+      }
+    }
+
+    keepScanning(videoRef, {
+      detectHandler,
+      locateHandler: onLocate,
+      minDelay: scanInterval()
+    })
+  }
+})
+
+// methods
 const onLocate = (detectedCodes: DetectedBarcode[]) => {
   const canvas = trackingLayerRef.value
   const video = videoRef.value
@@ -254,19 +233,8 @@ const onLocate = (detectedCodes: DetectedBarcode[]) => {
   }
 }
 
-// const repaintTrackingLayer = (video, canvas, location) => {
-//   const ctx = canvas.getContext("2d");
-
-//   window.requestAnimationFrame(() => {
-//     canvas.width = displayWidth;
-//     canvas.height = displayHeight;
-
-//     trackRepaintFunction(coordinatesAdjusted, ctx);
-//   });
-// },
-
 const clearCanvas = (canvas: HTMLCanvasElement) => {
-  if (!canvas) return
+  // if (!canvas) return
 
   const ctx = canvas.getContext('2d')
 
