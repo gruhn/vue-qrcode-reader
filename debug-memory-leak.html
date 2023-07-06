@@ -9,7 +9,7 @@
   <video id="video" autoplay muted playsinline></video>
 </body>
 <script type="module">
-import BarcodeDetector from "https://cdn.skypack.dev/barcode-detector@0.5.0";
+import BarcodeDetectorPolyfill from "https://cdn.skypack.dev/barcode-detector@1.0.3";
 
 const adaptOldFormat = detectedCodes => {
   if (detectedCodes.length > 0) {
@@ -47,7 +47,7 @@ const adaptOldFormat = detectedCodes => {
 }
 
 export const keepScanning = (videoElement, options) => {
-  const barcodeDetector = new BarcodeDetector({ formats: ["qr_code"] });
+  const barcodeDetector = new BarcodeDetectorPolyfill({ formats: ["qr_code"] });
 
   const { detectHandler, locateHandler, minDelay } = options;
 
