@@ -49,7 +49,7 @@ const narrowDownFacingMode = async (camera: string) => {
     'Caméra Desk View',
     'Fotocamera di Panoramica Scrivania',
     'Rückseitige Ultra-Weitwinkelkamera',
-    'Rückseitige Telefotokamera'
+    'Rückseitige Telefotokamera',
     'Rückseitige Dual-Weitwinkelkamera',
     'Rückseitige Triple-Kamera',
     'Back Dual Wide Camera',
