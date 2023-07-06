@@ -4,7 +4,7 @@
       Last result: <b>{{ result }}</b>
     </p>
 
-    <qrcode-stream :camera="camera" @decode="onDecode" @error="onError" @camera-on="resetValidationState">
+    <qrcode-stream :camera="camera" @detect="onDetect" @error="onError" @camera-on="resetValidationState">
       <div v-if="validationSuccess" class="validation-success">This is a URL</div>
 
       <div v-if="validationFailure" class="validation-failure">This is NOT a URL!</div>
@@ -49,13 +49,13 @@ export default {
       this.isValid = undefined
     },
 
-    async onDecode(content) {
-      this.result = content
+    async onDetect([ firstDetectedCode ]) {
+      this.result = firstDetectedCode.rawValue
       this.turnCameraOff()
 
       // pretend it's taking really long
       await this.timeout(3000)
-      this.isValid = content.startsWith('http')
+      this.isValid = this.result.startsWith('http')
 
       // some more delay, so users have time to read the message
       await this.timeout(2000)

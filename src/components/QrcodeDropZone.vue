@@ -11,13 +11,19 @@
 
 <script setup lang="ts">
 import { processFile, processUrl } from '../misc/scanner'
-import { useCommonApi } from '../composables/useCommonApi'
 
-const emit = defineEmits(['detect', 'decode', 'dragover'])
-
-const { onDetect } = useCommonApi(emit)
+const emit = defineEmits(['detect', 'dragover', 'error'])
 
 // methods
+const onDetect = async promise => {
+  try {
+    const detectedCodes = await promise
+    emit('detect', detectedCodes)
+  } catch (error) {
+    emit('error', error)
+  }
+}
+
 const onDragOver = (isDraggingOver: boolean) => {
   emit('dragover', isDraggingOver)
 }

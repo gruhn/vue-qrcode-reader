@@ -11,18 +11,23 @@
 
 <script setup lang="ts">
 import { processFile } from '../misc/scanner'
-import { useCommonApi } from '../composables/useCommonApi'
 
-const emit = defineEmits(['detect', 'decode'])
-
-const { onDetect } = useCommonApi(emit)
+const emit = defineEmits(['detect'])
 
 // methods
+const onDetect = async promise => {
+  // FIXME: why await twice here???
+  const detectedCodes = await (await promise)
+  emit('detect', detectedCodes)
+}
+
 const onChangeInput = (event: Event) => {
   if (!(event.target instanceof HTMLInputElement) || !event.target.files) return
-  const files = [...Array.from(event.target.files)]
-  const resultPromises = files.map(processFile)
 
-  resultPromises.forEach(onDetect)
+  const files = [...Array.from(event.target.files)]
+
+  for (const promise of files.map(processFile)) {
+    onDetect(promise)
+  }
 }
 </script>

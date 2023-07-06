@@ -1,49 +1,15 @@
 import '@sec-ant/barcode-detector'
 
 import { type DetectedBarcode } from '@sec-ant/barcode-detector'
-import type { Ref } from 'vue'
-
 import { eventOn } from './callforth'
 import { DropImageFetchError } from './errors'
-import type { Point } from '../types/types'
-
-export const adaptOldFormat = (detectedCodes: DetectedBarcode[]) => {
-  if (detectedCodes.length > 0) {
-    const [firstCode] = detectedCodes
-
-    const [topLeftCorner, topRightCorner, bottomRightCorner, bottomLeftCorner] =
-      firstCode.cornerPoints
-
-    return {
-      content: firstCode.rawValue,
-      location: {
-        topLeftCorner,
-        topRightCorner,
-        bottomRightCorner,
-        bottomLeftCorner,
-
-        // not supported by native API:
-        topLeftFinderPattern: {},
-        topRightFinderPattern: {},
-        bottomLeftFinderPattern: {}
-      },
-      imageData: null
-    }
-  } else {
-    return {
-      content: null,
-      location: null,
-      imageData: null
-    }
-  }
-}
 
 /**
  * Continuously extracts frames from camera stream and tries to read
  * potentially pictured QR codes.
  */
 export const keepScanning = async (
-  videoElement: Ref<HTMLVideoElement | undefined>,
+  videoElement: HTMLVideoElement,
   {
     detectHandler,
     locateHandler,
@@ -55,50 +21,76 @@ export const keepScanning = async (
   const processFrame =
     (state: {
       lastScanned: number
-      contentBefore: string | null
-      locationBefore: {
-        topLeftCorner: Point
-        topRightCorner: Point
-        bottomRightCorner: Point
-        bottomLeftCorner: Point
-        topLeftFinderPattern: {}
-        topRightFinderPattern: {}
-        bottomLeftFinderPattern: {}
-      } | null
+      contentBefore: string[]
+      lastScanHadContent: boolean
     }) =>
     async (timeNow: number) => {
-      if (videoElement?.value && videoElement?.value.readyState > 1) {
-        const { lastScanned, contentBefore, locationBefore } = state
+      if (videoElement.readyState > 1) {
+        const { lastScanned, contentBefore, lastScanHadContent } = state
 
-        if (timeNow - lastScanned >= minDelay) {
-          const detectedCodes = await barcodeDetector.detect(videoElement.value)
-          const { content, location, imageData } = adaptOldFormat(detectedCodes)
+        if (timeNow - lastScanned < minDelay) {
+          // Scanning is expensive and we don't need to scan camera frames with 
+          // the maximum possible frequency. In particular when visual tracking
+          // is disabled. So we skip scanning a frame if `minDelay` has not passed 
+          // yet.
+          window.requestAnimationFrame(processFrame(state))
+        } else {
+          const detectedCodes = await barcodeDetector.detect(videoElement)
 
-          if (content !== null && content !== contentBefore) {
-            detectHandler({ content, location, imageData })
+          // Only emit a detect event, if at least one of the detected codes has 
+          // not been seen before. Otherwise we spam tons of detect events while
+          // a QR code is in view of the camera. To avoid that we store the previous 
+          // detection in `contentBefore`.  
+          //
+          // Implicitly we also don't emit a `detect` event if `detectedCodes` is an 
+          // empty array.
+          const anyNewCodesDetected = detectedCodes.some(code => {
+            return !contentBefore.includes(code.rawValue)
+          })
+
+          if (anyNewCodesDetected) {
+            detectHandler(detectedCodes)
           }
 
-          if (location !== null || locationBefore !== null) {
+          const currentScanHasContent = detectedCodes.length > 0
+
+          // In contrast to the QR code content, the location changes all the time. 
+          // So we call the locate handler on every detection to repaint the tracking 
+          // canvas. 
+          if (currentScanHasContent) {
             locateHandler(detectedCodes)
           }
 
-          window.requestAnimationFrame(
-            processFrame({
-              lastScanned: timeNow,
-              contentBefore: content ?? contentBefore,
-              locationBefore: location
-            })
-          )
-        } else {
-          window.requestAnimationFrame(processFrame(state))
+          // Additionally, we need to clear the tracking canvas once when no QR code 
+          // is in view of the camera anymore. Technically this can be merged with the
+          // previous if-statement but this way it's more explicit.
+          if (!currentScanHasContent && lastScanHadContent) {
+            locateHandler(detectedCodes)
+          }
+
+          const newState = {
+            lastScanned: timeNow,
+            lastScanHadContent: currentScanHasContent,
+
+            // It can happen that a QR code is constantly in view of the camera but 
+            // maybe a scanned frame is a bit blurry and we detect nothing but in the 
+            // next frame we detect the code again. We also want to avoid emitting 
+            // a `detect` event in such a case. So we don't reset `contentBefore`, 
+            // if we detect nothing, only if we detect something new.
+            contentBefore: anyNewCodesDetected
+              ? detectedCodes.map(code => code.rawValue) 
+              : contentBefore
+          }
+
+          window.requestAnimationFrame(processFrame(newState))
         }
       }
     }
 
   processFrame({
-    contentBefore: null,
-    locationBefore: null,
-    lastScanned: performance.now()
+    lastScanned: performance.now(),
+    contentBefore: [],
+    lastScanHadContent: false
   })(performance.now())
 }
 
@@ -115,21 +107,20 @@ const imageElementFromUrl = async (url: string) => {
   return image
 }
 
-export const processFile = async (file: File) => {
+export const processFile = async (file: File) : Promise<DetectedBarcode[]> => {
   const barcodeDetector = new BarcodeDetector({
     formats: ['qr_code']
   })
-  const detectedCodes = await barcodeDetector.detect(file)
 
-  return adaptOldFormat(detectedCodes)
+  return await barcodeDetector.detect(file)
 }
 
-export const processUrl = async (url: string) => {
+export const processUrl = async (url: string) : Promise<DetectedBarcode[]> => {
   const barcodeDetector = new BarcodeDetector({
     formats: ['qr_code']
   })
-  const image = await imageElementFromUrl(url)
-  const detectedCodes = await barcodeDetector.detect(image)
 
-  return adaptOldFormat(detectedCodes)
+  const image = await imageElementFromUrl(url)
+
+  return await barcodeDetector.detect(image)
 }

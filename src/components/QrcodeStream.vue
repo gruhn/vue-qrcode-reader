@@ -30,7 +30,6 @@ import { nextTick, onBeforeUnmount, computed, onMounted, ref, watch } from 'vue'
 
 import { adaptOldFormat, keepScanning } from '../misc/scanner'
 import * as cameraController from '../misc/camera'
-import { useCommonApi } from '../composables/useCommonApi'
 import type { Point } from '../types/types'
 
 const props = defineProps({
@@ -50,8 +49,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['detect', 'decode', 'camera-on', 'camera-off', 'error'])
-const { onDetect } = useCommonApi(emit)
+const emit = defineEmits(['detect', 'camera-on', 'camera-off', 'error'])
 
 // refs
 const pauseFrameRef = ref<HTMLCanvasElement>()
@@ -132,11 +130,6 @@ watch(shouldScan, shouldScan => {
     clearCanvas(pauseFrameRef.value)
     clearCanvas(trackingLayerRef.value)
 
-   
-    const detectHandler = (result: ReturnType<typeof adaptOldFormat>) => {
-      onDetect(Promise.resolve(result))
-    }
-
     // Minimum delay in milliseconds between frames to be scanned. Don't scan
     // so often when visual tracking is disabled to improve performance.
     const scanInterval = () => {
@@ -147,8 +140,8 @@ watch(shouldScan, shouldScan => {
       }
     }
 
-    keepScanning(videoRef, {
-      detectHandler,
+    keepScanning(videoRef.value, {
+      detectHandler: detectedCodes => emit('detect', detectedCodes),
       locateHandler: onLocate,
       minDelay: scanInterval()
     })
