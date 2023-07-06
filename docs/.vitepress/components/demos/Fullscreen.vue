@@ -1,6 +1,6 @@
 <template>
   <div :class="{ fullscreen: fullscreen }" ref="wrapper" @fullscreenchange="onFullscreenChange">
-    <qrcode-stream @init="logErrors">
+    <qrcode-stream @error="logErrors">
       <button @click="fullscreen = !fullscreen" class="fullscreen-button">
         <img :src="withBase(fullscreenIcon)" alt="toggle fullscreen" />
       </button>
@@ -91,9 +91,7 @@ export default {
       }
     },
 
-    logErrors(promise) {
-      promise.catch(console.error)
-    },
+    logErrors: console.error,
 
     withBase
   }

@@ -2,7 +2,7 @@
   <div>
     <p v-if="torchNotSupported" class="error">Torch not supported for active camera</p>
 
-    <qrcode-stream :torch="torchActive" @init="onInit">
+    <qrcode-stream :torch="torchActive" @camera-on="onCameraOn" @error="onError">
       <button @click="torchActive = !torchActive" :disabled="torchNotSupported">
         <img :src="withBase(icon)" alt="toggle torch" />
       </button>
@@ -33,17 +33,12 @@ export default {
   },
 
   methods: {
-    async onInit(promise) {
-      try {
-        const { capabilities } = await promise
-
-        console.log(capabilities)
-
-        this.torchNotSupported = !capabilities.torch
-      } catch (error) {
-        console.error(error)
-      }
+    onCameraOn(capabilities) {
+      console.log(capabilities)
+      this.torchNotSupported = !capabilities.torch
     },
+
+    onError: console.error,
 
     withBase
   }
@@ -55,6 +50,10 @@ button {
   position: absolute;
   left: 10px;
   top: 10px;
+}
+button img {
+  with: 50px;
+  height: 50px;
 }
 .error {
   color: red;

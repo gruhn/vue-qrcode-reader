@@ -9,7 +9,7 @@
       </select>
     </p>
 
-    <qrcode-stream :track="selected.value" @init="logErrors" />
+    <qrcode-stream :track="selected.value" @error="logErrors" />
   </div>
 </template>
 
@@ -84,9 +84,7 @@ export default {
       }
     },
 
-    logErrors(promise) {
-      promise.catch(console.error)
-    }
+    logErrors: console.error
   }
 }
 </script>

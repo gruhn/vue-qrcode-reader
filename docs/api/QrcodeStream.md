@@ -66,50 +66,75 @@ methods: {
   }
 }
 ```
-
-### `init`
+### `camera-on` <Badge text="since v5.0.0" type="info" />
 * **Payload Type:** `Promise<MediaTrackCapabilities>`
 
-It might take a while before the component is ready and the scanning process starts. The user has to be asked for camera access permission first and the camera stream has to be loaded.
+It might take a while before the component is ready and the scanning process starts. 
+The user has to be asked for camera access permission first and the camera stream has to be loaded.
 
-If you want to show a loading indicator, you can listen for the `init` event. It's emitted as soon as the component is mounted. It carries a promise which resolves with the cameras [MediaTrackCapabilities](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/getCapabilities) when everything is ready. The promise is rejected if initialization fails. This can have [a couple of reasons](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Exceptions).
+If you want to show a loading indicator, you can listen for the `camera-on` event. 
+It's emitted as soon as the camera start streaming. 
 
-::: warning
-In Chrome you can't prompt users for permissions a second time. Once denied, users can only manually grant them. Make sure your users understand why you need access to their camera **before** you mount this component. Otherwise they might panic and deny and then get frustrated because they don't know how to change their decision.
-:::
+It carries a promise which resolves with the cameras [MediaTrackCapabilities](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/getCapabilities) when everything is ready. 
 
 ```html
-<qrcode-stream @init="onInit"></qrcode-stream>
+<qrcode-stream @camera-on="onReady"></qrcode-stream>
 ```
 ```javascript
 methods: {
-  async onInit (promise) {
-    // show loading indicator
+  onReady(capabilities) {
+    // hide loading indicator
+  }
+}
+```
 
-    try {
-      const { capabilities } = await promise
+::: warning
+In Chrome you can't prompt users for permissions a second time. 
+Once denied, users can only manually grant them. 
+Make sure your users understand why you need access to their camera **before** you mount this component. 
+Otherwise they might panic and deny and then get frustrated because they don't know how to change their decision.
+:::
 
-      // successfully initialized
-    } catch (error) {
-      if (error.name === 'NotAllowedError') {
-        // user denied camera access permisson
-      } else if (error.name === 'NotFoundError') {
-        // no suitable camera device installed
-      } else if (error.name === 'NotSupportedError') {
-        // page is not served over HTTPS (or localhost)
-      } else if (error.name === 'NotReadableError') {
-        // maybe camera is already in use
-      } else if (error.name === 'OverconstrainedError') {
-        // did you requested the front camera although there is none?
-      } else if (error.name === 'StreamApiNotSupportedError') {
-        // browser seems to be lacking features
-      }
-    } finally {
-      // hide loading indicator
+### `camera-off` <Badge text="since v5.0.0" type="info" />
+* **Payload Type:** `void`
+
+Emitted whenever the camera is turned off. 
+This happens whenever the camera constraints are modified and the camera has to be restarted or a different camera is started.
+For example when switching between front and rear camera.
+
+### `error` <Badge text="since v5.0.0" type="info" />
+* **Payload Type:** `Error`
+
+Error events are emitted in particular when camera initialization fails.
+This can happen [a couple of reasons](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Exceptions).
+
+```html
+<qrcode-stream @error="onError"></qrcode-stream>
+```
+```javascript
+methods: {
+  onError(error) {
+    if (error.name === 'NotAllowedError') {
+      // user denied camera access permisson
+    } else if (error.name === 'NotFoundError') {
+      // no suitable camera device installed
+    } else if (error.name === 'NotSupportedError') {
+      // page is not served over HTTPS (or localhost)
+    } else if (error.name === 'NotReadableError') {
+      // maybe camera is already in use
+    } else if (error.name === 'OverconstrainedError') {
+      // did you requested the front camera although there is none?
+    } else if (error.name === 'StreamApiNotSupportedError') {
+      // browser seems to be lacking features
     }
   }
 }
 ```
+
+### `init` <Badge text="removed in v5.0.0" type="danger" />
+
+TODO: link old docs
+
 
 ## Props
 
@@ -147,12 +172,12 @@ With the `camera` prop you can control which camera to access on the users devic
 But if a device like a laptop has only a front camera installed, `auto` will fallback to that.
  * Use `off` to not request a camera at all or in other words: turn the camera off.
 
-Every time the camera prop is modified, a new camera stream is requested so the `init` event is emitted again.
-That way you can catch errors.
+Every time the camera prop is modified, a new camera stream is requested so the `camera-on` event is emitted again.
+You can catch errors with the `error` event.
 For example when the front camera is requested on a device that doesn't have one.
 
 ```html
-<qrcode-stream :camera="camera" @init="onCameraChange"></qrcode-stream>
+<qrcode-stream :camera="camera" @error="onError"></qrcode-stream>
 ```
 ```js
 data () {
@@ -166,15 +191,13 @@ methods: {
     this.camera = 'front'
   },
 
-  onCameraChange (promise) {
-    promise.catch(error => {
-      const cameraMissingError = error.name === 'OverconstrainedError'
-      const triedFrontCamera = this.camera === 'front'
+  onError (error) {
+    const cameraMissingError = error.name === 'OverconstrainedError'
+    const triedFrontCamera = this.camera === 'front'
 
-      if (triedFrontCamera && cameraMissingError) {
-        // no front camera on this device
-      }
-    })
+    if (triedFrontCamera && cameraMissingError) {
+      // no front camera on this device
+    }
   }
 }
 ```
@@ -187,31 +210,25 @@ With the `torch` prop you can turn a devices flashlight on/off.
 This is not consistently supported by all devices and browsers.
 Support can even vary on the same device with the same browser.
 For example the rear camera often has a flashlight but the front camera doesn't.
-We can only tell if flashlight control is supported once the camera is loaded and the `init` event has been emitted.
+We can only tell if flashlight control is supported once the camera is loaded and the `camera-on` event has been emitted.
 At the moment, `torch` silently fails on unsupported devices.
-But from the `init` events payload you can access the [MediaTrackCapabilities](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/getCapabilities) object.
+But from the `camera-on` events payload you can access the [MediaTrackCapabilities](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/getCapabilities) object.
 This will tell you whether or not `torch` is supported.
 
 Due to API limitations the camera stream must be reloaded when turning the torch on/off.
-That means the `init` event will be emitted again.
+That means the `camera-on` event will be emitted again.
 
 
 ```html
-<qrcode-stream :torch="true" @init="onInit"></qrcode-stream>
+<qrcode-stream :torch="true" @camera-on="onInit"></qrcode-stream>
 ```
 ```js
 methods: {
-  async onInit (promise) {
-    const { capabilities } = await promise
-
+  onInit (capabilities) {
     const TORCH_IS_SUPPORTED = !!capabilities.torch
   }
 }
 ```
-
-### `worker` <Badge text="removed in v3.0.0" type="error" />
-
-[old documentation](https://github.com/gruhn/vue-qrcode-reader/blob/3608e0e04b0fbc8d2b57a5713fef92eef1e84c41/docs/api/QrcodeStream.md#worker-)
 
 ## Slots
 
