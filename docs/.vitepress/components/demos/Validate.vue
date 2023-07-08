@@ -4,7 +4,7 @@
       Last result: <b>{{ result }}</b>
     </p>
 
-    <qrcode-stream :camera="camera" @detect="onDetect" @error="onError" @camera-on="resetValidationState">
+    <qrcode-stream :paused="paused" @detect="onDetect" @error="onError" @camera-on="resetValidationState">
       <div v-if="validationSuccess" class="validation-success">This is a URL</div>
 
       <div v-if="validationFailure" class="validation-failure">This is NOT a URL!</div>
@@ -23,14 +23,14 @@ export default {
   data() {
     return {
       isValid: undefined,
-      camera: 'auto',
+      paused: false,
       result: null
     }
   },
 
   computed: {
     validationPending() {
-      return this.isValid === undefined && this.camera === 'off'
+      return this.isValid === undefined && this.paused
     },
 
     validationSuccess() {
@@ -51,7 +51,7 @@ export default {
 
     async onDetect([ firstDetectedCode ]) {
       this.result = firstDetectedCode.rawValue
-      this.turnCameraOff()
+      this.paused = true
 
       // pretend it's taking really long
       await this.timeout(3000)
@@ -59,16 +59,7 @@ export default {
 
       // some more delay, so users have time to read the message
       await this.timeout(2000)
-
-      this.turnCameraOn()
-    },
-
-    turnCameraOn() {
-      this.camera = 'auto'
-    },
-
-    turnCameraOff() {
-      this.camera = 'off'
+      this.paused = false
     },
 
     timeout(ms) {
@@ -89,10 +80,11 @@ export default {
   height: 100%;
 
   background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px;
   text-align: center;
   font-weight: bold;
   font-size: 1.4rem;
-  padding: 10px;
+  color: black;
 
   display: flex;
   flex-flow: column nowrap;

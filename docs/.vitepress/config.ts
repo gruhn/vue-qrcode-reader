@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  base: '/vue-qrcode-reader/',
+  // base: '/vue-qrcode-reader/',
   description: 'A set of Vue.js components for detecting and decoding QR codes.',
   lang: 'en-US',
   lastUpdated: true,
@@ -59,6 +59,10 @@ export default defineConfig({
           link: '/demos/Torch'
         },
         {
+          text: 'Enumerate Cameras',
+          link: '/demos/DeviceId'
+        },
+        {
           text: 'Decode by Drag&Drop',
           link: '/demos/DragDrop'
         },
@@ -70,15 +74,15 @@ export default defineConfig({
       '/api/': [
         {
           text: 'QrcodeStream',
-          link: '/api/QrcodeStream'
+          link: '/api/QrcodeStream',
         },
         {
           text: 'QrcodeDropZone',
-          link: '/api/QrcodeDropZone'
+          link: '/api/QrcodeDropZone',
         },
         {
           text: 'QrcodeCapture',
-          link: '/api/QrcodeCapture'
+          link: '/api/QrcodeCapture',
         }
       ]
     },

@@ -26,19 +26,22 @@
 
 <script setup lang="ts">
 import type { DetectedBarcode } from '@sec-ant/barcode-detector'
-import { nextTick, onBeforeUnmount, computed, onMounted, ref, watch } from 'vue'
+import { nextTick, onUnmounted, computed, onMounted, ref, watch } from 'vue'
 
 import { adaptOldFormat, keepScanning } from '../misc/scanner'
 import * as cameraController from '../misc/camera'
 import type { Point } from '../types/types'
 
 const props = defineProps({
-  camera: {
-    type: String,
-    default: 'auto',
-    validator(camera: string) {
-      return ['auto', 'rear', 'front', 'off'].includes(camera)
+  constraints: {
+    type: Object,
+    default() {
+      return { facingMode: 'environment' }
     }
+  },
+  paused: {
+    type: Boolean,
+    default: false
   },
   torch: {
     type: Boolean,
@@ -67,8 +70,12 @@ onMounted(() => {
   isMounted.value = true
 })
 
-onBeforeUnmount(() => {
-  isMounted.value = false
+// Initially assumed, that setting `isMounted.value = false` in a
+// `onBeforeUnmounted` hook, would trigger the watcher on `cameraSettings`
+// one last time before the component is destroyed. But apparently the
+// watcher is not called in time. So we need to stop the camera directly.
+onUnmounted(() => {
+  cameraController.stop()
 })
 
 // Collect all reactive values together that incluence the camera to have a
@@ -79,8 +86,8 @@ onBeforeUnmount(() => {
 const cameraSettings = computed(() => {
   return {
     torch: props.torch,
-    camera: props.camera,
-    shouldStream: isMounted.value && props.camera !== 'off'
+    constraints: props.constraints,
+    shouldStream: isMounted.value && !props.paused
   }
 })
 
@@ -113,7 +120,6 @@ watch(cameraSettings, async cameraSettings => {
 
     ctx?.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
 
-    await nextTick()
     cameraController.stop()
     cameraActive.value = false
     emit('camera-off')
@@ -227,10 +233,7 @@ const onLocate = (detectedCodes: DetectedBarcode[]) => {
 }
 
 const clearCanvas = (canvas: HTMLCanvasElement) => {
-  // if (!canvas) return
-
   const ctx = canvas.getContext('2d')
-
   ctx?.clearRect(0, 0, canvas.width, canvas.height)
 }
 </script>

@@ -145,19 +145,6 @@ Use kebab-case to reference them in your templates:
 
 # Troubleshooting :zap:
 
-### The wrong camera is picked by default. Can I set it explicitly?
-
-Modern devices sometimes have multiple rear cameras.
-Not all are optimal for scanning QR codes.
-For example wide angle, infrared and virtual cameras.
-With the current web API it's hard to pick the right camera automatically.
-It's technically possible to let the user make that decision.
-For example by displaying list of installed cameras and letting the user select the right one.
-However, this is a user experience trade-off.
-Native QR code reader applications don't face this trade-off.
-That's why we want to find a different solution.
-
-Please create a GitHub issue from the [wrong camera selected](https://github.com/gruhn/vue-qrcode-reader/issues/new?assignees=&labels=&template=wrong_camera.md&title=) template and follow the instructions in the text.
 #### I don't see the camera when using `QrcodeStream`.
 
 - Check if it works on the demo page. Especially the [Decode All](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html) demo, since it renders error messages. If you see errors, consult the docs to understand their meaning.
