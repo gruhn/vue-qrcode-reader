@@ -107,7 +107,6 @@ export default {
   right: 0;
   left: 0;
 }
-
 .fullscreen-button {
   background-color: white;
   position: absolute;

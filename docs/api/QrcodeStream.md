@@ -18,9 +18,8 @@ Vue Native is not supported (see [#206](https://github.com/gruhn/vue-qrcode-read
 
 ## Events
 
-
 ### `detect` 
-* **Payload Type:** `Promise<DetectedBarcode[]>`
+* **Payload Type:** `DetectedBarcode[]`
 
 Once a stream from the users camera is loaded, it's displayed and continuously scanned for QR codes. 
 Results are indicated by the `detect` event.
@@ -35,7 +34,7 @@ methods: {
   }
 }
 ```
-The payload is an array of one or multiple detected codes (only QR codes supported at the moment).
+The payload is an array of **one or multiple** detected codes (only QR codes supported at the moment).
 The structure of the array items is accroding to the [Barcode Detection API spec](https://wicg.github.io/shape-detection-api/#detectedbarcode-section).
 Here is an example:
 
@@ -69,11 +68,8 @@ Here is an example:
 If you scan the same QR code multiple times in a row, `detect` is still only emitted once. 
 When you hold a QR code in the camera, frames are actually decoded multiple times a second but you don't want to be flooded with `detect` events that often. 
 That's why the last decoded QR code is always cached and only new results are propagated. 
-However changing the value of `camera` resets this internal cache.
+However changing the value of `paused` resets this internal cache.
 :::
-
-
-For example:
 
 
 ### `camera-on` <Badge text="since v5.0.0" type="info" />
@@ -143,13 +139,31 @@ methods: {
 
 ### `decode` <Badge text="removed in v5.0.0" type="danger" />
 
-TODO: link old docs
+Use `detect` instead.
+
+[docs for v4.0.0](https://github.com/gruhn/vue-qrcode-reader/blob/781484fccd186e8e30c6191f85beec3bd174ef59/docs/api/QrcodeStream.md)
 
 ### `init` <Badge text="removed in v5.0.0" type="danger" />
 
-TODO: link old docs
+Use `camera-on`/`error` instead.
+
+[docs for v4.0.0](https://github.com/gruhn/vue-qrcode-reader/blob/781484fccd186e8e30c6191f85beec3bd174ef59/docs/api/QrcodeStream.md)
+
+### `camera` <Badge text="removed in v5.0.0" type="danger" />
+
+Use `constraints` instead.
+
+[docs for v4.0.0](https://github.com/gruhn/vue-qrcode-reader/blob/781484fccd186e8e30c6191f85beec3bd174ef59/docs/api/QrcodeStream.md)
 
 ## Props
+
+### `paused` <Badge text="since v5.0.0" type="info" />
+* **Input Type:** `Boolean`
+* **Default:** `false`
+
+Setting this prop to `true` freezes the camera. 
+Useful if you want to show some microinteraction after successful scans.
+When you unpause the camera is restarted so the `camera-on` event is emitted again.
 
 ### `track`
 * **Input Type:** `Function`
@@ -173,40 +187,46 @@ Avoid access to reactive properties in this function (like stuff in `data`, `com
 :::
 
 
-### `camera`
-* **Input Type:** `String`
-* **Default:** `auto`
-* **Valid Inputs:** `auto`, `rear`, `front`, `off`
+### `constraints`
+* **Input Type:** `MediaTrackConstraints`
+* **Default:** `{ facingMode: "environment" }`
 
-With the `camera` prop you can control which camera to access on the users device.
+With this prop you can pass an object with various camera configuration options. 
+For example whether to use front- or rear camera.
 
- * Use `front` or `rear` to force request the front or rear camera respectively.
- * If you choose `auto` the rear camera is requested by default.
-But if a device like a laptop has only a front camera installed, `auto` will fallback to that.
- * Use `off` to not request a camera at all or in other words: turn the camera off.
+The object must be of type [`MediaTrackConstriants`](https://w3c.github.io/mediacapture-main/#dom-mediatrackconstraints). 
 
-Every time the camera prop is modified, a new camera stream is requested so the `camera-on` event is emitted again.
+The object is passed as-is to `getUserMedia`, which is the API call for requesting a camera stream:
+
+```js
+navigator.mediaDevices.getUserMedia({
+  audio: false,
+  video: the_constraint_object_you_provide
+})
+```
+
+Every time the prop is modified, a new camera stream is requested so the `camera-on` event is emitted again.
 You can catch errors with the `error` event.
-For example when the front camera is requested on a device that doesn't have one.
+An error can occur for example when you try to use the front camera on a device that doesn't have one.
 
 ```html
-<qrcode-stream :camera="camera" @error="onError"></qrcode-stream>
+<qrcode-stream :constraints="{ facingMode }" @error="onError"></qrcode-stream>
 ```
 ```js
 data () {
   return {
-    camera: 'auto'
+    facingMode: 'environment'
   }
 },
 
 methods: {
   startFrontCamera () {
-    this.camera = 'front'
+    this.facingMode = 'user'
   },
 
   onError (error) {
     const cameraMissingError = error.name === 'OverconstrainedError'
-    const triedFrontCamera = this.camera === 'front'
+    const triedFrontCamera = this.facingMode === 'user'
 
     if (triedFrontCamera && cameraMissingError) {
       // no front camera on this device

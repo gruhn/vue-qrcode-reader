@@ -4,7 +4,7 @@
 
     <p class="error" v-if="noRearCamera">You don't seem to have a rear camera on your device</p>
 
-    <qrcode-stream :camera="camera" @error="onError">
+    <qrcode-stream :constraints="{ facingMode }" @error="onError">
       <button @click="switchCamera">
         <img :src="withBase('/camera-switch.svg')" alt="switch camera" />
       </button>
@@ -22,8 +22,7 @@ export default {
 
   data() {
     return {
-      camera: 'rear',
-
+      facingMode: 'environment',  
       noRearCamera: false,
       noFrontCamera: false
     }
@@ -31,19 +30,19 @@ export default {
 
   methods: {
     switchCamera() {
-      switch (this.camera) {
-        case 'front':
-          this.camera = 'rear'
+      switch (this.facingMode) {
+        case 'environment':
+          this.facingMode = 'user'
           break
-        case 'rear':
-          this.camera = 'front'
+        case 'user':
+          this.facingMode = 'environment'
           break
       }
     },
 
     onError(error) {
-      const triedFrontCamera = this.camera === 'front'
-      const triedRearCamera = this.camera === 'rear'
+      const triedFrontCamera = this.facingMode === 'user'
+      const triedRearCamera = this.facingMode === 'environment'
 
       const cameraMissingError = error.name === 'OverconstrainedError'
 
@@ -69,7 +68,10 @@ button {
   left: 10px;
   top: 10px;
 }
-
+button img {
+  with: 50px;
+  height: 50px;
+}
 .error {
   color: red;
   font-weight: bold;

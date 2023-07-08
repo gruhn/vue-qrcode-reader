@@ -78,8 +78,9 @@ This is a custom event not to be confused with [native `dragover`](https://devel
 
 ### `decode` <Badge text="removed in v5.0.0" type="danger" />
 
-Use `detect` instead. TODO: link old docs.
+Use `detect` instead.
 
+[docs for v4.0.0](https://github.com/gruhn/vue-qrcode-reader/blob/781484fccd186e8e30c6191f85beec3bd174ef59/docs/api/QrcodeStream.md)
 
 ## Props
 
