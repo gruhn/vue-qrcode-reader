@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - vue3-compatibility
 
 jobs:
   release:
@@ -25,12 +24,12 @@ jobs:
         run: |
           pnpm install
           pnpm run build
-          pnpm run docs:build
-      - name: Deploy Docs
-        uses: JamesIves/github-pages-deploy-action@4.1.4
-        with:
-          branch: gh-pages
-          folder: docs/.vitepress/dist
+      #     pnpm run docs:build
+      # - name: Deploy Docs
+      #   uses: JamesIves/github-pages-deploy-action@4.1.4
+      #   with:
+      #     branch: gh-pages
+      #     folder: docs/.vitepress/dist
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
