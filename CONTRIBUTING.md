@@ -9,7 +9,7 @@ Clone the repository and run
 npm install
 ```
 
-We use a locally served version of the [demo page](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html) during development. 
+We use a locally served version of the [demo page](https://vue-qrcode-reader.netlify.app/demos/DecodeAll.html) during development. 
 To get that started run
 
 ```

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://gruhn.github.io/vue-qrcode-reader/logo.png" alt="Logo" width="240" height="240" style="max-width: 100%;">
+  <img src="https://vue-qrcode-reader.netlify.app/logo.png" alt="Logo" width="240" height="240" style="max-width: 100%;">
 
   <br>
   <br>
@@ -53,8 +53,8 @@
 
   <br>
   <br>
-  <a href="https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html">live demos</a> |
-  <a href="https://gruhn.github.io/vue-qrcode-reader/api/QrcodeStream.html">api reference</a>
+  <a href="https://vue-qrcode-reader.netlify.app/demos/DecodeAll.html">live demos</a> |
+  <a href="https://vue-qrcode-reader.netlify.app/api/QrcodeStream.html">api reference</a>
 </p>
 
 A set of Vue.js components, allowing you to detect and decode QR codes, without leaving the browser.
@@ -147,7 +147,7 @@ Use kebab-case to reference them in your templates:
 
 #### I don't see the camera when using `QrcodeStream`.
 
-- Check if it works on the demo page. Especially the [Decode All](https://gruhn.github.io/vue-qrcode-reader/demos/DecodeAll.html) demo, since it renders error messages. If you see errors, consult the docs to understand their meaning.
+- Check if it works on the demo page. Especially the [Decode All](https://vue-qrcode-reader.netlify.app/demos/DecodeAll.html) demo, since it renders error messages. If you see errors, consult the docs to understand their meaning.
   - The demo works but it doesn't work in my project: Listen for the `init` event to investigate errors.
   - The demo doesn't work: Carefully review the Browser Support section above. Maybe your device is just not supported.
 
