@@ -63,7 +63,7 @@
     "vue-tsc": "1.6.5"
   },
   "bugs": "https://github.com/gruhn/vue-qrcode-reader/issues",
-  "homepage": "https://gruhn.github.io/vue-qrcode-reader",
+  "homepage": "https://vue-qrcode-reader.netlify.app",
   "keywords": [
     "vue",
     "vuejs",
