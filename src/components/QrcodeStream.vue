@@ -54,12 +54,12 @@ const props = defineProps({
 
 const emit = defineEmits(['detect', 'camera-on', 'camera-off', 'error'])
 
-// refs
+// DOM refs
 const pauseFrameRef = ref<HTMLCanvasElement>()
 const trackingLayerRef = ref<HTMLCanvasElement>()
 const videoRef = ref<HTMLVideoElement>()
 
-// data
+// Whether the camera is currently streaming or not
 const cameraActive = ref(false)
 
 // `isMounted` sensitively influences many other reactive values but we make sure
@@ -70,11 +70,11 @@ onMounted(() => {
   isMounted.value = true
 })
 
-// Initially assumed, that setting `isMounted.value = false` in a
-// `onBeforeUnmounted` hook, would trigger the watcher on `cameraSettings`
-// one last time before the component is destroyed. But apparently the
-// watcher is not called in time. So we need to stop the camera directly.
 onUnmounted(() => {
+  // Initially assumed, that setting `isMounted.value = false` in a
+  // `onBeforeUnmounted` hook, would trigger the watcher on `cameraSettings`
+  // one last time before the component is destroyed. But apparently the
+  // watcher is not called in time. So we need to stop the camera directly.
   cameraController.stop()
 })
 
@@ -155,86 +155,95 @@ watch(shouldScan, shouldScan => {
 })
 
 // methods
+const clearCanvas = (canvas: HTMLCanvasElement) => {
+  const ctx = canvas.getContext('2d')
+
+  console.assert(
+    ctx !== undefined,
+    'tried to clear canvas with undefined 2D context'
+  )
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+}
+
 const onLocate = (detectedCodes: DetectedBarcode[]) => {
   const canvas = trackingLayerRef.value
   const video = videoRef.value
 
-  if (canvas !== undefined) {
-    if (detectedCodes.length > 0 && props.track !== undefined && video !== undefined) {
-      // The visually occupied area of the video element.
-      // Because the component is responsive and fills the available space,
-      // this can be more or less than the actual resolution of the camera.
-      const displayWidth = video.offsetWidth
-      const displayHeight = video.offsetHeight
+  console.assert(
+    canvas !== undefined && video !== undefined, 
+    'onLocate handler called although component is not mounted'
+  )
 
-      // The actual resolution of the camera.
-      // These values are fixed no matter the screen size.
-      const resolutionWidth = video.videoWidth
-      const resolutionHeight = video.videoHeight
+  if (detectedCodes.length === 0 || props.track === undefined) {
+    clearCanvas(canvas)
+  } else {
+    // The visually occupied area of the video element.
+    // Because the component is responsive and fills the available space,
+    // this can be more or less than the actual resolution of the camera.
+    const displayWidth = video.offsetWidth
+    const displayHeight = video.offsetHeight
 
-      // Dimensions of the video element as if there would be no
-      //   object-fit: cover;
-      // Thus, the ratio is the same as the cameras resolution but it's
-      // scaled down to the size of the visually occupied area.
-      const largerRatio = Math.max(displayWidth / resolutionWidth, displayHeight / resolutionHeight)
-      const uncutWidth = resolutionWidth * largerRatio
-      const uncutHeight = resolutionHeight * largerRatio
+    // The actual resolution of the camera.
+    // These values are fixed no matter the screen size.
+    const resolutionWidth = video.videoWidth
+    const resolutionHeight = video.videoHeight
 
-      const xScalar = uncutWidth / resolutionWidth
-      const yScalar = uncutHeight / resolutionHeight
-      const xOffset = (displayWidth - uncutWidth) / 2
-      const yOffset = (displayHeight - uncutHeight) / 2
+    // Dimensions of the video element as if there would be no
+    //   object-fit: cover;
+    // Thus, the ratio is the same as the cameras resolution but it's
+    // scaled down to the size of the visually occupied area.
+    const largerRatio = Math.max(displayWidth / resolutionWidth, displayHeight / resolutionHeight)
+    const uncutWidth = resolutionWidth * largerRatio
+    const uncutHeight = resolutionHeight * largerRatio
 
-      const scale = ({ x, y }: Point) => {
-        return {
-          x: Math.floor(x * xScalar),
-          y: Math.floor(y * yScalar)
-        }
+    const xScalar = uncutWidth / resolutionWidth
+    const yScalar = uncutHeight / resolutionHeight
+    const xOffset = (displayWidth - uncutWidth) / 2
+    const yOffset = (displayHeight - uncutHeight) / 2
+
+    const scale = ({ x, y }: Point) => {
+      return {
+        x: Math.floor(x * xScalar),
+        y: Math.floor(y * yScalar)
       }
+    }
 
-      const translate = ({ x, y }: Point) => {
-        return {
-          x: Math.floor(x + xOffset),
-          y: Math.floor(y + yOffset)
-        }
+    const translate = ({ x, y }: Point) => {
+      return {
+        x: Math.floor(x + xOffset),
+        y: Math.floor(y + yOffset)
       }
+    }
 
-      const adjustedCodes = detectedCodes.map((detectedCode) => {
-        const { boundingBox, cornerPoints } = detectedCode
+    const adjustedCodes = detectedCodes.map((detectedCode) => {
+      const { boundingBox, cornerPoints } = detectedCode
 
-        const { x, y } = translate(
-          scale({
-            x: boundingBox.x,
-            y: boundingBox.y
-          })
-        )
-        const { x: width, y: height } = scale({
-          x: boundingBox.width,
-          y: boundingBox.height
+      const { x, y } = translate(
+        scale({
+          x: boundingBox.x,
+          y: boundingBox.y
         })
-
-        return {
-          ...detectedCode,
-          cornerPoints: cornerPoints.map((point) => translate(scale(point))),
-          boundingBox: DOMRectReadOnly.fromRect({ x, y, width, height })
-        }
+      )
+      const { x: width, y: height } = scale({
+        x: boundingBox.width,
+        y: boundingBox.height
       })
 
-      canvas.width = video.offsetWidth
-      canvas.height = video.offsetHeight
+      return {
+        ...detectedCode,
+        cornerPoints: cornerPoints.map((point) => translate(scale(point))),
+        boundingBox: DOMRectReadOnly.fromRect({ x, y, width, height })
+      }
+    })
 
-      const ctx = canvas.getContext('2d')
+    canvas.width = video.offsetWidth
+    canvas.height = video.offsetHeight
 
-      props.track(adjustedCodes, ctx)
-    } else {
-      clearCanvas(canvas)
-    }
-  }
-}
+    const ctx = canvas.getContext('2d')
 
-const clearCanvas = (canvas: HTMLCanvasElement) => {
-  const ctx = canvas.getContext('2d')
-  ctx?.clearRect(0, 0, canvas.width, canvas.height)
+    props.track(adjustedCodes, ctx)
+  } 
 }
 </script>
 

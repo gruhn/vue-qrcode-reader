@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
+import { withPwa } from '@vite-pwa/vitepress'
 
-export default defineConfig({
-  // base: '/vue-qrcode-reader/',
+export default withPwa(defineConfig({
   description: 'A set of Vue.js components for detecting and decoding QR codes.',
   lang: 'en-US',
   lastUpdated: true,
@@ -27,8 +27,8 @@ export default defineConfig({
           link: '/demos/Simple'
         },
         {
-          text: 'Decode Continuously',
-          link: '/demos/DecodeAll'
+          text: 'Handle Errors',
+          link: '/demos/HandleErrors'
         },
         {
           text: 'Visual Tracking',
@@ -105,5 +105,38 @@ export default defineConfig({
         '@': __dirname
       }
     }
-  }
-})
+  },
+  pwa: {
+    mode: 'development',
+    base: '/',
+    scope: '/',
+    registerType: 'autoUpdate',
+    // injectRegister: 'inline',
+    includeAssets: ['favicon.svg'],
+    manifest: {
+      name: 'Vue Qrcode Reader',
+      short_name: 'Vue QR',
+      theme_color: '#10b981',
+      icons: [
+        {
+          src: 'pwa-192x192.png',
+          sizes: '192x192',
+          type: 'image/png',
+        },
+        {
+          src: 'pwa-512x512.png',
+          sizes: '512x512',
+          type: 'image/png',
+        }
+      ],
+    },
+    workbox: {
+      globPatterns: ['**/*.{css,js,html,svg,png,ico,txt,woff2}'],
+    },
+    devOptions: {
+      enabled: true,
+      suppressWarnings: true,
+      navigateFallback: '/',
+    },
+  },
+}))

@@ -28,23 +28,24 @@ const onDetect = detectedCodes => {
 }
 
 const onError = err => {
+  error.value = `[${err.name}]: `
+
   if (err.name === 'NotAllowedError') {
-    error.value = 'ERROR: you need to grant camera access permission'
+    error.value += 'you need to grant camera access permission'
   } else if (err.name === 'NotFoundError') {
-    error.value = 'ERROR: no camera on this device'
+    error.value += 'no camera on this device'
   } else if (err.name === 'NotSupportedError') {
-    error.value = 'ERROR: secure context required (HTTPS, localhost)'
+    error.value += 'secure context required (HTTPS, localhost)'
   } else if (err.name === 'NotReadableError') {
-    error.value = 'ERROR: is the camera already in use?'
+    error.value += 'is the camera already in use?'
   } else if (err.name === 'OverconstrainedError') {
-    error.value = 'ERROR: installed cameras are not suitable'
+    error.value += 'installed cameras are not suitable'
   } else if (err.name === 'StreamApiNotSupportedError') {
-    error.value = 'ERROR: Stream API is not supported in this browser'
+    error.value += 'Stream API is not supported in this browser'
   } else if (err.name === 'InsecureContextError') {
-    error.value =
-      'ERROR: Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP.'
+    error.value += 'Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP.'
   } else {
-    error.value = `ERROR: Camera error (${err.name})`
+    error.value += err.message
   }
 }
 </script>
