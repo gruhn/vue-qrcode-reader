@@ -52,7 +52,7 @@ button {
   top: 10px;
 }
 button img {
-  with: 50px;
+  width: 50px;
   height: 50px;
 }
 .error {

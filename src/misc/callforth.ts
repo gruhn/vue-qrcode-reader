@@ -1,13 +1,13 @@
 export const eventOn = (
-  eventTarget: any,
+  eventTarget: EventTarget,
   successEvent: string,
   errorEvent = 'error'
-) => {
-  let $resolve: (value: unknown) => void
-  let $reject: (reason?: any) => void
+) : Promise<Event> => {
+  let $resolve: (value: Event) => void
+  let $reject: (reason?: Event) => void
 
   const promise = new Promise(
-    (resolve: (value: unknown) => void, reject: (reason?: any) => void) => {
+    (resolve: (value: Event) => void, reject: (reason?: Event) => void) => {
       $resolve = resolve
       $reject = reject
 

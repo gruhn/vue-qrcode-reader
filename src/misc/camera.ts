@@ -1,4 +1,4 @@
-import { StreamApiNotSupportedError, InsecureContextError } from './errors'
+import { StreamApiNotSupportedError, InsecureContextError, StreamLoadTimeoutError } from './errors'
 import { eventOn, timeout } from './callforth'
 import shimGetUserMedia from './shimGetUserMedia'
 
@@ -14,7 +14,9 @@ let cameraState : Camera = { isActive: false }
 
 export function stop() {
   if (cameraState.isActive) {
+    cameraState.videoEl.src = ""
     cameraState.videoEl.srcObject = null
+    cameraState.videoEl.load()
 
     for (const track of cameraState.stream.getTracks()) {
       cameraState.stream.removeTrack(track)
@@ -80,7 +82,17 @@ export async function start(
     videoEl.src = stream.id
   }
 
-  await eventOn(videoEl, 'loadeddata')
+  await Promise.race([
+    eventOn(videoEl, 'loadeddata'),
+
+    // On iOS devices in PWA mode, QrcodeStream works initially, but after
+    // killing and restarting the PWA, all video elements fail to load camera 
+    // streams and never emit the `loadeddata` event. Looks like this is 
+    // related to a WebKit issue (see #298). No workarounds at the moment. 
+    // To at least detect this situation, we throw an error if the event
+    // has not been emitted after a 3 second timeout.
+    timeout(3000).then(() => { throw new StreamLoadTimeoutError() })
+  ])
 
   // According to: https://oberhofer.co/mediastreamtrack-and-its-capabilities/#queryingcapabilities
   // On some devices, getCapabilities only returns a non-empty object after
