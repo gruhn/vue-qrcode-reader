@@ -62,11 +62,11 @@ export default {
   font-weight: bold;
   padding: 10px;
 
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: #3c3c43;
 }
 
 .dragover {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: #10b981;
 }
 
 .drop-error {
