@@ -1,6 +1,4 @@
-import '@sec-ant/barcode-detector'
-
-import { type DetectedBarcode } from '@sec-ant/barcode-detector'
+import { type DetectedBarcode, BarcodeDetector } from '@sec-ant/barcode-detector/pure'
 import { eventOn } from './callforth'
 import { DropImageFetchError } from './errors'
 

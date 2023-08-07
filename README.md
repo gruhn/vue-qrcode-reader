@@ -167,3 +167,11 @@ Use kebab-case to reference them in your templates:
 #### How to make it work with Vue 2?
 
 Support is dropped but you can downgrade to vue-qrcode-reader v3.* or lower.
+
+#### I get a "Failed to fetch" error at runtime for some Wasm file.
+
+That Wasm file implements the QR code detector. 
+Unfortunately, it's not very convenient to bundle this file with the package.
+So by default we fetch it at runtime from a CDN.
+That's an issue for offline applications or applications that run in a network with strict CSP policy. 
+For a workaround see: https://github.com/gruhn/vue-qrcode-reader/issues/354
