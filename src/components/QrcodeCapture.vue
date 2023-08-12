@@ -10,7 +10,16 @@
 </template>
 
 <script setup lang="ts">
+import { type PropType } from 'vue'
 import { processFile } from '../misc/scanner'
+import { type BarcodeFormat } from '@sec-ant/barcode-detector/pure'
+
+const props = defineProps({
+  formats: {
+    type: Array as PropType<BarcodeFormat[]>,
+    default: () => ['qr_code'] as BarcodeFormat[]
+  }
+})
 
 const emit = defineEmits(['detect'])
 
@@ -26,7 +35,7 @@ const onChangeInput = (event: Event) => {
 
   const files = [...Array.from(event.target.files)]
 
-  for (const promise of files.map(processFile)) {
+  for (const promise of files.map(file => processFile(file, props.formats))) {
     onDetect(promise)
   }
 }

@@ -35,6 +35,10 @@ export default withPwa(defineConfig({
           link: '/demos/CustomTracking'
         },
         {
+          text: 'Visual Tracking with Formats',
+          link: '/demos/CustomTrackingWithFormats'
+        },
+        {
           text: 'Show Loading Indicator',
           link: '/demos/LoadingIndicator'
         },

@@ -15,8 +15,8 @@ Vue Native is not supported (see [#206](https://github.com/gruhn/vue-qrcode-read
 ### `detect`
 * **Payload Type:** `DetectedBarcode[]`
 
-You can drag-and-drop image files from your desktop or images embedded into other web pages anywhere in the area the component occupies. 
-The images are directly scanned and positive results are indicated by the `detect` event. 
+You can drag-and-drop image files from your desktop or images embedded into other web pages anywhere in the area the component occupies.
+The images are directly scanned and positive results are indicated by the `detect` event.
 You can also drop multiple images at the same time (still one event per image though).
 If no QR code can be recognized an empty array is emitted.
 
@@ -44,6 +44,17 @@ methods: {
     }
   }
 }
+```
+
+### `formats` <Badge text="since v5.3.0" type="info" />
+* **Payload Type:** `BarcodeDetectorOptions['formats']`
+* **Default:** `['qr_code']`
+
+The `formats` prop defines which barcode formats are detected.
+ [Supported Formats](https://github.com/Sec-ant/barcode-detector/blob/190c8d351e6ed18aea33b38a46e557750bbe5caa/src/utils.ts#L1-L16).
+
+```html
+<qrcode-drop-zone :formats="['qr_code', 'code_128']"></qrcode-drop-zone>
 ```
 
 ### `dragover`

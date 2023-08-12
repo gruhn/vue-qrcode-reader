@@ -10,7 +10,16 @@
 </template>
 
 <script setup lang="ts">
+import { type PropType } from 'vue'
 import { processFile, processUrl } from '../misc/scanner'
+import { type BarcodeFormat } from '@sec-ant/barcode-detector/pure'
+
+const props = defineProps({
+  formats: {
+    type: Array as PropType<BarcodeFormat[]>,
+    default: () => ['qr_code'] as BarcodeFormat[]
+  }
+})
 
 const emit = defineEmits(['detect', 'dragover', 'error'])
 
@@ -41,7 +50,7 @@ const onDrop = ({ dataTransfer }: DragEvent) => {
   })
 
   if (droppedUrl !== '') {
-    onDetect(processUrl(droppedUrl))
+    onDetect(processUrl(droppedUrl, props.formats))
   }
 }
 </script>
