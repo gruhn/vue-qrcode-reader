@@ -18,10 +18,10 @@ Vue Native is not supported (see [#206](https://github.com/gruhn/vue-qrcode-read
 
 ## Events
 
-### `detect` 
+### `detect`
 * **Payload Type:** `DetectedBarcode[]`
 
-Once a stream from the users camera is loaded, it's displayed and continuously scanned for QR codes. 
+Once a stream from the users camera is loaded, it's displayed and continuously scanned for QR codes.
 Results are indicated by the `detect` event.
 
 ```html
@@ -61,27 +61,37 @@ Here is an example:
       { "x": 342, "y": 375 }
     ]
   }
-] 
+]
 ```
 
 ::: tip
-If you scan the same QR code multiple times in a row, `detect` is still only emitted once. 
-When you hold a QR code in the camera, frames are actually decoded multiple times a second but you don't want to be flooded with `detect` events that often. 
-That's why the last decoded QR code is always cached and only new results are propagated. 
+If you scan the same QR code multiple times in a row, `detect` is still only emitted once.
+When you hold a QR code in the camera, frames are actually decoded multiple times a second but you don't want to be flooded with `detect` events that often.
+That's why the last decoded QR code is always cached and only new results are propagated.
 However changing the value of `paused` resets this internal cache.
 :::
 
+### `formats` <Badge text="since v5.3.0" type="info" />
+* **Payload Type:** `BarcodeDetectorOptions['formats']`
+* **Default:** `['qr_code']`
+
+The `formats` prop defines which barcode formats are detected.
+ [Supported Formats](https://github.com/Sec-ant/barcode-detector/blob/190c8d351e6ed18aea33b38a46e557750bbe5caa/src/utils.ts#L1-L16).
+
+```html
+<qrcode-stream :formats="['qr_code', 'code_128']"></qrcode-stream>
+```
 
 ### `camera-on` <Badge text="since v5.0.0" type="info" />
 * **Payload Type:** `Promise<MediaTrackCapabilities>`
 
-It might take a while before the component is ready and the scanning process starts. 
+It might take a while before the component is ready and the scanning process starts.
 The user has to be asked for camera access permission first and the camera stream has to be loaded.
 
-If you want to show a loading indicator, you can listen for the `camera-on` event. 
-It's emitted as soon as the camera start streaming. 
+If you want to show a loading indicator, you can listen for the `camera-on` event.
+It's emitted as soon as the camera start streaming.
 
-It carries a promise which resolves with the cameras [MediaTrackCapabilities](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/getCapabilities) when everything is ready. 
+It carries a promise which resolves with the cameras [MediaTrackCapabilities](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/getCapabilities) when everything is ready.
 
 ```html
 <qrcode-stream @camera-on="onReady"></qrcode-stream>
@@ -95,16 +105,16 @@ methods: {
 ```
 
 ::: warning
-In Chrome you can't prompt users for permissions a second time. 
-Once denied, users can only manually grant them. 
-Make sure your users understand why you need access to their camera **before** you mount this component. 
+In Chrome you can't prompt users for permissions a second time.
+Once denied, users can only manually grant them.
+Make sure your users understand why you need access to their camera **before** you mount this component.
 Otherwise they might panic and deny and then get frustrated because they don't know how to change their decision.
 :::
 
 ### `camera-off` <Badge text="since v5.0.0" type="info" />
 * **Payload Type:** `void`
 
-Emitted whenever the camera is turned off. 
+Emitted whenever the camera is turned off.
 This happens whenever the camera constraints are modified and the camera has to be restarted or a different camera is started.
 For example when switching between front and rear camera.
 
@@ -161,7 +171,7 @@ Use `constraints` instead.
 * **Input Type:** `Boolean`
 * **Default:** `false`
 
-Setting this prop to `true` freezes the camera. 
+Setting this prop to `true` freezes the camera.
 Useful if you want to show some microinteraction after successful scans.
 When you unpause the camera is restarted so the `camera-on` event is emitted again.
 
@@ -191,10 +201,10 @@ Avoid access to reactive properties in this function (like stuff in `data`, `com
 * **Input Type:** `MediaTrackConstraints`
 * **Default:** `{ facingMode: "environment" }`
 
-With this prop you can pass an object with various camera configuration options. 
+With this prop you can pass an object with various camera configuration options.
 For example whether to use front- or rear camera.
 
-The object must be of type [`MediaTrackConstriants`](https://w3c.github.io/mediacapture-main/#dom-mediatrackconstraints). 
+The object must be of type [`MediaTrackConstriants`](https://w3c.github.io/mediacapture-main/#dom-mediatrackconstraints).
 
 The object is passed as-is to `getUserMedia`, which is the API call for requesting a camera stream:
 

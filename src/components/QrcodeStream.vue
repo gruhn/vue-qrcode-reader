@@ -25,10 +25,10 @@
 </template>
 
 <script setup lang="ts">
-import type { DetectedBarcode } from '@sec-ant/barcode-detector'
-import { nextTick, onUnmounted, computed, onMounted, ref, watch } from 'vue'
+import type { DetectedBarcode, BarcodeFormat } from '@sec-ant/barcode-detector'
+import { nextTick, onUnmounted, computed, onMounted, ref, toRefs, watch, type PropType } from 'vue'
 
-import { adaptOldFormat, keepScanning } from '../misc/scanner'
+import { adaptOldFormat, keepScanning, setScanningFormats } from '../misc/scanner'
 import * as cameraController from '../misc/camera'
 import type { Point } from '../types/types'
 
@@ -38,6 +38,10 @@ const props = defineProps({
     default() {
       return { facingMode: 'environment' }
     }
+  },
+  formats: {
+    type: Array as PropType<BarcodeFormat[]>,
+    default: () => ['qr_code'] as BarcodeFormat[]
   },
   paused: {
     type: Boolean,
@@ -68,6 +72,7 @@ const isMounted = ref(false)
 
 onMounted(() => {
   isMounted.value = true
+  setScanningFormats(props.formats)
 })
 
 onUnmounted(() => {
@@ -80,8 +85,8 @@ onUnmounted(() => {
 
 // Collect all reactive values together that incluence the camera to have a
 // single source of truth for when EXACTLY to start/stop/restart the camera.
-// The watcher on this computed value should be the only function to interact 
-// with the camera directly and it should only interact with it in response to 
+// The watcher on this computed value should be the only function to interact
+// with the camera directly and it should only interact with it in response to
 // changes of this computed value.
 const cameraSettings = computed(() => {
   return {
@@ -126,6 +131,14 @@ watch(cameraSettings, async cameraSettings => {
   }
 }, { deep: true })
 
+// Set formats will create a new BarcodeDetector instance with the given formats.
+const { formats: propFormats } = toRefs(props)
+watch(propFormats, formats => {
+  if (isMounted.value) {
+    setScanningFormats(formats)
+  }
+})
+
 // The single source of truth when EXACTLY to start/stop scanning the camera stream.
 // The watcher on this computed property should be the only function to interact with
 // the scanner.
@@ -148,6 +161,7 @@ watch(shouldScan, shouldScan => {
 
     keepScanning(videoRef.value, {
       detectHandler: detectedCodes => emit('detect', detectedCodes),
+      formats: props.formats,
       locateHandler: onLocate,
       minDelay: scanInterval()
     })
@@ -171,7 +185,7 @@ const onLocate = (detectedCodes: DetectedBarcode[]) => {
   const video = videoRef.value
 
   console.assert(
-    canvas !== undefined && video !== undefined, 
+    canvas !== undefined && video !== undefined,
     'onLocate handler called although component is not mounted'
   )
 
@@ -243,7 +257,7 @@ const onLocate = (detectedCodes: DetectedBarcode[]) => {
     const ctx = canvas.getContext('2d')
 
     props.track(adjustedCodes, ctx)
-  } 
+  }
 }
 </script>
 

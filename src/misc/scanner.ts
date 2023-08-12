@@ -1,6 +1,12 @@
-import { type DetectedBarcode, BarcodeDetector } from '@sec-ant/barcode-detector/pure'
+import { type DetectedBarcode,  type BarcodeFormat, BarcodeDetector } from '@sec-ant/barcode-detector/pure'
 import { eventOn } from './callforth'
 import { DropImageFetchError } from './errors'
+
+
+let barcodeDetector: BarcodeDetector
+export const setScanningFormats = (formats: BarcodeFormat[]) => {
+  barcodeDetector = new BarcodeDetector({ formats })
+}
 
 /**
  * Continuously extracts frames from camera stream and tries to read
@@ -14,8 +20,6 @@ export const keepScanning = async (
     minDelay
   }: { detectHandler: any; locateHandler: any; minDelay: any }
 ) => {
-  const barcodeDetector = new BarcodeDetector({ formats: ['qr_code'] })
-
   const processFrame =
     (state: {
       lastScanned: number
@@ -27,20 +31,20 @@ export const keepScanning = async (
         const { lastScanned, contentBefore, lastScanHadContent } = state
 
         if (timeNow - lastScanned < minDelay) {
-          // Scanning is expensive and we don't need to scan camera frames with 
+          // Scanning is expensive and we don't need to scan camera frames with
           // the maximum possible frequency. In particular when visual tracking
-          // is disabled. So we skip scanning a frame if `minDelay` has not passed 
+          // is disabled. So we skip scanning a frame if `minDelay` has not passed
           // yet.
           window.requestAnimationFrame(processFrame(state))
         } else {
           const detectedCodes = await barcodeDetector.detect(videoElement)
 
-          // Only emit a detect event, if at least one of the detected codes has 
+          // Only emit a detect event, if at least one of the detected codes has
           // not been seen before. Otherwise we spam tons of detect events while
-          // a QR code is in view of the camera. To avoid that we store the previous 
-          // detection in `contentBefore`.  
+          // a QR code is in view of the camera. To avoid that we store the previous
+          // detection in `contentBefore`.
           //
-          // Implicitly we also don't emit a `detect` event if `detectedCodes` is an 
+          // Implicitly we also don't emit a `detect` event if `detectedCodes` is an
           // empty array.
           const anyNewCodesDetected = detectedCodes.some(code => {
             return !contentBefore.includes(code.rawValue)
@@ -52,14 +56,14 @@ export const keepScanning = async (
 
           const currentScanHasContent = detectedCodes.length > 0
 
-          // In contrast to the QR code content, the location changes all the time. 
-          // So we call the locate handler on every detection to repaint the tracking 
-          // canvas. 
+          // In contrast to the QR code content, the location changes all the time.
+          // So we call the locate handler on every detection to repaint the tracking
+          // canvas.
           if (currentScanHasContent) {
             locateHandler(detectedCodes)
           }
 
-          // Additionally, we need to clear the tracking canvas once when no QR code 
+          // Additionally, we need to clear the tracking canvas once when no QR code
           // is in view of the camera anymore. Technically this can be merged with the
           // previous if-statement but this way it's more explicit.
           if (!currentScanHasContent && lastScanHadContent) {
@@ -70,13 +74,13 @@ export const keepScanning = async (
             lastScanned: timeNow,
             lastScanHadContent: currentScanHasContent,
 
-            // It can happen that a QR code is constantly in view of the camera but 
-            // maybe a scanned frame is a bit blurry and we detect nothing but in the 
-            // next frame we detect the code again. We also want to avoid emitting 
-            // a `detect` event in such a case. So we don't reset `contentBefore`, 
+            // It can happen that a QR code is constantly in view of the camera but
+            // maybe a scanned frame is a bit blurry and we detect nothing but in the
+            // next frame we detect the code again. We also want to avoid emitting
+            // a `detect` event in such a case. So we don't reset `contentBefore`,
             // if we detect nothing, only if we detect something new.
             contentBefore: anyNewCodesDetected
-              ? detectedCodes.map(code => code.rawValue) 
+              ? detectedCodes.map(code => code.rawValue)
               : contentBefore
           }
 
@@ -105,17 +109,17 @@ const imageElementFromUrl = async (url: string) => {
   return image
 }
 
-export const processFile = async (file: File) : Promise<DetectedBarcode[]> => {
+export const processFile = async (file: File, formats: BarcodeFormat[] = ['qr_code']) : Promise<DetectedBarcode[]> => {
   const barcodeDetector = new BarcodeDetector({
-    formats: ['qr_code']
+    formats
   })
 
   return await barcodeDetector.detect(file)
 }
 
-export const processUrl = async (url: string) : Promise<DetectedBarcode[]> => {
+export const processUrl = async (url: string, formats: BarcodeFormat[] = ['qr_code']) : Promise<DetectedBarcode[]> => {
   const barcodeDetector = new BarcodeDetector({
-    formats: ['qr_code']
+    formats
   })
 
   const image = await imageElementFromUrl(url)

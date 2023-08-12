@@ -15,10 +15,10 @@ The newest API this component depend on is the [FileReader API](https://caniuse.
 ### `detect`
 * **Payload Type:** `DetectedBarcode[]`
 
-The component renders to a simple file picker `input` element. 
-Clicking opens a file dialog. 
-On supporting mobile devices the camera is started to take a picture. 
-The selected images are directly scanned and positive results are indicated by the `detect` event. 
+The component renders to a simple file picker `input` element.
+Clicking opens a file dialog.
+On supporting mobile devices the camera is started to take a picture.
+The selected images are directly scanned and positive results are indicated by the `detect` event.
 You can also select multiple images at the same time (still one event per image though).
 If no QR code can be recognized an empty array is emitted.
 
@@ -31,8 +31,19 @@ Use `detect` instead. TODO: link old docs.
 
 ## Props
 
-`QrcodeCapture` has no explicitly defined props.
-However, checkout the components template:
+### `formats` <Badge text="since v5.3.0" type="info" />
+* **Payload Type:** `BarcodeDetectorOptions['formats']`
+* **Default:** `['qr_code']`
+
+The `formats` prop defines which barcode formats are detected.
+ [Supported Formats](https://github.com/Sec-ant/barcode-detector/blob/190c8d351e6ed18aea33b38a46e557750bbe5caa/src/utils.ts#L1-L16).
+
+```html
+<qrcode-capture :formats="['qr_code', 'code_128']"></qrcode-capture>
+```
+
+
+Checkout the components template of `QrcodeCapture`:
 
 ```html
 <template>
