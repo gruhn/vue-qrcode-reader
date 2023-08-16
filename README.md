@@ -57,13 +57,16 @@
   <a href="https://vue-qrcode-reader.netlify.app/api/QrcodeStream.html">api reference</a>
 </p>
 
-A set of Vue.js components, allowing you to detect and decode QR codes, without leaving the browser.
+A set of Vue.js components for detecting QR codes and [various other barcode formats](https://developer.mozilla.org/en-US/docs/Web/API/Barcode_Detection_API#supported_barcode_formats) right in the browser:
 
-- :movie_camera: `QrcodeStream` accesses the device camera and continuously scans incoming frames.
-- :put_litter_in_its_place: `QrcodeDropZone` renders to an empty region where you can drag-and-drop images to be decoded.
+- :movie_camera: `QrcodeStream` continuously scans frames from a camera stream.
+- :put_litter_in_its_place: `QrcodeDropZone` is an empty region where you can drag-and-drop images to be decoded.
 - :open_file_folder: `QrcodeCapture` is a classic file upload field, instantly scanning all files you select.
 
-All components are responsive. Beyond that, close to zero styling. Make them fit your layout. Usage is simple and straight forward:
+All components are responsive. 
+Beyond that, close to zero styling. 
+Make them fit your layout. 
+Usage is simple and straight forward:
 
 ```html
 <qrcode-stream @detect="onDetect"></qrcode-stream>
@@ -77,12 +80,11 @@ methods: {
 }
 ```
 
-### Screenshots
+### Preview
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/screenshot1.png" height="500" alt="Screenshot 1">
-  <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/screenshot2.png" height="500" alt="Screenshot 2">
-  <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/screenshot3.png" height="500" alt="Screenshot 3">
+  <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/preview1.gif" width="280" alt="preview screencast 1" />
+  <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/preview2.gif" width="280" alt="preview screencast 2" />
 </p>
 
 # Installation :package:
