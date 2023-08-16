@@ -20,17 +20,3 @@ export { QrcodeStream, QrcodeCapture, QrcodeDropZone, setZXingModuleOverrides }
 const plugin: Plugin = { install }
 
 export { plugin as VueQrcodeReader }
-
-// Auto-install
-let GlobalVue = null
-if (typeof window !== 'undefined') {
-  // @ts-ignore
-  GlobalVue = window.Vue
-  // @ts-ignore
-} else if (typeof global !== 'undefined') {
-  // @ts-ignore
-  GlobalVue = global.Vue
-}
-if (GlobalVue) {
-  GlobalVue.use(plugin)
-}
