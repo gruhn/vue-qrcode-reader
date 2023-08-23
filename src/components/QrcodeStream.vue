@@ -1,24 +1,27 @@
 <template>
-  <div class="qrcode-stream-wrapper">
-    <!--
-    Note, the following DOM elements are not styled with z-index.
-    If z-index is not defined, elements are stacked in the order they appear in the DOM.
-    The first element is at the very bottom and subsequent elements are added on top.
-    -->
+  <div :style="wrapperStyle">
+    <!-- 
+      All immediate children of the wrapper div are stacked upon each other. 
+      The z-index is implicitly given by the (inverse) element order. 
+
+      The video element is at the very bottom, the pause frame canvas is above it,
+      the tracking layer is yet above and finally at the very top is the slot
+      overlay.
+    --> 
+
     <video
       ref="videoRef"
-      :class="{ 'qrcode-stream-camera--hidden': !shouldScan }"
-      class="qrcode-stream-camera"
+      :style="videoElStyle"
       autoplay
       muted
       playsinline
     />
 
-    <canvas ref="pauseFrameRef" v-show="!shouldScan" class="qrcode-stream-camera" />
+    <canvas id="qrcode-stream-pause-frame" ref="pauseFrameRef" v-show="!shouldScan" :style="cameraStyle" />
 
-    <canvas ref="trackingLayerRef" class="qrcode-stream-overlay" />
+    <canvas id="qrcode-stream-tracking-layer" ref="trackingLayerRef" :style="overlayStyle" />
 
-    <div class="qrcode-stream-overlay">
+    <div :style="overlayStyle">
       <slot />
     </div>
   </div>
@@ -26,7 +29,7 @@
 
 <script setup lang="ts">
 import type { DetectedBarcode, BarcodeFormat } from '@sec-ant/barcode-detector/pure'
-import { onUnmounted, computed, onMounted, ref, toRefs, watch, type PropType } from 'vue'
+import { onUnmounted, computed, onMounted, ref, toRefs, watch, type PropType, type CSSProperties } from 'vue'
 
 import { keepScanning, setScanningFormats } from '../misc/scanner'
 import * as cameraController from '../misc/camera'
@@ -261,33 +264,37 @@ const onLocate = (detectedCodes: DetectedBarcode[]) => {
     props.track(adjustedCodes, ctx)
   }
 }
-</script>
 
-<style lang="css" scoped>
-.qrcode-stream-wrapper {
-  width: 100%;
-  height: 100%;
+/**
+ * Styling is all inline to avoid generating an external style.css file.
+ * Component users shouldn't have to figure out how to setup their bundler to 
+ * import external CSS.
+ */
 
-  position: relative;
-  z-index: 0;
+const wrapperStyle : CSSProperties = {
+  "width": "100%",
+  "height": "100%",
+  "position": "relative",
+  // notice that we use z-index only once for the wrapper div.
+  // If z-index is not defined, elements are stacked in the order they appear in the DOM.
+  // The first element is at the very bottom and subsequent elements are added on top.
+  "z-index": "0",
 }
 
-.qrcode-stream-overlay {
-  width: 100%;
-  height: 100%;
-
-  position: absolute;
-  top: 0;
-  left: 0;
+const overlayStyle : CSSProperties = {
+  "width": "100%",
+  "height": "100%",
+  "position": "absolute",
+  "top": "0",
+  "left": "0",
 }
 
-.qrcode-stream-camera {
-  width: 100%;
-  height: 100%;
-
-  display: block;
-  object-fit: cover;
+const cameraStyle : CSSProperties = {
+  "width": "100%",
+  "height": "100%",
+  "object-fit": "cover"
 }
+
 /* When a camera stream is loaded, we assign the stream to the `video`
  * element via `video.srcObject`. At this point the element used to be
  * hidden with `v-show="false"` aka. `display: none`. We do that because
@@ -300,8 +307,17 @@ const onLocate = (detectedCodes: DetectedBarcode[]) => {
  * element was hidden with `display: none`. Using `visibility: hidden`
  * instead seems to have fixed the problem though.
  */
-.qrcode-stream-camera--hidden {
-  visibility: hidden;
-  position: absolute;
-}
-</style>
+const videoElStyle = computed<CSSProperties>(() => {
+  if (shouldScan.value) {
+    return cameraStyle
+  } else {
+    return {
+      ...cameraStyle,
+
+      "visibility": "hidden",
+      "position": "absolute",
+    }
+  }
+})
+
+</script>
