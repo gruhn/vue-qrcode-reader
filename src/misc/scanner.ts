@@ -8,6 +8,8 @@ export const setScanningFormats = (formats: BarcodeFormat[]) => {
   barcodeDetector = new BarcodeDetector({ formats })
 }
 
+type ScanHandler = (_ : DetectedBarcode[]) => void
+
 /**
  * Continuously extracts frames from camera stream and tries to read
  * potentially pictured QR codes.
@@ -17,9 +19,12 @@ export const keepScanning = async (
   {
     detectHandler,
     locateHandler,
-    minDelay
-  }: { detectHandler: any; locateHandler: any; minDelay: any }
+    minDelay,
+    formats
+  }: { detectHandler: ScanHandler; locateHandler: ScanHandler; minDelay: number, formats : BarcodeFormat[] }
 ) => {
+  barcodeDetector = new BarcodeDetector({ formats })
+  
   const processFrame =
     (state: {
       lastScanned: number
