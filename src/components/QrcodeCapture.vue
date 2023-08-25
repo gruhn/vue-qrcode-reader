@@ -24,19 +24,13 @@ const props = defineProps({
 const emit = defineEmits(['detect'])
 
 // methods
-const onDetect = async promise => {
-  // FIXME: why await twice here???
-  const detectedCodes = await (await promise)
-  emit('detect', detectedCodes)
-}
-
 const onChangeInput = (event: Event) => {
   if (!(event.target instanceof HTMLInputElement) || !event.target.files) return
 
-  const files = [...Array.from(event.target.files)]
-
-  for (const promise of files.map(file => processFile(file, props.formats))) {
-    onDetect(promise)
+  for (const file of Array.from(event.target.files)) {
+    processFile(file, props.formats).then(detectedCodes => {
+      emit('detect', detectedCodes)
+    })
   }
 }
 </script>

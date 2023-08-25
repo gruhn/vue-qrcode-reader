@@ -40,7 +40,7 @@ export function getCapabilities() : MediaTrackCapabilities {
 export async function start(
   videoEl: HTMLVideoElement, { constraints, torch }: { 
     constraints: MediaTrackConstraints
-    torch: string 
+    torch: boolean
   }
 ) : Promise<MediaTrackCapabilities> {
   // At least in Chrome `navigator.mediaDevices` is undefined when the page is

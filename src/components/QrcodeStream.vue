@@ -28,13 +28,14 @@
 import type { DetectedBarcode, BarcodeFormat } from '@sec-ant/barcode-detector'
 import { nextTick, onUnmounted, computed, onMounted, ref, toRefs, watch, type PropType } from 'vue'
 
-import { adaptOldFormat, keepScanning, setScanningFormats } from '../misc/scanner'
+import { keepScanning, setScanningFormats } from '../misc/scanner'
 import * as cameraController from '../misc/camera'
 import type { Point } from '../types/types'
+import { assert } from '../misc/util'
 
 const props = defineProps({
   constraints: {
-    type: Object,
+    type: Object as PropType<MediaTrackConstraints>,
     default() {
       return { facingMode: 'environment' }
     }
@@ -72,7 +73,6 @@ const isMounted = ref(false)
 
 onMounted(() => {
   isMounted.value = true
-  setScanningFormats(props.formats)
 })
 
 onUnmounted(() => {
@@ -97,9 +97,18 @@ const cameraSettings = computed(() => {
 })
 
 watch(cameraSettings, async cameraSettings => {
+  const videoEl = videoRef.value
+  assert(videoEl !== undefined, 'cameraSettings watcher should never be triggered when component is not mounted. Thus video element should always be defined.')
+
+  const canvas = pauseFrameRef.value
+  assert(canvas !== undefined, 'cameraSettings watcher should never be triggered when component is not mounted. Thus canvas should always be defined.')
+
+  const ctx = canvas.getContext('2d')
+  assert(ctx !== null, 'if cavnas is defined, canvas 2d context should also be non-null')
+
   if (cameraSettings.shouldStream) { // start camera
     try {
-      const capabilities = await cameraController.start(videoRef.value, cameraSettings)
+      const capabilities = await cameraController.start(videoEl, cameraSettings)
 
       // if the component is destroyed before `camera.start` resolves the
       // `onBeforeUnmount` hook has no chance to clear the remaining camera
@@ -116,14 +125,10 @@ watch(cameraSettings, async cameraSettings => {
     }
   } else { // stop camera
     // paint pause frame
-    const canvas = pauseFrameRef.value
-    const ctx = canvas.getContext('2d')
-    const video = videoRef.value
+    canvas.width = videoEl.videoWidth
+    canvas.height = videoEl.videoHeight
 
-    canvas.width = video.videoWidth
-    canvas.height = video.videoHeight
-
-    ctx?.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
+    ctx.drawImage(videoEl, 0, 0, videoEl.videoWidth, videoEl.videoHeight)
 
     cameraController.stop()
     cameraActive.value = false
@@ -146,7 +151,10 @@ const shouldScan = computed(() => cameraSettings.value.shouldStream && cameraAct
 
 watch(shouldScan, shouldScan => {
   if (shouldScan) {
+    assert(pauseFrameRef.value !== undefined, 'shouldScan watcher should only be triggered when component is mounted. Thus pause frame canvas is defined')
     clearCanvas(pauseFrameRef.value)
+
+    assert(trackingLayerRef.value !== undefined, 'shouldScan watcher should only be triggered when component is mounted. Thus tracking canvas is defined')
     clearCanvas(trackingLayerRef.value)
 
     // Minimum delay in milliseconds between frames to be scanned. Don't scan
@@ -159,8 +167,9 @@ watch(shouldScan, shouldScan => {
       }
     }
 
+    assert(videoRef.value !== undefined, 'shouldScan watcher should only be triggered when component is mounted. Thus video element is defined')
     keepScanning(videoRef.value, {
-      detectHandler: detectedCodes => emit('detect', detectedCodes),
+      detectHandler: (detectedCodes : DetectedBarcode[]) => emit('detect', detectedCodes),
       formats: props.formats,
       locateHandler: onLocate,
       minDelay: scanInterval()
@@ -171,23 +180,16 @@ watch(shouldScan, shouldScan => {
 // methods
 const clearCanvas = (canvas: HTMLCanvasElement) => {
   const ctx = canvas.getContext('2d')
-
-  console.assert(
-    ctx !== undefined,
-    'tried to clear canvas with undefined 2D context'
-  )
-
+  assert(ctx !== null, 'canvas 2d context should always be non-null')
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 }
 
 const onLocate = (detectedCodes: DetectedBarcode[]) => {
   const canvas = trackingLayerRef.value
-  const video = videoRef.value
+  assert(canvas !== undefined, 'onLocate handler should only be called when component is mounted. Thus tracking canvas is always defined.')
 
-  console.assert(
-    canvas !== undefined && video !== undefined,
-    'onLocate handler called although component is not mounted'
-  )
+  const video = videoRef.value
+  assert(video !== undefined, 'onLocate handler should only be called when component is mounted. Thus video element is always defined.')
 
   if (detectedCodes.length === 0 || props.track === undefined) {
     clearCanvas(canvas)
