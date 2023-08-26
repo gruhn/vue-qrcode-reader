@@ -19,13 +19,10 @@ export default defineConfig({
       }
     }
   },
-  plugins: [
-    vue(),
-    dts()
-  ],
+  plugins: [vue(), dts()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  },
+  }
 })
