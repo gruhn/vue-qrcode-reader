@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import type { DetectedBarcode, BarcodeFormat } from '@sec-ant/barcode-detector'
-import { nextTick, onUnmounted, computed, onMounted, ref, toRefs, watch, type PropType } from 'vue'
+import { onUnmounted, computed, onMounted, ref, toRefs, watch, type PropType } from 'vue'
 
 import { keepScanning, setScanningFormats } from '../misc/scanner'
 import * as cameraController from '../misc/camera'
