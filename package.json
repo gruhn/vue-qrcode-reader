@@ -30,14 +30,13 @@
       "require": "./dist/vue-qrcode-reader.umd.cjs",
       "types": "./dist/index.d.ts"
     },
-    "./dist/styles.css": {
-      "import": "./dist/style.css",
-      "require": "./dist/style.css"
-    }
+    "./style": "./dist/style.css",
+    "./src": "./src/index.ts"
   },
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "dependencies": {
     "@sec-ant/barcode-detector": "^1.1.2",
