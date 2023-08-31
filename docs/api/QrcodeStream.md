@@ -131,7 +131,7 @@ This can happen [a couple of reasons](https://developer.mozilla.org/en-US/docs/W
 methods: {
   onError(error) {
     if (error.name === 'NotAllowedError') {
-      // user denied camera access permisson
+      // user denied camera access permission
     } else if (error.name === 'NotFoundError') {
       // no suitable camera device installed
     } else if (error.name === 'NotSupportedError') {
@@ -139,7 +139,7 @@ methods: {
     } else if (error.name === 'NotReadableError') {
       // maybe camera is already in use
     } else if (error.name === 'OverconstrainedError') {
-      // did you requested the front camera although there is none?
+      // did you request the front camera although there is none?
     } else if (error.name === 'StreamApiNotSupportedError') {
       // browser seems to be lacking features
     }
