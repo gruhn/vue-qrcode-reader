@@ -127,13 +127,13 @@ Vue.use(VueQrcodeReader);
 
 Include the following JS file:
 
-https://unpkg.com/vue-qrcode-reader/dist/VueQrcodeReader.umd.min.js
+https://unpkg.com/vue-qrcode-reader/dist/vue-qrcode-reader.umd.cjs
 
 Make sure to include it after Vue:
 
 ```html
 <script src="./vue.js"></script>
-<script src="./VueQrcodeReader.umd.min.js"></script>
+<script src="./vue-qrcode-reader.umd.cjs"></script>
 ```
 
 All components are automatically registered globally.
