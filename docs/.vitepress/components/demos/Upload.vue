@@ -29,7 +29,7 @@ export default {
     const options = [
       { text: 'rear camera (default)', value: 'environment' },
       { text: 'front camera', value: 'user' },
-      { text: 'force file dialog', value: false }
+      { text: 'force file dialog', value: null }
     ]
 
     return {
