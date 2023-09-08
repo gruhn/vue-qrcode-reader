@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { type PropType } from 'vue'
 import { processFile, processUrl } from '../misc/scanner'
-import { type BarcodeFormat } from '@sec-ant/barcode-detector/pure'
+import { type BarcodeFormat } from 'barcode-detector/pure'
 
 const props = defineProps({
   formats: {

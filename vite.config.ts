@@ -11,6 +11,18 @@ export default defineConfig({
     }
   },
   build: {
+    // these are the targets supported by zxing webassembly
+    // ----------------------------------------------------
+    // according to: https://esbuild.github.io/api/#target
+    // esbuild will transpile newer ES syntaxes according to this list
+    // newer web APIs will still have to be polyfilled if they don't exist
+    // ----------------------------------------------------
+    // according to: https://github.com/emscripten-core/emscripten/blob/b72550132f8381c3f3021853505159f6f6b11e48/src/settings.js#L1763-L1812
+    // even older browsers may still be supported, however let's settle on this until someone complains
+    // ----------------------------------------------------
+    // safari 13 support is requested by: https://github.com/Sec-ant/barcode-detector/issues/11
+    // others are defaults from emscripten and vite
+    target: ['es2020', 'edge88', 'firefox68', 'chrome75', 'safari13'],
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'VueQrcodeReader'
