@@ -4,7 +4,7 @@ import QrcodeStream from './components/QrcodeStream.vue'
 import QrcodeCapture from './components/QrcodeCapture.vue'
 import QrcodeDropZone from './components/QrcodeDropZone.vue'
 
-import { setZXingModuleOverrides } from '@sec-ant/barcode-detector/pure'
+import { setZXingModuleOverrides } from 'barcode-detector/pure'
 
 // Install the components
 export function install(app: App) {
