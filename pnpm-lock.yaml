@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   barcode-detector:
-    specifier: ^2.0.1
-    version: 2.0.1(react@18.2.0)
+    specifier: 2.0.3
+    version: 2.0.3(react@18.2.0)
   webrtc-adapter:
     specifier: ^8.2.3
     version: 8.2.3
@@ -2059,8 +2059,8 @@ packages:
       string-argv: 0.3.2
     dev: true
 
-  /@sec-ant/zxing-wasm@2.1.4(react@18.2.0):
-    resolution: {integrity: sha512-7KmKMvN5nT4AL5hrXzTouO6MBSK4mZladSaiYT7gDqEMRiHcEKBfrgV3f0KwWeUSexzouQMJrczYvobXtXl3Ig==}
+  /@sec-ant/zxing-wasm@2.1.5(react@18.2.0):
+    resolution: {integrity: sha512-U8/bq15/qytQ2GOfFeyoL9ItnBLLWlILpG3c0F03iZ3SlEZNJtUWd/DONjDAlbQ90TRzzOFFVw9AQhh75XlANQ==}
     dependencies:
       '@types/emscripten': 1.39.7
       zustand: 4.4.1(react@18.2.0)
@@ -2854,10 +2854,10 @@ packages:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
     dev: true
 
-  /barcode-detector@2.0.1(react@18.2.0):
-    resolution: {integrity: sha512-B7brBlxLRFyBjf8jVBxVHzRSN7bo0DteZbw27rzPYAS8SDMjTYj8kCijTCInS/Ru5wi700ntOtbLnOrVJyZNaw==}
+  /barcode-detector@2.0.3(react@18.2.0):
+    resolution: {integrity: sha512-4d6KAcnsL5SuXhxtz0Z+7qjKqPi6bqrgE2QdocKKWTA33MMR+s2Dx1+YfGEhQ++/sM/MrXT/hTBzgG8XL4dAgg==}
     dependencies:
-      '@sec-ant/zxing-wasm': 2.1.4(react@18.2.0)
+      '@sec-ant/zxing-wasm': 2.1.5(react@18.2.0)
       '@types/dom-webcodecs': 0.1.8
     transitivePeerDependencies:
       - '@types/react'
