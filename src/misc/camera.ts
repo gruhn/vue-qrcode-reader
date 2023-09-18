@@ -2,19 +2,21 @@ import { StreamApiNotSupportedError, InsecureContextError, StreamLoadTimeoutErro
 import { eventOn, timeout } from './callforth'
 import shimGetUserMedia from './shimGetUserMedia'
 
-type Camera = {
-  isActive: true
-  videoEl: HTMLVideoElement
-  stream: MediaStream
-} | { 
-  isActive: false 
-}
+type Camera =
+  | {
+      isActive: true
+      videoEl: HTMLVideoElement
+      stream: MediaStream
+    }
+  | {
+      isActive: false
+    }
 
-let cameraState : Camera = { isActive: false }
+let cameraState: Camera = { isActive: false }
 
 export function stop() {
   if (cameraState.isActive) {
-    cameraState.videoEl.src = ""
+    cameraState.videoEl.src = ''
     cameraState.videoEl.srcObject = null
     cameraState.videoEl.load()
 
@@ -27,7 +29,7 @@ export function stop() {
   }
 }
 
-export function getCapabilities() : MediaTrackCapabilities {
+export function getCapabilities(): MediaTrackCapabilities {
   if (cameraState.isActive) {
     const [track] = cameraState.stream.getVideoTracks()
     // Firefox does not yet support getCapabilities as of August 2020
@@ -38,11 +40,15 @@ export function getCapabilities() : MediaTrackCapabilities {
 }
 
 export async function start(
-  videoEl: HTMLVideoElement, { constraints, torch }: { 
+  videoEl: HTMLVideoElement,
+  {
+    constraints,
+    torch
+  }: {
     constraints: MediaTrackConstraints
     torch: boolean
   }
-) : Promise<MediaTrackCapabilities> {
+): Promise<MediaTrackCapabilities> {
   // At least in Chrome `navigator.mediaDevices` is undefined when the page is
   // loaded using HTTP rather than HTTPS. Thus `STREAM_API_NOT_SUPPORTED` is
   // initialized with `false` although the API might actually be supported.
@@ -82,16 +88,23 @@ export async function start(
     videoEl.src = stream.id
   }
 
+  // In the WeChat browser on iOS,
+  // 'loadeddata' event won't get fired
+  // unless video is explictly triggered by play()
+  videoEl.play()
+
   await Promise.race([
     eventOn(videoEl, 'loadeddata'),
 
     // On iOS devices in PWA mode, QrcodeStream works initially, but after
-    // killing and restarting the PWA, all video elements fail to load camera 
-    // streams and never emit the `loadeddata` event. Looks like this is 
-    // related to a WebKit issue (see #298). No workarounds at the moment. 
+    // killing and restarting the PWA, all video elements fail to load camera
+    // streams and never emit the `loadeddata` event. Looks like this is
+    // related to a WebKit issue (see #298). No workarounds at the moment.
     // To at least detect this situation, we throw an error if the event
     // has not been emitted after a 3 second timeout.
-    timeout(3000).then(() => { throw new StreamLoadTimeoutError() })
+    timeout(3000).then(() => {
+      throw new StreamLoadTimeoutError()
+    })
   ])
 
   // According to: https://oberhofer.co/mediastreamtrack-and-its-capabilities/#queryingcapabilities
