@@ -2,20 +2,26 @@ import { StreamApiNotSupportedError, InsecureContextError, StreamLoadTimeoutErro
 import { eventOn, timeout } from './callforth'
 import shimGetUserMedia from './shimGetUserMedia'
 
-type Camera =
-  | {
-      isActive: true
-      videoEl: HTMLVideoElement
-      stream: MediaStream
-    }
-  | {
-      isActive: false
-    }
+type CameraActive = {
+  isActive: true
+  torchOn: boolean
+  videoEl: HTMLVideoElement
+  stream: MediaStream
+}
+
+type CameraInactive = { isActive: false }
+
+type Camera = CameraActive | CameraInactive
 
 let cameraState: Camera = { isActive: false }
 
-export function stop() {
+export async function stop() {
   if (cameraState.isActive) {
+    if (cameraState.torchOn) {
+      // @ts-ignore
+      await track.applyConstraints({ advanced: [{ torch: false }] })
+    }
+
     cameraState.videoEl.src = ''
     cameraState.videoEl.srcObject = null
     cameraState.videoEl.load()
@@ -49,6 +55,10 @@ export async function start(
     torch: boolean
   }
 ): Promise<MediaTrackCapabilities> {
+  if (cameraState.isActive) {
+    await stop()
+  }
+
   // At least in Chrome `navigator.mediaDevices` is undefined when the page is
   // loaded using HTTP rather than HTTPS. Thus `STREAM_API_NOT_SUPPORTED` is
   // initialized with `false` although the API might actually be supported.
@@ -112,22 +122,17 @@ export async function start(
   // some delay. There is no appropriate event so we have to add a constant timeout
   await timeout(500)
 
-  if (torch) {
-    const [track] = stream.getVideoTracks()
-    const capabilities = track.getCapabilities()
+  cameraState = { videoEl, stream, isActive: true, torchOn: false }
 
+  const [track] = stream.getVideoTracks()
+  const capabilities = track?.getCapabilities?.() ?? {}
+
+  // @ts-ignore
+  if (torch && capabilities.torch) {
     // @ts-ignore
-    if (capabilities.torch) {
-      // @ts-ignore
-      track.applyConstraints({ advanced: [{ torch: true }] })
-    } else {
-      console.warn('device does not support torch capability')
-    }
+    await track.applyConstraints({ advanced: [{ torch: true }] })
+    cameraState.torchOn = true
   }
 
-  cameraState = { videoEl, stream, isActive: true }
-
-  // Firefox does not yet support getCapabilities as of August 2020
-  const [track] = cameraState.stream.getVideoTracks()
-  return track?.getCapabilities?.() ?? {}
+  return capabilities
 }
