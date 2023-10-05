@@ -19,6 +19,9 @@ devDependencies:
   '@types/node':
     specifier: 20.5.6
     version: 20.5.6
+  '@types/w3c-image-capture':
+    specifier: ^1.0.8
+    version: 1.0.8
   '@vite-pwa/vitepress':
     specifier: ^0.2.0
     version: 0.2.0(vite-plugin-pwa@0.16.4)
@@ -2226,8 +2229,18 @@ packages:
     resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
     dev: true
 
+  /@types/w3c-image-capture@1.0.8:
+    resolution: {integrity: sha512-NEloDXYaYcJrPM8CQdmzVeyYr55SSRkn67mTaiQYjDPzm/PG/3gssIF2eCHMkNxEpzAhcxEbmURA7ENGMF0Yzg==}
+    dependencies:
+      '@types/webrtc': 0.0.37
+    dev: true
+
   /@types/web-bluetooth@0.0.17:
     resolution: {integrity: sha512-4p9vcSmxAayx72yn70joFoL44c9MO/0+iVEBIQXe3v2h2SiAsEIo/G5v6ObFWvNKRFjbrVadNf9LqEEZeQPzdA==}
+    dev: true
+
+  /@types/webrtc@0.0.37:
+    resolution: {integrity: sha512-JGAJC/ZZDhcrrmepU4sPLQLIOIAgs5oIK+Ieq90K8fdaNMhfdfqmYatJdgif1NDQtvrSlTOGJDUYHIDunuufOg==}
     dev: true
 
   /@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.48.0)(typescript@5.1.6):
