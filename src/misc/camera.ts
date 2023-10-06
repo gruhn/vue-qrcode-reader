@@ -17,16 +17,12 @@ let cameraState: Camera = { isActive: false }
 
 export async function stop() {
   if (cameraState.isActive) {
-    if (cameraState.torchOn) {
-      // @ts-ignore
-      await track.applyConstraints({ advanced: [{ torch: false }] })
-    }
-
     cameraState.videoEl.src = ''
     cameraState.videoEl.srcObject = null
     cameraState.videoEl.load()
 
     for (const track of cameraState.stream.getTracks()) {
+      cameraState.torchOn ?? track.applyConstraints({ advanced: [{ torch: false }] })
       cameraState.stream.removeTrack(track)
       track.stop()
     }
@@ -35,7 +31,11 @@ export async function stop() {
   }
 }
 
-export function getCapabilities(): MediaTrackCapabilities {
+// TODO: Do we have to keep this function?
+// This function is never revoked in other places but is exported,
+// and we cannot reuse this function in the "start" function below
+// because the abstraction doesn't fit
+export function getCapabilities(): Partial<MediaTrackCapabilities> {
   if (cameraState.isActive) {
     const [track] = cameraState.stream.getVideoTracks()
     // Firefox does not yet support getCapabilities as of August 2020
@@ -44,6 +44,8 @@ export function getCapabilities(): MediaTrackCapabilities {
     return {}
   }
 }
+
+type CreateObjectURLCompat = (obj: MediaSource | Blob | MediaStream) => string
 
 export async function start(
   videoEl: HTMLVideoElement,
@@ -54,7 +56,7 @@ export async function start(
     constraints: MediaTrackConstraints
     torch: boolean
   }
-): Promise<MediaTrackCapabilities> {
+): Promise<Partial<MediaTrackCapabilities>> {
   if (cameraState.isActive) {
     await stop()
   }
@@ -84,16 +86,12 @@ export async function start(
 
   if (videoEl.srcObject !== undefined) {
     videoEl.srcObject = stream
-    // @ts-ignore
   } else if (videoEl.mozSrcObject !== undefined) {
-    // @ts-ignore
     videoEl.mozSrcObject = stream
   } else if (window.URL.createObjectURL) {
-    // @ts-ignore
-    videoEl.src = window.URL.createObjectURL(stream)
+    videoEl.src = (window.URL.createObjectURL as CreateObjectURLCompat)(stream)
   } else if (window.webkitURL) {
-    // @ts-ignore
-    videoEl.src = window.webkitURL.createObjectURL(stream)
+    videoEl.src = (window.webkitURL.createObjectURL as CreateObjectURLCompat)(stream)
   } else {
     videoEl.src = stream.id
   }
@@ -125,11 +123,10 @@ export async function start(
   cameraState = { videoEl, stream, isActive: true, torchOn: false }
 
   const [track] = stream.getVideoTracks()
-  const capabilities = track?.getCapabilities?.() ?? {}
 
-  // @ts-ignore
+  const capabilities: Partial<MediaTrackCapabilities> = track?.getCapabilities?.() ?? {}
+
   if (torch && capabilities.torch) {
-    // @ts-ignore
     await track.applyConstraints({ advanced: [{ torch: true }] })
     cameraState.torchOn = true
   }
