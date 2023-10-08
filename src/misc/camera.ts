@@ -2,65 +2,33 @@ import { StreamApiNotSupportedError, InsecureContextError, StreamLoadTimeoutErro
 import { eventOn, timeout } from './callforth'
 import shimGetUserMedia from './shimGetUserMedia'
 
-type CameraActive = {
-  isActive: true
-  torchOn: boolean
-  videoEl: HTMLVideoElement
-  stream: MediaStream
-}
-
-type CameraInactive = { isActive: false }
-
-type Camera = CameraActive | CameraInactive
-
-let cameraState: Camera = { isActive: false }
-
-export async function stop() {
-  if (cameraState.isActive) {
-    cameraState.videoEl.src = ''
-    cameraState.videoEl.srcObject = null
-    cameraState.videoEl.load()
-
-    for (const track of cameraState.stream.getTracks()) {
-      cameraState.torchOn ?? track.applyConstraints({ advanced: [{ torch: false }] })
-      cameraState.stream.removeTrack(track)
-      track.stop()
-    }
-
-    cameraState = { isActive: false }
+interface StartTaskResult {
+  type: 'start'
+  data: {
+    videoEl: HTMLVideoElement
+    stream: MediaStream
+    capabilities: Partial<MediaTrackCapabilities>
+    constraints: MediaTrackConstraints
+    isTorchOn: boolean
   }
 }
 
-// TODO: Do we have to keep this function?
-// This function is never revoked in other places but is exported,
-// and we cannot reuse this function in the "start" function below
-// because the abstraction doesn't fit
-export function getCapabilities(): Partial<MediaTrackCapabilities> {
-  if (cameraState.isActive) {
-    const [track] = cameraState.stream.getVideoTracks()
-    // Firefox does not yet support getCapabilities as of August 2020
-    return track?.getCapabilities?.() ?? {}
-  } else {
-    return {}
-  }
+interface StopTaskResult {
+  type: 'stop'
+  data: {}
 }
+
+type TaskResult = StartTaskResult | StopTaskResult
+
+let taskQueue: Promise<TaskResult> = Promise.resolve({ type: 'stop', data: {} })
 
 type CreateObjectURLCompat = (obj: MediaSource | Blob | MediaStream) => string
 
-export async function start(
+async function runStartTask(
   videoEl: HTMLVideoElement,
-  {
-    constraints,
-    torch
-  }: {
-    constraints: MediaTrackConstraints
-    torch: boolean
-  }
-): Promise<Partial<MediaTrackCapabilities>> {
-  if (cameraState.isActive) {
-    await stop()
-  }
-
+  constraints: MediaTrackConstraints,
+  torch: boolean
+): Promise<StartTaskResult> {
   // At least in Chrome `navigator.mediaDevices` is undefined when the page is
   // loaded using HTTP rather than HTTPS. Thus `STREAM_API_NOT_SUPPORTED` is
   // initialized with `false` although the API might actually be supported.
@@ -120,16 +88,131 @@ export async function start(
   // some delay. There is no appropriate event so we have to add a constant timeout
   await timeout(500)
 
-  cameraState = { videoEl, stream, isActive: true, torchOn: false }
-
   const [track] = stream.getVideoTracks()
 
   const capabilities: Partial<MediaTrackCapabilities> = track?.getCapabilities?.() ?? {}
 
+  let isTorchOn = false
   if (torch && capabilities.torch) {
     await track.applyConstraints({ advanced: [{ torch: true }] })
-    cameraState.torchOn = true
+    isTorchOn = true
   }
 
-  return capabilities
+  return {
+    type: 'start',
+    data: {
+      videoEl,
+      stream,
+      capabilities,
+      constraints,
+      isTorchOn
+    }
+  }
+}
+
+export async function start(
+  videoEl: HTMLVideoElement,
+  {
+    constraints,
+    torch,
+    restart = false
+  }: {
+    constraints: MediaTrackConstraints
+    torch: boolean
+    restart?: boolean
+  }
+): Promise<Partial<MediaTrackCapabilities>> {
+  // update the task queue synchronously
+  taskQueue = taskQueue.then((prevTaskResult) => {
+    if (prevTaskResult.type === 'start') {
+      // previous task is a start task
+      // we'll check if we can reuse the previous result
+      const {
+        data: {
+          videoEl: prevVideoEl,
+          stream: prevStream,
+          constraints: prevConstraints,
+          isTorchOn: prevIsTorchOn
+        }
+      } = prevTaskResult
+      // TODO: Should we keep this object comparison
+      // this code only checks object sameness not equality
+      // deep comparison requires snapshots and value by value check
+      // which seem too much
+      if (
+        !restart &&
+        videoEl === prevVideoEl &&
+        constraints === prevConstraints &&
+        torch === prevIsTorchOn
+      ) {
+        // things didn't change, reuse the previous result
+        return prevTaskResult
+      }
+      // something changed, restart (stop then start)
+      return runStopTask(prevVideoEl, prevStream, prevIsTorchOn).then(() =>
+        runStartTask(videoEl, constraints, torch)
+      )
+    }
+    // previous task is a stop task
+    // we can safely start
+    return runStartTask(videoEl, constraints, torch)
+  })
+  // await the task queue asynchronously
+  const taskResult = await taskQueue
+  if (taskResult.type === 'stop') {
+    // we just synchronously updated the task above
+    // to make the latest task a start task
+    // so this case shouldn't happen
+    throw new Error('Something went wrong with the camera task queue (start task).')
+  }
+  // return the data we want
+  return taskResult.data.capabilities
+}
+
+async function runStopTask(
+  videoEl: HTMLVideoElement,
+  stream: MediaStream,
+  isTorchOn: boolean
+): Promise<StopTaskResult> {
+  videoEl.src = ''
+  videoEl.srcObject = null
+  videoEl.load()
+
+  // wait for load() to emit error
+  // because src and srcObject are empty
+  await eventOn(videoEl, 'error')
+
+  for (const track of stream.getTracks()) {
+    isTorchOn ?? (await track.applyConstraints({ advanced: [{ torch: false }] }))
+    stream.removeTrack(track)
+    track.stop()
+  }
+
+  return {
+    type: 'stop',
+    data: {}
+  }
+}
+
+export async function stop() {
+  // update the task queue synchronously
+  taskQueue = taskQueue.then((prevTaskResult) => {
+    if (prevTaskResult.type === 'stop') {
+      // previous task is a stop task
+      // no need to stop again
+      return prevTaskResult
+    }
+    const {
+      data: { videoEl, stream, isTorchOn }
+    } = prevTaskResult
+    return runStopTask(videoEl, stream, isTorchOn)
+  })
+  // await the task queue asynchronously
+  const taskResult = await taskQueue
+  if (taskResult.type === 'start') {
+    // we just synchronously updated the task above
+    // to make the latest task a stop task
+    // so this case shouldn't happen
+    throw new Error('Something went wrong with the camera task queue (stop task).')
+  }
 }
