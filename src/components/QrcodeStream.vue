@@ -118,7 +118,7 @@ watch(cameraSettings, async cameraSettings => {
       // ... thus we check whether the component is still alive right after the promise resolves and stop 
       // the camera otherwise.
       if (!isMounted.value) {
-        cameraController.stop()
+        await cameraController.stop()
       } else {
         cameraActive.value = true
         emit('camera-on', capabilities)
