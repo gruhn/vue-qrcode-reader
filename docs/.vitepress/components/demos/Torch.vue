@@ -16,7 +16,8 @@
       :constraints="{ deviceId: selected.deviceId }" 
       v-if="selected !== null"       
       @error="console.error"
-      @camera-on="onCameraOn" 
+      @camera-on="onCameraOn"
+      v-memo="[torchActive, selected.deviceId]"
     >
       <button @click="torchActive = !torchActive" :disabled="torchNotSupported">
         <img :src="withBase(icon)" alt="toggle torch" />
@@ -30,8 +31,8 @@ import { ref, onMounted, computed } from 'vue'
 import { withBase } from 'vitepress'
 import { QrcodeStream } from '../../../../src'
 
-const selected = ref(null)
-const devices = ref([])
+const selected = ref(null as MediaDeviceInfo | null)
+const devices = ref([] as MediaDeviceInfo[])
 
 onMounted(async () => {
   devices.value = (await navigator.mediaDevices.enumerateDevices())
