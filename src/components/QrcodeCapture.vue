@@ -28,7 +28,7 @@ const onChangeInput = (event: Event) => {
   if (!(event.target instanceof HTMLInputElement) || !event.target.files) return
 
   for (const file of Array.from(event.target.files)) {
-    processFile(file, props.formats).then(detectedCodes => {
+    processFile(file, props.formats).then((detectedCodes) => {
       emit('detect', detectedCodes)
     })
   }

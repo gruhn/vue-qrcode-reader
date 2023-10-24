@@ -7,7 +7,7 @@
       The video element is at the very bottom, the pause frame canvas is above it,
       the tracking layer is yet above and finally at the very top is the slot
       overlay.
-    --> 
+    -->
 
     <video
       ref="videoRef"
@@ -15,21 +15,39 @@
       autoplay
       muted
       playsinline
-    />
+    ></video>
 
-    <canvas id="qrcode-stream-pause-frame" ref="pauseFrameRef" v-show="!shouldScan" :style="cameraStyle" />
+    <canvas
+      id="qrcode-stream-pause-frame"
+      ref="pauseFrameRef"
+      v-show="!shouldScan"
+      :style="cameraStyle"
+    ></canvas>
 
-    <canvas id="qrcode-stream-tracking-layer" ref="trackingLayerRef" :style="overlayStyle" />
+    <canvas
+      id="qrcode-stream-tracking-layer"
+      ref="trackingLayerRef"
+      :style="overlayStyle"
+    ></canvas>
 
     <div :style="overlayStyle">
-      <slot />
+      <slot></slot>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { DetectedBarcode, BarcodeFormat } from 'barcode-detector/pure'
-import { onUnmounted, computed, onMounted, ref, toRefs, watch, type PropType, type CSSProperties } from 'vue'
+import {
+  onUnmounted,
+  computed,
+  onMounted,
+  ref,
+  toRefs,
+  watch,
+  type PropType,
+  type CSSProperties
+} from 'vue'
 
 import { keepScanning, setScanningFormats } from '../misc/scanner'
 import * as cameraController from '../misc/camera'
@@ -40,7 +58,7 @@ const props = defineProps({
   constraints: {
     type: Object as PropType<MediaTrackConstraints>,
     default() {
-      return { facingMode: 'environment' }
+      return { facingMode: 'environment' } as MediaTrackConstraints
     }
   },
   formats: {
@@ -99,49 +117,61 @@ const cameraSettings = computed(() => {
   }
 })
 
-watch(cameraSettings, async cameraSettings => {
-  const videoEl = videoRef.value
-  assert(videoEl !== undefined, 'cameraSettings watcher should never be triggered when component is not mounted. Thus video element should always be defined.')
+watch(
+  cameraSettings,
+  async (cameraSettings) => {
+    const videoEl = videoRef.value
+    assert(
+      videoEl !== undefined,
+      'cameraSettings watcher should never be triggered when component is not mounted. Thus video element should always be defined.'
+    )
 
-  const canvas = pauseFrameRef.value
-  assert(canvas !== undefined, 'cameraSettings watcher should never be triggered when component is not mounted. Thus canvas should always be defined.')
+    const canvas = pauseFrameRef.value
+    assert(
+      canvas !== undefined,
+      'cameraSettings watcher should never be triggered when component is not mounted. Thus canvas should always be defined.'
+    )
 
-  const ctx = canvas.getContext('2d')
-  assert(ctx !== null, 'if cavnas is defined, canvas 2d context should also be non-null')
+    const ctx = canvas.getContext('2d')
+    assert(ctx !== null, 'if cavnas is defined, canvas 2d context should also be non-null')
 
-  if (cameraSettings.shouldStream) { // start camera
-    try {
-      // Usually, when the component is destroyed the `onUnmounted` hook takes care of stopping the camera.
-      // However, if the component is destroyed while we are in the middle of starting the camera, then 
-      // the `onUnmounted` hook might fire before the following promise resolves ...
-      const capabilities = await cameraController.start(videoEl, cameraSettings)
-      // ... thus we check whether the component is still alive right after the promise resolves and stop 
-      // the camera otherwise.
-      if (!isMounted.value) {
-        await cameraController.stop()
-      } else {
-        cameraActive.value = true
-        emit('camera-on', capabilities)
+    if (cameraSettings.shouldStream) {
+      // start camera
+      try {
+        // Usually, when the component is destroyed the `onUnmounted` hook takes care of stopping the camera.
+        // However, if the component is destroyed while we are in the middle of starting the camera, then
+        // the `onUnmounted` hook might fire before the following promise resolves ...
+        const capabilities = await cameraController.start(videoEl, cameraSettings)
+        // ... thus we check whether the component is still alive right after the promise resolves and stop
+        // the camera otherwise.
+        if (!isMounted.value) {
+          await cameraController.stop()
+        } else {
+          cameraActive.value = true
+          emit('camera-on', capabilities)
+        }
+      } catch (error) {
+        emit('error', error)
       }
-    } catch (error) {
-      emit('error', error)
+    } else {
+      // stop camera
+      // paint pause frame
+      canvas.width = videoEl.videoWidth
+      canvas.height = videoEl.videoHeight
+
+      ctx.drawImage(videoEl, 0, 0, videoEl.videoWidth, videoEl.videoHeight)
+
+      cameraController.stop()
+      cameraActive.value = false
+      emit('camera-off')
     }
-  } else { // stop camera
-    // paint pause frame
-    canvas.width = videoEl.videoWidth
-    canvas.height = videoEl.videoHeight
-
-    ctx.drawImage(videoEl, 0, 0, videoEl.videoWidth, videoEl.videoHeight)
-
-    cameraController.stop()
-    cameraActive.value = false
-    emit('camera-off')
-  }
-}, { deep: true })
+  },
+  { deep: true }
+)
 
 // Set formats will create a new BarcodeDetector instance with the given formats.
 const { formats: propFormats } = toRefs(props)
-watch(propFormats, formats => {
+watch(propFormats, (formats) => {
   if (isMounted.value) {
     setScanningFormats(formats)
   }
@@ -152,12 +182,18 @@ watch(propFormats, formats => {
 // the scanner.
 const shouldScan = computed(() => cameraSettings.value.shouldStream && cameraActive.value)
 
-watch(shouldScan, shouldScan => {
+watch(shouldScan, (shouldScan) => {
   if (shouldScan) {
-    assert(pauseFrameRef.value !== undefined, 'shouldScan watcher should only be triggered when component is mounted. Thus pause frame canvas is defined')
+    assert(
+      pauseFrameRef.value !== undefined,
+      'shouldScan watcher should only be triggered when component is mounted. Thus pause frame canvas is defined'
+    )
     clearCanvas(pauseFrameRef.value)
 
-    assert(trackingLayerRef.value !== undefined, 'shouldScan watcher should only be triggered when component is mounted. Thus tracking canvas is defined')
+    assert(
+      trackingLayerRef.value !== undefined,
+      'shouldScan watcher should only be triggered when component is mounted. Thus tracking canvas is defined'
+    )
     clearCanvas(trackingLayerRef.value)
 
     // Minimum delay in milliseconds between frames to be scanned. Don't scan
@@ -170,9 +206,12 @@ watch(shouldScan, shouldScan => {
       }
     }
 
-    assert(videoRef.value !== undefined, 'shouldScan watcher should only be triggered when component is mounted. Thus video element is defined')
+    assert(
+      videoRef.value !== undefined,
+      'shouldScan watcher should only be triggered when component is mounted. Thus video element is defined'
+    )
     keepScanning(videoRef.value, {
-      detectHandler: (detectedCodes : DetectedBarcode[]) => emit('detect', detectedCodes),
+      detectHandler: (detectedCodes: DetectedBarcode[]) => emit('detect', detectedCodes),
       formats: props.formats,
       locateHandler: onLocate,
       minDelay: scanInterval()
@@ -189,10 +228,16 @@ const clearCanvas = (canvas: HTMLCanvasElement) => {
 
 const onLocate = (detectedCodes: DetectedBarcode[]) => {
   const canvas = trackingLayerRef.value
-  assert(canvas !== undefined, 'onLocate handler should only be called when component is mounted. Thus tracking canvas is always defined.')
+  assert(
+    canvas !== undefined,
+    'onLocate handler should only be called when component is mounted. Thus tracking canvas is always defined.'
+  )
 
   const video = videoRef.value
-  assert(video !== undefined, 'onLocate handler should only be called when component is mounted. Thus video element is always defined.')
+  assert(
+    video !== undefined,
+    'onLocate handler should only be called when component is mounted. Thus video element is always defined.'
+  )
 
   if (detectedCodes.length === 0 || props.track === undefined) {
     clearCanvas(canvas)
@@ -267,32 +312,32 @@ const onLocate = (detectedCodes: DetectedBarcode[]) => {
 
 /**
  * Styling is all inline to avoid generating an external style.css file.
- * Component users shouldn't have to figure out how to setup their bundler to 
+ * Component users shouldn't have to figure out how to setup their bundler to
  * import external CSS.
  */
 
-const wrapperStyle : CSSProperties = {
-  "width": "100%",
-  "height": "100%",
-  "position": "relative",
+const wrapperStyle: CSSProperties = {
+  width: '100%',
+  height: '100%',
+  position: 'relative',
   // notice that we use z-index only once for the wrapper div.
   // If z-index is not defined, elements are stacked in the order they appear in the DOM.
   // The first element is at the very bottom and subsequent elements are added on top.
-  "z-index": "0",
+  'z-index': '0'
 }
 
-const overlayStyle : CSSProperties = {
-  "width": "100%",
-  "height": "100%",
-  "position": "absolute",
-  "top": "0",
-  "left": "0",
+const overlayStyle: CSSProperties = {
+  width: '100%',
+  height: '100%',
+  position: 'absolute',
+  top: '0',
+  left: '0'
 }
 
-const cameraStyle : CSSProperties = {
-  "width": "100%",
-  "height": "100%",
-  "object-fit": "cover"
+const cameraStyle: CSSProperties = {
+  width: '100%',
+  height: '100%',
+  'object-fit': 'cover'
 }
 
 /* When a camera stream is loaded, we assign the stream to the `video`
@@ -314,10 +359,9 @@ const videoElStyle = computed<CSSProperties>(() => {
     return {
       ...cameraStyle,
 
-      "visibility": "hidden",
-      "position": "absolute",
+      visibility: 'hidden',
+      position: 'absolute'
     }
   }
 })
-
 </script>
