@@ -2,7 +2,7 @@ export const eventOn = (
   eventTarget: EventTarget,
   successEvent: string,
   errorEvent = 'error'
-) : Promise<Event> => {
+): Promise<Event> => {
   let $resolve: (value: Event) => void
   let $reject: (reason?: Event) => void
 

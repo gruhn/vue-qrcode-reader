@@ -7,7 +7,7 @@ export const setScanningFormats = (formats: BarcodeFormat[]) => {
   barcodeDetector = new BarcodeDetector({ formats })
 }
 
-type ScanHandler = (_ : DetectedBarcode[]) => void
+type ScanHandler = (_: DetectedBarcode[]) => void
 
 /**
  * Continuously extracts frames from camera stream and tries to read
@@ -20,16 +20,17 @@ export const keepScanning = async (
     locateHandler,
     minDelay,
     formats
-  }: { detectHandler: ScanHandler; locateHandler: ScanHandler; minDelay: number, formats : BarcodeFormat[] }
+  }: {
+    detectHandler: ScanHandler
+    locateHandler: ScanHandler
+    minDelay: number
+    formats: BarcodeFormat[]
+  }
 ) => {
   barcodeDetector = new BarcodeDetector({ formats })
-  
+
   const processFrame =
-    (state: {
-      lastScanned: number
-      contentBefore: string[]
-      lastScanHadContent: boolean
-    }) =>
+    (state: { lastScanned: number; contentBefore: string[]; lastScanHadContent: boolean }) =>
     async (timeNow: number) => {
       if (videoElement.readyState > 1) {
         const { lastScanned, contentBefore, lastScanHadContent } = state
@@ -38,23 +39,23 @@ export const keepScanning = async (
         // the maximum possible frequency. In particular when visual tracking
         // is disabled. So we skip scanning a frame if `minDelay` has not passed
         // yet. Notice that this approach is different from doing a `setTimeout`
-        // after each scan. With `setTimeout`, delay and scanning are sequential: 
+        // after each scan. With `setTimeout`, delay and scanning are sequential:
         //
         //    |-- scan --|---- minDelay ----|-- scan --|---- minDelay ----|
-        // 
+        //
         // Instead we do it concurrently:
         //
         //    |---- minDelay ----|---- minDelay ----|---- minDelay ----|
         //    |-- scan --|       |-- scan --|       |-- scan --|
         //
-        // Let's say `minDelay` is 40ms, then we scan every 40ms as long as 
-        // scanning itself does not take more than 40ms. In particular when 
-        // visual tracking is enabled, that means we can repaint the tracking 
-        // canvas every 40ms. So we paint 
+        // Let's say `minDelay` is 40ms, then we scan every 40ms as long as
+        // scanning itself does not take more than 40ms. In particular when
+        // visual tracking is enabled, that means we can repaint the tracking
+        // canvas every 40ms. So we paint
         //
         //     1000ms / 40ms = 25fps (frames per second)
         //
-        // 24fps is the minimum frame-rate that is perceived as a continuous 
+        // 24fps is the minimum frame-rate that is perceived as a continuous
         // animation. We target 25fps just because 24 doesn't divide 1000ms
         // evenly.
         if (timeNow - lastScanned < minDelay) {
@@ -69,7 +70,7 @@ export const keepScanning = async (
           //
           // Implicitly we also don't emit a `detect` event if `detectedCodes` is an
           // empty array.
-          const anyNewCodesDetected = detectedCodes.some(code => {
+          const anyNewCodesDetected = detectedCodes.some((code) => {
             return !contentBefore.includes(code.rawValue)
           })
 
@@ -103,7 +104,7 @@ export const keepScanning = async (
             // a `detect` event in such a case. So we don't reset `contentBefore`,
             // if we detect nothing, only if we detect something new.
             contentBefore: anyNewCodesDetected
-              ? detectedCodes.map(code => code.rawValue)
+              ? detectedCodes.map((code) => code.rawValue)
               : contentBefore
           }
 
@@ -132,7 +133,10 @@ const imageElementFromUrl = async (url: string) => {
   return image
 }
 
-export const processFile = async (file: File, formats: BarcodeFormat[] = ['qr_code']) : Promise<DetectedBarcode[]> => {
+export const processFile = async (
+  file: File,
+  formats: BarcodeFormat[] = ['qr_code']
+): Promise<DetectedBarcode[]> => {
   const barcodeDetector = new BarcodeDetector({
     formats
   })
@@ -140,7 +144,10 @@ export const processFile = async (file: File, formats: BarcodeFormat[] = ['qr_co
   return await barcodeDetector.detect(file)
 }
 
-export const processUrl = async (url: string, formats: BarcodeFormat[] = ['qr_code']) : Promise<DetectedBarcode[]> => {
+export const processUrl = async (
+  url: string,
+  formats: BarcodeFormat[] = ['qr_code']
+): Promise<DetectedBarcode[]> => {
   const barcodeDetector = new BarcodeDetector({
     formats
   })

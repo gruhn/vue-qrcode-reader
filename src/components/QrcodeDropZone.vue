@@ -24,7 +24,7 @@ const props = defineProps({
 const emit = defineEmits(['detect', 'dragover', 'error'])
 
 // methods
-const onDetect = async (promise : Promise<any>) => {
+const onDetect = async (promise: Promise<any>) => {
   try {
     const detectedCodes = await promise
     emit('detect', detectedCodes)

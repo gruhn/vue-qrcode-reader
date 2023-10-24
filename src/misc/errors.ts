@@ -26,7 +26,9 @@ export class InsecureContextError extends Error {
 
 export class StreamLoadTimeoutError extends Error {
   constructor() {
-    super('Loading camera stream timed out after 3 seconds. If you are on iOS in PWA mode, this is a known issue (see https://github.com/gruhn/vue-qrcode-reader/issues/298)')
+    super(
+      'Loading camera stream timed out after 3 seconds. If you are on iOS in PWA mode, this is a known issue (see https://github.com/gruhn/vue-qrcode-reader/issues/298)'
+    )
 
     this.name = 'StreamLoadTimeoutError'
   }
