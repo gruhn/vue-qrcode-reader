@@ -164,7 +164,7 @@ Use kebab-case to reference them in your templates:
 #### Some of my QR codes are not being detected.
 
 - Make sure, there is some white border around the QR code.
-- [Model 1 QR codes](https://en.wikipedia.org/wiki/QR_code#Model_1) are not supported.
+- Test your QR codes in the upstream packages: [`barcode-detector`](https://github.com/Sec-ant/barcode-detector) -> [`zxing-wasm`](https://github.com/Sec-ant/zxing-wasm) -> [`zxing-cpp`](https://github.com/zxing-cpp/zxing-cpp), and file detection issues in the highest-level repository where the problem first occurs.
 
 #### How to make it work with Vue 2?
 
