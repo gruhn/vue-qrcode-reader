@@ -36,7 +36,7 @@
     "dist"
   ],
   "dependencies": {
-    "barcode-detector": "2.0.3",
+    "barcode-detector": "2.1.0",
     "webrtc-adapter": "^8.2.3"
   },
   "devDependencies": {
