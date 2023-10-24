@@ -12,7 +12,7 @@
   "packageManager": "pnpm@8.3.1",
   "type": "module",
   "scripts": {
-    "build": "pnpm rimraf dist && vite build && cp dist/vue-qrcode-reader.umd.cjs dist/vue-qrcode-reader.umd.js",
+    "build": "vite build",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
@@ -55,7 +55,6 @@
     "husky": "8.0.3",
     "lint-staged": "15.0.2",
     "prettier": "3.0.3",
-    "rimraf": "5.0.5",
     "semantic-release": "22.0.5",
     "typescript": "5.2.2",
     "vite": "4.5.0",

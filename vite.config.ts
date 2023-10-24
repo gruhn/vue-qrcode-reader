@@ -24,8 +24,13 @@ export default defineConfig({
     // others are defaults from emscripten and vite
     target: ['es2020', 'edge88', 'firefox68', 'chrome75', 'safari13'],
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
-      name: 'VueQrcodeReader'
+      entry: {
+        'vue-qrcode-reader': resolve(__dirname, 'src/index.ts')
+      },
+      formats: ['es', 'umd'],
+      name: 'VueQrcodeReader',
+      fileName: (format, entryName) =>
+        format === 'es' ? `${entryName}.js` : `${entryName}.${format}.js`
     },
     rollupOptions: {
       external: ['vue'],
