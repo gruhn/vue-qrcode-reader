@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   barcode-detector:
-    specifier: 2.1.0
-    version: 2.1.0
+    specifier: 2.1.1
+    version: 2.1.1
   webrtc-adapter:
     specifier: 8.2.3
     version: 8.2.3
@@ -2871,11 +2871,11 @@ packages:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
     dev: true
 
-  /barcode-detector@2.1.0:
-    resolution: {integrity: sha512-i9L6Kvz8M7jK+3NHFSxtzUTcHeB6RTztm/dPlfMuz5giRvfp8XKje7yoPU0dIg98WQ8aD7gsbXHg6JzHsrzcaw==}
+  /barcode-detector@2.1.1:
+    resolution: {integrity: sha512-yA6gR5u5j22uw2eHSlFGzhYgnnQqx6hc4amDb/r0bKWl2gcDOqVE6SzUE6O87UzJ3ZhjJjM9uG/L9+D705HsKg==}
     dependencies:
       '@types/dom-webcodecs': 0.1.9
-      zxing-wasm: 1.0.0-rc.3
+      zxing-wasm: 1.0.0-rc.4
     dev: false
 
   /before-after-hook@2.2.3:
@@ -6729,8 +6729,8 @@ packages:
       commander: 9.5.0
     dev: true
 
-  /zxing-wasm@1.0.0-rc.3:
-    resolution: {integrity: sha512-rNpPqQ6w/Dym7yK3hMJMMS5DK36J8wCDXYW5FVfW3k83NYT88MTi26AtJE3zIvqOpFr5C0khTjbWfEvJTw4MDA==}
+  /zxing-wasm@1.0.0-rc.4:
+    resolution: {integrity: sha512-SvVErHUZhzFqpqA2vpwmXeAPa6sgGdUCOkMCd5cMch6L1urZbZCZR8jb2+NI9bCfJRNkQi2ZjME9/NaiUFiSGg==}
     dependencies:
       '@types/emscripten': 1.39.9
     dev: false
