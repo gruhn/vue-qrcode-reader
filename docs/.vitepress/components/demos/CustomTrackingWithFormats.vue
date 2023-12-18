@@ -37,7 +37,7 @@ export default {
 
     const selected = options[1]
 
-    const barcodeTypes = ["aztec", "code_128", "code_39", "code_93", "codabar", "data_matrix", "ean_13", "ean_8", "itf", "pdf417", "qr_code", "upc_a", "upc_e"]
+    const barcodeTypes = ["aztec", "code_128", "code_39", "code_93", "codabar", "databar", "databar_expanded", "data_matrix", "dx_film_edge", "ean_13", "ean_8", "itf", "maxi_code", "micro_qr_code", "pdf417", "qr_code", "rm_qr_code", "upc_a", "upc_e", "linear_codes", "matrix_codes"]
 
     const selectedBarcodeTypes = ["qr_code"]
 
