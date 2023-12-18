@@ -57,7 +57,7 @@
   <a href="https://vue-qrcode-reader.netlify.app/api/QrcodeStream.html">api reference</a>
 </p>
 
-A set of Vue.js components for detecting QR codes and [various other barcode formats](https://developer.mozilla.org/en-US/docs/Web/API/Barcode_Detection_API#supported_barcode_formats) right in the browser:
+A set of Vue.js components for detecting QR codes and [various other barcode formats](https://github.com/Sec-ant/barcode-detector?tab=readme-ov-file#barcode-detector) right in the browser:
 
 - :movie_camera: `QrcodeStream` continuously scans frames from a camera stream.
 - :put_litter_in_its_place: `QrcodeDropZone` is an empty region where you can drag-and-drop images to be decoded.

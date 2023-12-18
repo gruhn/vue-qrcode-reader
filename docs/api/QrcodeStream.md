@@ -76,7 +76,7 @@ However changing the value of `paused` resets this internal cache.
 * **Default:** `['qr_code']`
 
 The `formats` prop defines which barcode formats are detected.
- [Supported Formats](https://github.com/Sec-ant/barcode-detector/blob/190c8d351e6ed18aea33b38a46e557750bbe5caa/src/utils.ts#L1-L16).
+ [Supported Formats](https://github.com/Sec-ant/barcode-detector?tab=readme-ov-file#barcode-detector).
 
 ```html
 <qrcode-stream :formats="['qr_code', 'code_128']"></qrcode-stream>
