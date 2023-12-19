@@ -177,3 +177,19 @@ Unfortunately, it's not very convenient to bundle this file with the package.
 So by default we fetch it at runtime from a CDN.
 That's an issue for offline applications or applications that run in a network with strict CSP policy. 
 For a workaround see: https://github.com/gruhn/vue-qrcode-reader/issues/354
+
+### `torch` is not supported on my device, although it has a flashlight.
+
+Support for `torch` is inconsistent across devices, cameras and browsers and operating systems.
+On some devices the rear camera supports `torch` but the front camera doesn't,
+even if the front camera actually has a flashlight.
+
+Furthermore, `torch` is not supported on iOS at all (last checked iOS 17.1). 
+
+Visit [this page](https://vue-qrcode-reader.netlify.app/select-camera-demo.html) with your device.
+The list of links represents all cameras installed on the device. 
+If you click, the camera should be loaded. 
+Below the camera view the JSON object of "capabilities" is printed. 
+If it doesn't contain the key/value pair `"torch": true` then flashlight is not supported for that camera.
+
+This JSON object provided as payload of the [`camera-on` event](https://vue-qrcode-reader.netlify.app/api/QrcodeStream.html#camera-on).
