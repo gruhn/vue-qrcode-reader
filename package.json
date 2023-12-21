@@ -36,7 +36,7 @@
     "dist"
   ],
   "dependencies": {
-    "barcode-detector": "2.2.0",
+    "barcode-detector": "2.2.2",
     "webrtc-adapter": "8.2.3"
   },
   "devDependencies": {
@@ -50,7 +50,7 @@
     "@vue/eslint-config-typescript": "12.0.0",
     "@vue/tsconfig": "0.5.1",
     "eslint": "8.56.0",
-    "eslint-plugin-prettier": "5.0.1",
+    "eslint-plugin-prettier": "5.1.0",
     "eslint-plugin-vue": "9.19.2",
     "husky": "8.0.3",
     "lint-staged": "15.2.0",
