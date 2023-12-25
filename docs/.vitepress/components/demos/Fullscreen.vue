@@ -1,8 +1,18 @@
 <template>
-  <div :class="{ fullscreen: fullscreen }" ref="wrapper" @fullscreenchange="onFullscreenChange">
+  <div
+    :class="{ fullscreen: fullscreen }"
+    ref="wrapper"
+    @fullscreenchange="onFullscreenChange"
+  >
     <qrcode-stream @error="logErrors">
-      <button @click="fullscreen = !fullscreen" class="fullscreen-button">
-        <img :src="withBase(fullscreenIcon)" alt="toggle fullscreen" />
+      <button
+        @click="fullscreen = !fullscreen"
+        class="fullscreen-button"
+      >
+        <img
+          :src="withBase(fullscreenIcon)"
+          alt="toggle fullscreen"
+        />
       </button>
     </qrcode-stream>
   </div>

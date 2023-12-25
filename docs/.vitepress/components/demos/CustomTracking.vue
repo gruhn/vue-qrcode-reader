@@ -3,13 +3,20 @@
     <p>
       Track function:
       <select v-model="selected">
-        <option v-for="option in options" :key="option.text" :value="option">
+        <option
+          v-for="option in options"
+          :key="option.text"
+          :value="option"
+        >
           {{ option.text }}
         </option>
       </select>
     </p>
 
-    <qrcode-stream :track="selected.value" @error="logErrors" />
+    <qrcode-stream
+      :track="selected.value"
+      @error="logErrors"
+    />
   </div>
 </template>
 

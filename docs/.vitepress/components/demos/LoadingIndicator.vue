@@ -2,8 +2,16 @@
   <div>
     <button @click="reload">Destroy And Re-Create Component</button>
 
-    <qrcode-stream @camera-on="onCameraOn" v-if="!destroyed">
-      <div class="loading-indicator" v-if="loading">Loading...</div>
+    <qrcode-stream
+      @camera-on="onCameraOn"
+      v-if="!destroyed"
+    >
+      <div
+        class="loading-indicator"
+        v-if="loading"
+      >
+        Loading...
+      </div>
     </qrcode-stream>
   </div>
 </template>

@@ -2,8 +2,15 @@
   <div>
     <p>
       Barcodeformat:
-      <select v-model="selectedBarcodeTypes" multiple>
-        <option v-for="(option, index) in barcodeTypes" :key="index" :value="option">
+      <select
+        v-model="selectedBarcodeTypes"
+        multiple
+      >
+        <option
+          v-for="(option, index) in barcodeTypes"
+          :key="index"
+          :value="option"
+        >
           {{ option }}
         </option>
       </select>
@@ -11,13 +18,21 @@
     <p>
       Track function:
       <select v-model="selected">
-        <option v-for="option in options" :key="option.text" :value="option">
+        <option
+          v-for="option in options"
+          :key="option.text"
+          :value="option"
+        >
           {{ option.text }}
         </option>
       </select>
     </p>
 
-    <qrcode-stream :formats="selectedBarcodeTypes" :track="selected.value" @error="logErrors" />
+    <qrcode-stream
+      :formats="selectedBarcodeTypes"
+      :track="selected.value"
+      @error="logErrors"
+    />
   </div>
 </template>
 
@@ -37,11 +52,33 @@ export default {
 
     const selected = options[1]
 
-    const barcodeTypes = ["aztec", "code_128", "code_39", "code_93", "codabar", "databar", "databar_expanded", "data_matrix", "dx_film_edge", "ean_13", "ean_8", "itf", "maxi_code", "micro_qr_code", "pdf417", "qr_code", "rm_qr_code", "upc_a", "upc_e", "linear_codes", "matrix_codes"]
+    const barcodeTypes = [
+      'aztec',
+      'code_128',
+      'code_39',
+      'code_93',
+      'codabar',
+      'databar',
+      'databar_expanded',
+      'data_matrix',
+      'dx_film_edge',
+      'ean_13',
+      'ean_8',
+      'itf',
+      'maxi_code',
+      'micro_qr_code',
+      'pdf417',
+      'qr_code',
+      'rm_qr_code',
+      'upc_a',
+      'upc_e',
+      'linear_codes',
+      'matrix_codes'
+    ]
 
-    const selectedBarcodeTypes = ["qr_code"]
+    const selectedBarcodeTypes = ['qr_code']
 
-    return { selected, options, selectedBarcodeTypes, barcodeTypes}
+    return { selected, options, selectedBarcodeTypes, barcodeTypes }
   },
 
   methods: {

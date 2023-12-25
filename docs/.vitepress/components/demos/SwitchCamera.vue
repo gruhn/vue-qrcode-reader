@@ -1,12 +1,28 @@
 <template>
   <div>
-    <p class="error" v-if="noFrontCamera">You don't seem to have a front camera on your device</p>
+    <p
+      class="error"
+      v-if="noFrontCamera"
+    >
+      You don't seem to have a front camera on your device
+    </p>
 
-    <p class="error" v-if="noRearCamera">You don't seem to have a rear camera on your device</p>
+    <p
+      class="error"
+      v-if="noRearCamera"
+    >
+      You don't seem to have a rear camera on your device
+    </p>
 
-    <qrcode-stream :constraints="{ facingMode }" @error="onError">
+    <qrcode-stream
+      :constraints="{ facingMode }"
+      @error="onError"
+    >
       <button @click="switchCamera">
-        <img :src="withBase('/camera-switch.svg')" alt="switch camera" />
+        <img
+          :src="withBase('/camera-switch.svg')"
+          alt="switch camera"
+        />
       </button>
     </qrcode-stream>
   </div>
@@ -22,7 +38,7 @@ export default {
 
   data() {
     return {
-      facingMode: 'environment',  
+      facingMode: 'environment',
       noRearCamera: false,
       noFrontCamera: false
     }

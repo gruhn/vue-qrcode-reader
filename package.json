@@ -16,7 +16,8 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "lint": "eslint **/*.{vue,js,jsx,cjs,mjs,ts,tsx,cts,mts} --fix --ignore-path .gitignore",
+    "format": "prettier **/*.{vue,js,jsx,cjs,mjs,ts,tsx,cts,mts,json,md} --write --ignore-path .gitignore --ignore-path docs/.gitignore",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
     "prepack": "pnpm run build",
     "prepare": "husky install"

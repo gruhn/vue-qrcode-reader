@@ -4,12 +4,24 @@
       Last result: <b>{{ result }}</b>
     </p>
 
-    <p v-if="error !== null" class="drop-error">
+    <p
+      v-if="error !== null"
+      class="drop-error"
+    >
       {{ error }}
     </p>
 
-    <qrcode-drop-zone @detect="onDetect" @dragover="onDragOver" @error="logErrors">
-      <div class="drop-area" :class="{ dragover: dragover }">DROP SOME IMAGES HERE</div>
+    <qrcode-drop-zone
+      @detect="onDetect"
+      @dragover="onDragOver"
+      @error="logErrors"
+    >
+      <div
+        class="drop-area"
+        :class="{ dragover: dragover }"
+      >
+        DROP SOME IMAGES HERE
+      </div>
     </qrcode-drop-zone>
   </div>
 </template>
@@ -32,9 +44,7 @@ export default {
     onDetect(detectedCodes) {
       console.log(detectedCodes)
 
-      this.result = JSON.stringify(
-        detectedCodes.map(code => code.rawValue)
-      )
+      this.result = JSON.stringify(detectedCodes.map((code) => code.rawValue))
     },
 
     logErrors(error) {

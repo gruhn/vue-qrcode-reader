@@ -44,7 +44,6 @@
     <img src="https://img.shields.io/npm/v/vue-qrcode-reader.svg" alt="npm current version">
   </a>
 
-
   <br>
 
   <a href="https://github.com/vuejs/awesome-vue">
@@ -63,9 +62,9 @@ A set of Vue.js components for detecting QR codes and [various other barcode for
 - :put_litter_in_its_place: `QrcodeDropZone` is an empty region where you can drag-and-drop images to be decoded.
 - :open_file_folder: `QrcodeCapture` is a classic file upload field, instantly scanning all files you select.
 
-All components are responsive. 
-Beyond that, close to zero styling. 
-Make them fit your layout. 
+All components are responsive.
+Beyond that, close to zero styling.
+Make them fit your layout.
 Usage is simple and straight forward:
 
 ```html
@@ -117,10 +116,10 @@ const MyComponent = {
 or register all of them globally right away
 
 ```javascript
-import Vue from "vue";
-import VueQrcodeReader from "vue-qrcode-reader";
+import Vue from 'vue'
+import VueQrcodeReader from 'vue-qrcode-reader'
 
-Vue.use(VueQrcodeReader);
+Vue.use(VueQrcodeReader)
 ```
 
 ## Without NPM
@@ -149,17 +148,17 @@ Use kebab-case to reference them in your templates:
 
 #### I don't see the camera when using `QrcodeStream`.
 
-- Check if it works on the demo page. Especially the [Handle Errors](https://vue-qrcode-reader.netlify.app/demos/HandleErrors.html) demo, 
-  since it renders error messages. 
+- Check if it works on the demo page. Especially the [Handle Errors](https://vue-qrcode-reader.netlify.app/demos/HandleErrors.html) demo,
+  since it renders error messages.
   - The demo works but it doesn't work in my project: Listen for the `error` event to investigate errors.
-  - The demo doesn't work: Carefully review the Browser Support section above. 
+  - The demo doesn't work: Carefully review the Browser Support section above.
     Maybe your device is just not supported.
 
 #### I'm running a dev server on localhost. How to test on my mobile device without HTTPS?
 
 - If your setup is Desktop Chrome + Android Chrome, use [Remote Debugging](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/) which allows your Android device to [access your local server as localhost](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/local-server).
 - Otherwise use a reverse proxy like [ngrok](https://ngrok.com/) or [serveo](https://serveo.net/) to temporarily make your local server publicly available with HTTPS.
-- There are also loads of serverless/static hosting services that have HTTPS enabled by default and where you can deploy your web app for free (e.g. *GitHub Pages*, *GitLab Pages*, *Google Firebase*, *Netlify*, *Heroku*, *ZEIT Now*, ...)
+- There are also loads of serverless/static hosting services that have HTTPS enabled by default and where you can deploy your web app for free (e.g. _GitHub Pages_, _GitLab Pages_, _Google Firebase_, _Netlify_, _Heroku_, _ZEIT Now_, ...)
 
 #### Some of my QR codes are not being detected.
 
@@ -168,28 +167,28 @@ Use kebab-case to reference them in your templates:
 
 #### How to make it work with Vue 2?
 
-Support is dropped but you can downgrade to vue-qrcode-reader v3.* or lower.
+Support is dropped but you can downgrade to vue-qrcode-reader v3.\* or lower.
 
 #### I get a "Failed to fetch" error at runtime for some Wasm file.
 
-That Wasm file implements the QR code detector. 
+That Wasm file implements the QR code detector.
 Unfortunately, it's not very convenient to bundle this file with the package.
 So by default we fetch it at runtime from a CDN.
-That's an issue for offline applications or applications that run in a network with strict CSP policy. 
+That's an issue for offline applications or applications that run in a network with strict CSP policy.
 For a workaround see: https://github.com/gruhn/vue-qrcode-reader/issues/354
 
-### `torch` is not supported on my device, although it has a flashlight.
+#### `torch` is not supported on my device, although it has a flashlight.
 
 Support for `torch` is inconsistent across devices, cameras and browsers and operating systems.
 On some devices the rear camera supports `torch` but the front camera doesn't,
 even if the front camera actually has a flashlight.
 
-Furthermore, `torch` is not supported on iOS at all (last checked iOS 17.1). 
+Furthermore, `torch` is not supported on iOS at all (last checked iOS 17.1).
 
 Visit [this page](https://vue-qrcode-reader.netlify.app/select-camera-demo.html) with your device.
-The list of links represents all cameras installed on the device. 
-If you click, the camera should be loaded. 
-Below the camera view the JSON object of "capabilities" is printed. 
+The list of links represents all cameras installed on the device.
+If you click, the camera should be loaded.
+Below the camera view the JSON object of "capabilities" is printed.
 If it doesn't contain the key/value pair `"torch": true` then flashlight is not supported for that camera.
 
 This JSON object provided as payload of the [`camera-on` event](https://vue-qrcode-reader.netlify.app/api/QrcodeStream.html#camera-on).
