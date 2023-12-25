@@ -102,15 +102,15 @@ You can import the components independantly
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader'
 
 const MyComponent = {
-
+  //
   components: {
     QrcodeStream,
     QrcodeDropZone,
     QrcodeCapture
-  },
+  }
 
   // ...
-))
+}
 ```
 
 or register all of them globally right away
@@ -164,6 +164,11 @@ Use kebab-case to reference them in your templates:
 
 - Make sure, there is some white border around the QR code.
 - Test your QR codes in the upstream packages: [`barcode-detector`](https://github.com/Sec-ant/barcode-detector) -> [`zxing-wasm`](https://github.com/Sec-ant/zxing-wasm) -> [`zxing-cpp`](https://github.com/zxing-cpp/zxing-cpp), and file detection issues in the highest-level repository where the problem first occurs.
+
+#### 1D barcodes are not being detected.
+
+The default value for the `formats` prop is `"['qr_code']"`, which reflects the setting before the `formats` prop was available.
+You'll need to add [other barcode formats](https://github.com/Sec-ant/barcode-detector?tab=readme-ov-file#barcode-detector) to this prop to detect those types of barcodes. Check out [this demo](https://vue-qrcode-reader.netlify.app/demos/CustomTrackingWithFormats.html).
 
 #### How to make it work with Vue 2?
 
