@@ -6,7 +6,10 @@
       Last result: <b>{{ result }}</b>
     </p>
 
-    <qrcode-stream @detect="onDetect" @error="onError" />
+    <qrcode-stream
+      @detect="onDetect"
+      @error="onError"
+    />
   </div>
 </template>
 
@@ -20,14 +23,14 @@ const result = ref('')
 const error = ref('')
 
 // methods
-const onDetect = detectedCodes => {
+const onDetect = (detectedCodes) => {
   console.log(detectedCodes)
 
-  const [ firstCode ] = detectedCodes
+  const [firstCode] = detectedCodes
   result.value = firstCode.rawValue
 }
 
-const onError = err => {
+const onError = (err) => {
   error.value = `[${err.name}]: `
 
   if (err.name === 'NotAllowedError') {
@@ -43,7 +46,8 @@ const onError = err => {
   } else if (err.name === 'StreamApiNotSupportedError') {
     error.value += 'Stream API is not supported in this browser'
   } else if (err.name === 'InsecureContextError') {
-    error.value += 'Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP.'
+    error.value +=
+      'Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP.'
   } else {
     error.value += err.message
   }

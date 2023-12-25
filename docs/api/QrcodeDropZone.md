@@ -6,14 +6,14 @@ The newest API this component depend on is the [FileReader API](https://caniuse.
 Vue Native is not supported (see [#206](https://github.com/gruhn/vue-qrcode-reader/issues/206)).
 
 | ![Internet Explorer](./ie_32x32.png) | ![Edge](./edge2019_32x32.png) | ![Firefox](./firefox_32x32.png) | ![Chrome](./chrome_32x32.png) | ![Safari](./safari_32x32.png) |
-| :---------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
-|                                                     10+                                                     |                                               Yes                                                |                                                  Yes                                                   |                                                 Yes                                                  |                                                 Yes                                                 |
-
+| :----------------------------------: | :---------------------------: | :-----------------------------: | :---------------------------: | :---------------------------: |
+|                 10+                  |              Yes              |               Yes               |              Yes              |              Yes              |
 
 ## Events
 
 ### `detect`
-* **Payload Type:** `DetectedBarcode[]`
+
+- **Payload Type:** `DetectedBarcode[]`
 
 You can drag-and-drop image files from your desktop or images embedded into other web pages anywhere in the area the component occupies.
 The images are directly scanned and positive results are indicated by the `detect` event.
@@ -28,9 +28,10 @@ Error events are emitted when a dropped url can't be fetched due to CORS or a dr
 
 ```html
 <qrcode-drop-zone @detect="onDetect">
-   <!-- ... -->
+  <!-- ... -->
 </qrcode-drop-zone>
 ```
+
 ```javascript
 methods: {
   onError (error) {
@@ -47,18 +48,20 @@ methods: {
 ```
 
 ### `formats` <Badge text="since v5.3.0" type="info" />
-* **Payload Type:** `BarcodeDetectorOptions['formats']`
-* **Default:** `['qr_code']`
+
+- **Payload Type:** `BarcodeDetectorOptions['formats']`
+- **Default:** `['qr_code']`
 
 The `formats` prop defines which barcode formats are detected.
- [Supported Formats](https://github.com/Sec-ant/barcode-detector?tab=readme-ov-file#barcode-detector).
+[Supported Formats](https://github.com/Sec-ant/barcode-detector?tab=readme-ov-file#barcode-detector).
 
 ```html
 <qrcode-drop-zone :formats="['qr_code', 'code_128']"></qrcode-drop-zone>
 ```
 
 ### `dragover`
-* **Payload Type:** `Boolean`
+
+- **Payload Type:** `Boolean`
 
 When the user is dragging something over the the component you might want to apply some emphasizing styling. Do that by reacting to the `dragover` event.
 
@@ -69,6 +72,7 @@ When the user is dragging something over the the component you might want to app
   </div>
 </qrcode-drop-zone>
 ```
+
 ```javascript
 data () {
   return {

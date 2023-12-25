@@ -4,9 +4,22 @@
       Last result: <b>{{ result }}</b>
     </p>
 
-    <qrcode-stream :paused="paused" @detect="onDetect" @camera-on="onCameraOn" @camera-off="onCameraOff" @error="onError">
-      <div v-show="showScanConfirmation" class="scan-confirmation">
-        <img :src="withBase('/checkmark.svg')" alt="Checkmark" width="128" />
+    <qrcode-stream
+      :paused="paused"
+      @detect="onDetect"
+      @camera-on="onCameraOn"
+      @camera-off="onCameraOff"
+      @error="onError"
+    >
+      <div
+        v-show="showScanConfirmation"
+        class="scan-confirmation"
+      >
+        <img
+          :src="withBase('/checkmark.svg')"
+          alt="Checkmark"
+          width="128"
+        />
       </div>
     </qrcode-stream>
   </div>
@@ -23,7 +36,7 @@ export default {
   data() {
     return {
       paused: false,
-      result: "",
+      result: '',
       showScanConfirmation: false
     }
   },
@@ -40,9 +53,7 @@ export default {
     onError: console.error,
 
     async onDetect(detectedCodes) {
-      this.result = JSON.stringify(
-        detectedCodes.map(code => code.rawValue)
-      )
+      this.result = JSON.stringify(detectedCodes.map((code) => code.rawValue))
 
       this.paused = true
       await this.timeout(500)

@@ -8,7 +8,6 @@ you are not prompted with a file dialog but with your camera.
 So you can directly take the picture to be uploaded.
 Adjust this behavior with the following dropdown:
 
-
 <ClientOnly>
   <DemoWrapper :component="Upload" />
 </ClientOnly>

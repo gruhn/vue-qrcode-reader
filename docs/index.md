@@ -3,7 +3,7 @@ layout: home
 titleTemplate: ':title'
 
 hero:
-  name: "Vue Qrcode Reader"
+  name: 'Vue Qrcode Reader'
   tagline: A set of Vue.js components for detecting and decoding QR codes.
   image:
     src: /logo.png
@@ -15,7 +15,6 @@ hero:
     - theme: alt
       text: View on GitHub
       link: https://github.com/gruhn/vue-qrcode-reader
-
 # features:
 #   - title: Feature A
 #     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
