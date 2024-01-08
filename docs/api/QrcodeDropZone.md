@@ -99,7 +99,19 @@ Use `detect` instead.
 
 ## Props
 
-> no props
+### `capture`
+
+- **Payload Type:** `'' | null | 'user' | 'environment'`
+- **Default:** `""`
+
+The capture attribute specifies that, optionally, a new file should be captured, and which device should be used to capture that new media of a type defined by the accept attribute.
+[html docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/capture)
+
+By default this is set to `''` to open the camera, when available. You can also provide a `null` value to disable this preset.
+
+```html
+<qrcode-drop-zone :capture="null"></qrcode-drop-zone>
+```
 
 ## Slots
 
