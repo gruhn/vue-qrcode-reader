@@ -181,3 +181,4 @@ Please create a GitHub issue from the [wrong camera selected](https://github.com
 <a href="https://browserstack.com">
   <img height="38" src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/browserstack-logo.png" alt="BrowserStack Logo">
 </a>
+
