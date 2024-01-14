@@ -29,7 +29,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "barcode-detector": "^1.0.3",
+    "barcode-detector": "2.2.2",
     "callforth": "^0.3.1",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
