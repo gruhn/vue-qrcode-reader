@@ -55,6 +55,11 @@ export default {
 
     track: {
       type: Function
+    },
+
+    formats: {
+      type: Array,
+      default: () => ["qr_code"]
     }
   },
 
@@ -170,7 +175,8 @@ export default {
       keepScanning(this.$refs.video, {
         detectHandler,
         locateHandler: this.onLocate,
-        minDelay: this.scanInterval
+        minDelay: this.scanInterval,
+        formats: this.formats
       });
     },
 
