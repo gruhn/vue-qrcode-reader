@@ -104,7 +104,7 @@ onUnmounted(() => {
   cameraController.stop()
 })
 
-// Collect all reactive values together that incluence the camera to have a
+// Collect all reactive values together that influence the camera to have a
 // single source of truth for when EXACTLY to start/stop/restart the camera.
 // The watcher on this computed value should be the only function to interact
 // with the camera directly and it should only interact with it in response to
@@ -136,6 +136,17 @@ watch(
     assert(ctx !== null, 'if cavnas is defined, canvas 2d context should also be non-null')
 
     if (cameraSettings.shouldStream) {
+      // When a camera is already loaded and then the `constraints` prop is changed, then
+      //  => both `cameraActive.value` and `cameraSettings.shouldStream` stay `true`
+      //  => so `shouldScan` does not change and thus
+      //  => and thus the watcher on `shouldScan` is not triggered
+      //  => and finally we don't start a new scanning process
+      // So in this interaction scanning breaks. To prevent that we explicitly set `cameraActive`
+      // to `false` here. That is not just a hack but also makes semantically sense, because 
+      // the camera is briefly inactive right before requesting a new camera.
+      cameraController.stop()
+      cameraActive.value = false
+
       // start camera
       try {
         // Usually, when the component is destroyed the `onUnmounted` hook takes care of stopping the camera.
