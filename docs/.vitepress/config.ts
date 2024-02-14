@@ -15,7 +15,7 @@ export default withPwa(
       },
       nav: [
         { text: 'Home', link: '/' },
-        { text: 'Live Demos', link: '/demos/CustomTracking' },
+        { text: 'Live Demos', link: '/demos/FullDemo' },
         { text: 'API Reference', link: '/api/QrcodeStream' }
       ],
       search: {
@@ -24,20 +24,12 @@ export default withPwa(
       sidebar: {
         '/demos/': [
           {
+            text: 'Full Demo',
+            link: '/demos/FullDemo'
+          },
+          {
             text: 'Simple',
             link: '/demos/Simple'
-          },
-          {
-            text: 'Handle Errors',
-            link: '/demos/HandleErrors'
-          },
-          {
-            text: 'Visual Tracking',
-            link: '/demos/CustomTracking'
-          },
-          {
-            text: 'Visual Tracking with Formats',
-            link: '/demos/CustomTrackingWithFormats'
           },
           {
             text: 'Show Loading Indicator',
@@ -64,17 +56,13 @@ export default withPwa(
             link: '/demos/Torch'
           },
           {
-            text: 'Enumerate Cameras',
-            link: '/demos/DeviceId'
-          },
-          {
             text: 'Decode by Drag&Drop',
             link: '/demos/DragDrop'
           },
           {
             text: 'Decode by Upload',
             link: '/demos/Upload'
-          }
+          },
         ],
         '/api/': [
           {

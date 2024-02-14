@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: See Demos →
-      link: /demos/CustomTracking
+      link: /demos/FullDemo
     - theme: alt
       text: View on GitHub
       link: https://github.com/gruhn/vue-qrcode-reader

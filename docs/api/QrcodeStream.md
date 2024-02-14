@@ -216,7 +216,7 @@ To enable this feature, pass a function to `track` that defines how this should 
 This function is called to produce each frame.
 It receives the location object as the first argument and a `CanvasRenderingContext2D` instance as the second argument.
 
-For example check out the [Custom Tracking Demo](../demos/CustomTracking.md)
+For example check out [this demo](../demos/FullDemo.md).
 
 Note that this scanning frequency has to be increased.
 So if you want to go easy on your target device you might not want to enable tracking.
