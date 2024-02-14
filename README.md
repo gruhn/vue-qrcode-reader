@@ -52,7 +52,7 @@
 
   <br>
   <br>
-  <a href="https://vue-qrcode-reader.netlify.app/demos/CustomTracking.html">live demos</a> |
+  <a href="https://vue-qrcode-reader.netlify.app/demos/FullDemo.html">live demos</a> |
   <a href="https://vue-qrcode-reader.netlify.app/api/QrcodeStream.html">api reference</a>
 </p>
 
@@ -168,7 +168,8 @@ Use kebab-case to reference them in your templates:
 #### 1D barcodes are not being detected.
 
 The default value for the `formats` prop is `"['qr_code']"`, which reflects the setting before the `formats` prop was available.
-You'll need to add [other barcode formats](https://github.com/Sec-ant/barcode-detector?tab=readme-ov-file#barcode-detector) to this prop to detect those types of barcodes. Check out [this demo](https://vue-qrcode-reader.netlify.app/demos/CustomTrackingWithFormats.html).
+You'll need to add [other barcode formats](https://github.com/Sec-ant/barcode-detector?tab=readme-ov-file#barcode-detector) to this prop to detect those types of barcodes. 
+Check out [this demo](https://vue-qrcode-reader.netlify.app/demos/FullDemo.html).
 
 #### How to make it work with Vue 2?
 
