@@ -1,11 +1,10 @@
 <template>
   <div>
     <p>
-      Modern mobile phones often have a variety of different cameras installed (e.g. front, rear, wide-angle, infrared, desk-view). 
-      The one picked by default is sometimes not the best choice. 
-      If you want fine-grained control, which camera is used, 
-      you can enumerate all installed cameras and then pick the one you need based 
-      on it's device ID:
+      Modern mobile phones often have a variety of different cameras installed (e.g. front, rear,
+      wide-angle, infrared, desk-view). The one picked by default is sometimes not the best choice.
+      If you want fine-grained control, which camera is used, you can enumerate all installed
+      cameras and then pick the one you need based on it's device ID:
 
       <select v-model="selectedDevice">
         <option
@@ -19,11 +18,15 @@
     </p>
 
     <p>
-      Detected codes are visually highlighted in real-time. 
-      Use the following dropdown to change the flavor:
+      Detected codes are visually highlighted in real-time. Use the following dropdown to change the
+      flavor:
 
       <select v-model="trackFunctionSelected">
-        <option v-for="option in trackFunctionOptions" :key="option.text" :value="option">
+        <option
+          v-for="option in trackFunctionOptions"
+          :key="option.text"
+          :value="option"
+        >
           {{ option.text }}
         </option>
       </select>
@@ -31,13 +34,21 @@
 
     <p>
       By default only QR-codes are detected but a variety of other barcode formats are also
-      supported. You can select one or multiple but the more you select the more expensive 
-      scanning becomes: <br>
+      supported. You can select one or multiple but the more you select the more expensive scanning
+      becomes: <br />
 
-      <span v-for="option in Object.keys(barcodeFormats)" :key="option" class="barcode-format-checkbox">
-        <input type="checkbox" v-model="barcodeFormats[option]" :id="option" /> 
+      <span
+        v-for="option in Object.keys(barcodeFormats)"
+        :key="option"
+        class="barcode-format-checkbox"
+      >
+        <input
+          type="checkbox"
+          v-model="barcodeFormats[option]"
+          :id="option"
+        />
         <label :for="option">{{ option }}</label>
-      </span>     
+      </span>
     </p>
 
     <p class="error">{{ error }}</p>
@@ -55,7 +66,10 @@
         @detect="onDetect"
         v-if="selectedDevice !== null"
       />
-      <p v-else class="error">
+      <p
+        v-else
+        class="error"
+      >
         No cameras on this device
       </p>
     </div>
@@ -72,7 +86,7 @@ const result = ref('')
 
 function onDetect(detectedCodes) {
   console.log(detectedCodes)
-  result.value = JSON.stringify(detectedCodes.map(code => code.rawValue))
+  result.value = JSON.stringify(detectedCodes.map((code) => code.rawValue))
 }
 
 /*** select camera ***/
@@ -150,31 +164,30 @@ const trackFunctionSelected = ref(trackFunctionOptions[1])
 /*** barcode formats ***/
 
 const barcodeFormats = ref({
-  'aztec': false,
-  'code_128': false,
-  'code_39': false,
-  'code_93': false,
-  'codabar': false,
-  'databar': false,
-  'databar_expanded': false,
-  'data_matrix': false,
-  'dx_film_edge': false,
-  'ean_13': false,
-  'ean_8': false,
-  'itf': false,
-  'maxi_code': false,
-  'micro_qr_code': false,
-  'pdf417': false,
-  'qr_code': true,
-  'rm_qr_code': false,
-  'upc_a': false,
-  'upc_e': false,
-  'linear_codes': false,
-  'matrix_codes': false,
+  aztec: false,
+  code_128: false,
+  code_39: false,
+  code_93: false,
+  codabar: false,
+  databar: false,
+  databar_expanded: false,
+  data_matrix: false,
+  dx_film_edge: false,
+  ean_13: false,
+  ean_8: false,
+  itf: false,
+  maxi_code: false,
+  micro_qr_code: false,
+  pdf417: false,
+  qr_code: true,
+  rm_qr_code: false,
+  upc_a: false,
+  upc_e: false,
+  linear_codes: false,
+  matrix_codes: false
 })
 const selectedBarcodeFormats = computed(() => {
-  return Object.keys(barcodeFormats.value)
-    .filter(format => barcodeFormats.value[format])
+  return Object.keys(barcodeFormats.value).filter((format) => barcodeFormats.value[format])
 })
 
 /*** error handling ***/
@@ -197,12 +210,12 @@ function onError(err) {
   } else if (err.name === 'StreamApiNotSupportedError') {
     error.value += 'Stream API is not supported in this browser'
   } else if (err.name === 'InsecureContextError') {
-    error.value += 'Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP.'
+    error.value +=
+      'Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP.'
   } else {
     error.value += err.message
   }
 }
-
 </script>
 
 <style scoped>

@@ -43,7 +43,10 @@ The `formats` prop defines which barcode formats are detected.
 <qrcode-capture :formats="['qr_code', 'code_128']"></qrcode-capture>
 ```
 
-Checkout the components template of `QrcodeCapture`:
+### `disabled`, `capture`, `multiple`, ...
+
+Technically, `QrcodeCapture` does not explicitly define any other props.
+But checkout the components template:
 
 ```html
 <template>
@@ -58,30 +61,14 @@ Checkout the components template of `QrcodeCapture`:
 </template>
 ```
 
-Because the `input` element is the root element of the component and because Vue components accept [non-prop attributes](https://vuejs.org/v2/guide/components-props.html#Non-Prop-Attributes) you can make use of any valid `input` attribute:
+Because the `input` element is the root element of the component and because Vue components accept [fallthrough attributes](https://vuejs.org/guide/components/attrs.html#fallthrough-attributes) you can make use of any valid `input` attribute:
 
 ```html
 <qrcode-capture disabled />
 ```
 
-You can even remove or replace already defined attributes:
-
-```html
-<qrcode-capture
-  :multiple="false"
-  capture="user"
-/>
-```
-
-### `capture`
-
-- **Payload Type:** `'' | null | 'user' | 'environment'`
-- **Default:** `""`
-
-The capture attribute specifies that, optionally, a new file should be captured, and which device should be used to capture that new media of a type defined by the accept attribute.
-[html docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/capture)
-
-By default this is set to `''` to open the camera, when available. You can also provide a `null` value to disable this preset.
+You can also override attributes.
+To remove attributes, set them to `null`:
 
 ```html
 <qrcode-capture :capture="null" />
