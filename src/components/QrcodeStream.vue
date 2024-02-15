@@ -43,7 +43,6 @@ import {
   computed,
   onMounted,
   ref,
-  toRefs,
   watch,
   type PropType,
   type CSSProperties
@@ -55,12 +54,14 @@ import type { Point } from '../types/types'
 import { assert } from '../misc/util'
 
 const props = defineProps({
+  // in this file: don't use `props.constraints` directly. Use `constraintsCached`.
   constraints: {
     type: Object as PropType<MediaTrackConstraints>,
     default() {
       return { facingMode: 'environment' } as MediaTrackConstraints
     }
   },
+  // in this file: don't use `props.formats` directly. Use `formatsCached`.
   formats: {
     type: Array as PropType<BarcodeFormat[]>,
     default: () => ['qr_code'] as BarcodeFormat[]
@@ -79,6 +80,56 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['detect', 'camera-on', 'camera-off', 'error'])
+
+// Props like `constraints` and `formats` which carry non-primitive values might receive
+// structurally equal updates. For example, let `constraints` be the variable that is
+// passed to `QrcodeStream`:
+//
+//     <qrcode-stream :constraints="constraints" />
+//
+// and imagine the `script` section looks like this:
+//
+//     const constraints = ref({})
+//
+//     setInterval(() => {
+//       constraints.value = { deviceId: 'whatever' }
+//     }, 100)
+//
+// This would keep triggering updates in `QrcodeStream` although the constraints don't
+// actually change. This is because the assigned object is referencially different every
+// time and Vue only checks referencial equality. A less contrived example where this
+// happens is when the template looks like this:
+//
+//     <qrcode-stream :constraints="{ deviceId: 'whatever' }" />
+//
+// Whenever Vue re-evaluates the passed object it creates a referencially different copy.
+//
+// To avoid this problem we maintain "cached" versions of these props and only update
+// them when we detect strucural changes.
+const constraintsCached = ref(props.constraints)
+const formatsCached = ref(props.formats)
+
+watch(
+  () => props.constraints,
+  (newConstraints, oldConstraints) => {
+    // Only update `constraintsCached` if the new constraints object is strucurally different.
+    if (JSON.stringify(newConstraints) !== JSON.stringify(oldConstraints)) {
+      constraintsCached.value = newConstraints
+    }
+  },
+  { deep: true }
+)
+
+watch(
+  () => props.formats,
+  (newFormats, oldFormats) => {
+    // Only update `formatsCached` if the new formats object is strucurally different.
+    if (JSON.stringify(newFormats) !== JSON.stringify(oldFormats)) {
+      formatsCached.value = newFormats
+    }
+  },
+  { deep: true }
+)
 
 // DOM refs
 const pauseFrameRef = ref<HTMLCanvasElement>()
@@ -112,14 +163,14 @@ onUnmounted(() => {
 const cameraSettings = computed(() => {
   return {
     torch: props.torch,
-    constraints: props.constraints,
+    constraints: constraintsCached.value,
     shouldStream: isMounted.value && !props.paused
   }
 })
 
 watch(
   cameraSettings,
-  async (cameraSettings) => {
+  async (newSettings) => {
     const videoEl = videoRef.value
     assert(
       videoEl !== undefined,
@@ -135,14 +186,14 @@ watch(
     const ctx = canvas.getContext('2d')
     assert(ctx !== null, 'if cavnas is defined, canvas 2d context should also be non-null')
 
-    if (cameraSettings.shouldStream) {
+    if (newSettings.shouldStream) {
       // When a camera is already loaded and then the `constraints` prop is changed, then
       //  => both `cameraActive.value` and `cameraSettings.shouldStream` stay `true`
       //  => so `shouldScan` does not change and thus
       //  => and thus the watcher on `shouldScan` is not triggered
       //  => and finally we don't start a new scanning process
       // So in this interaction scanning breaks. To prevent that we explicitly set `cameraActive`
-      // to `false` here. That is not just a hack but also makes semantically sense, because 
+      // to `false` here. That is not just a hack but also makes semantically sense, because
       // the camera is briefly inactive right before requesting a new camera.
       cameraController.stop()
       cameraActive.value = false
@@ -152,7 +203,7 @@ watch(
         // Usually, when the component is destroyed the `onUnmounted` hook takes care of stopping the camera.
         // However, if the component is destroyed while we are in the middle of starting the camera, then
         // the `onUnmounted` hook might fire before the following promise resolves ...
-        const capabilities = await cameraController.start(videoEl, cameraSettings)
+        const capabilities = await cameraController.start(videoEl, newSettings)
         // ... thus we check whether the component is still alive right after the promise resolves and stop
         // the camera otherwise.
         if (!isMounted.value) {
@@ -181,8 +232,7 @@ watch(
 )
 
 // Set formats will create a new BarcodeDetector instance with the given formats.
-const { formats: propFormats } = toRefs(props)
-watch(propFormats, (formats) => {
+watch(formatsCached, (formats) => {
   if (isMounted.value) {
     setScanningFormats(formats)
   }
@@ -223,7 +273,7 @@ watch(shouldScan, (shouldScan) => {
     )
     keepScanning(videoRef.value, {
       detectHandler: (detectedCodes: DetectedBarcode[]) => emit('detect', detectedCodes),
-      formats: props.formats,
+      formats: formatsCached.value,
       locateHandler: onLocate,
       minDelay: scanInterval()
     })

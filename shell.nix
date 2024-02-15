@@ -6,6 +6,7 @@ pkgs.mkShell {
     nodejs_18
     nodePackages.pnpm
     nodePackages.typescript-language-server
+    nodePackages.volar
   ];
-  
+
 }
