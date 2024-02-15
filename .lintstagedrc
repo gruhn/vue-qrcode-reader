@@ -1,4 +1,4 @@
 {
-  "**/*.{vue,js,jsx,cjs,mjs,ts,tsx,cts,mts}": ["pnpm lint"],
-  "**/*.{vue,js,jsx,cjs,mjs,ts,tsx,cts,mts,json,md}": ["pnpm format"]
+  "**/*.{vue,ts}": ["pnpm lint"],
+  "**/*.{vue,ts,json,md}": ["pnpm format"]
 }
