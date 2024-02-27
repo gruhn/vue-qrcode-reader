@@ -11,6 +11,8 @@ cameras: <br>
 <ul></ul>
 <br>
 <video autoplay muted playsinline></video>
+<h3>Capabilities:</h3>
+<pre id="capabilities"></pre>
 
 <script>
 const listEl = document.querySelector("ul")
@@ -23,10 +25,11 @@ const renderOptions = (currentDeviceId, devices) => {
     .map(({ label, deviceId }) => {
       const el = document.createElement('li')
 
-      if (deviceId == currentDeviceId)
-        el.innerHTML = `<a href="#" onclick="selectCamera('${deviceId}')">${label}</a> [PREFERRED]`
-      else
+      if (deviceId == currentDeviceId) {
         el.innerHTML = `<a href="#" onclick="selectCamera('${deviceId}')">${label}</a>`
+      } else {
+        el.innerHTML = `<a href="#" onclick="selectCamera('${deviceId}')">${label}</a>`
+      }
 
       return el
     })
@@ -65,6 +68,9 @@ const selectCamera = async deviceId => {
       videoTrack.getSettings().deviceId,
       await navigator.mediaDevices.enumerateDevices()
     )
+
+    const capEl = document.querySelector("#capabilities")
+    capEl.innerText = JSON.stringify(videoTrack.getCapabilities(), null, 2)
   } catch (error) {
     console.error(error)
   }
