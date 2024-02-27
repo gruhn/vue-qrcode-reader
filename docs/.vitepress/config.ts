@@ -109,7 +109,7 @@ export default withPwa(
     pwa: {
       mode: 'development',
       base: VITEPRESS_BASE,
-      scope: '/',
+      scope: VITEPRESS_BASE,
       registerType: 'autoUpdate',
       // injectRegister: 'inline',
       includeAssets: ['favicon.svg'],
