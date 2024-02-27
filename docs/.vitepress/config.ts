@@ -1,6 +1,12 @@
 import { defineConfig } from 'vitepress'
 import { withPwa } from '@vite-pwa/vitepress'
 
+const { VITEPRESS_BASE } = process.env
+
+if (VITEPRESS_BASE === undefined) {
+  throw new Error('env var VITEPRESS_BASE is undefined')
+}
+
 export default withPwa(
   defineConfig({
     description: 'A set of Vue.js components for detecting and decoding QR codes.',
@@ -101,7 +107,7 @@ export default withPwa(
     },
     pwa: {
       mode: 'development',
-      base: `/${process.env.VITEPRESS_BASE ?? ''}`,
+      base: `/${VITEPRESS_BASE}`,
       scope: '/',
       registerType: 'autoUpdate',
       // injectRegister: 'inline',
