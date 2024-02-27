@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://vue-qrcode-reader.netlify.app/logo.png" alt="Logo" width="240" height="240" style="max-width: 100%;">
+  <img src="https://gruhn.github.io/vue-qrcode-reader/logo.png" alt="Logo" width="240" height="240" style="max-width: 100%;">
 
   <br>
   <br>
@@ -52,8 +52,8 @@
 
   <br>
   <br>
-  <a href="https://vue-qrcode-reader.netlify.app/demos/FullDemo.html">live demos</a> |
-  <a href="https://vue-qrcode-reader.netlify.app/api/QrcodeStream.html">api reference</a>
+  <a href="https://gruhn.github.io/vue-qrcode-reader/demos/FullDemo.html">live demos</a> |
+  <a href="https://gruhn.github.io/vue-qrcode-reader/api/QrcodeStream.html">api reference</a>
 </p>
 
 A set of Vue.js components for detecting QR codes and [various other barcode formats](https://github.com/Sec-ant/barcode-detector?tab=readme-ov-file#barcode-detector) right in the browser:
@@ -148,7 +148,7 @@ Use kebab-case to reference them in your templates:
 
 #### I don't see the camera when using `QrcodeStream`.
 
-- Check if it works on the demo page. Especially the [Handle Errors](https://vue-qrcode-reader.netlify.app/demos/HandleErrors.html) demo,
+- Check if it works on the demo page. Especially the [Handle Errors](https://gruhn.github.io/vue-qrcode-reader/demos/HandleErrors.html) demo,
   since it renders error messages.
   - The demo works but it doesn't work in my project: Listen for the `error` event to investigate errors.
   - The demo doesn't work: Carefully review the Browser Support section above.
@@ -169,7 +169,7 @@ Use kebab-case to reference them in your templates:
 
 The default value for the `formats` prop is `"['qr_code']"`, which reflects the setting before the `formats` prop was available.
 You'll need to add [other barcode formats](https://github.com/Sec-ant/barcode-detector?tab=readme-ov-file#barcode-detector) to this prop to detect those types of barcodes. 
-Check out [this demo](https://vue-qrcode-reader.netlify.app/demos/FullDemo.html).
+Check out [this demo](https://gruhn.github.io/vue-qrcode-reader/demos/FullDemo.html).
 
 #### How to make it work with Vue 2?
 
@@ -191,10 +191,10 @@ even if the front camera actually has a flashlight.
 
 Furthermore, `torch` is not supported on iOS at all (last checked iOS 17.1).
 
-Visit [this page](https://vue-qrcode-reader.netlify.app/select-camera-demo.html) with your device.
+Visit [this page](https://gruhn.github.io/vue-qrcode-reader/select-camera-demo.html) with your device.
 The list of links represents all cameras installed on the device.
 If you click, the camera should be loaded.
 Below the camera view the JSON object of "capabilities" is printed.
 If it doesn't contain the key/value pair `"torch": true` then flashlight is not supported for that camera.
 
-This JSON object provided as payload of the [`camera-on` event](https://vue-qrcode-reader.netlify.app/api/QrcodeStream.html#camera-on).
+This JSON object provided as payload of the [`camera-on` event](https://gruhn.github.io/vue-qrcode-reader/api/QrcodeStream.html#camera-on).
