@@ -22,7 +22,7 @@ jobs:
           cache: pnpm
       - name: Install & Build
         env: 
-          VITEPRESS_BASE: vue-qrcode-reader
+          VITEPRESS_BASE: /vue-qrcode-reader/
         run: |
           pnpm install
           pnpm run build
