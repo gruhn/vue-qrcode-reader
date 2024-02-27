@@ -31,7 +31,7 @@ jobs:
       - name: Install & Build
         if: github.event.action != 'closed' # You might want to skip the build if the PR has been closed
         env: 
-          VITEPRESS_BASE: /vue-qrcode-reader/pr-preview/pr-422/
+          VITEPRESS_BASE: /vue-qrcode-reader/pr-preview/pr-${{ github.event.number }}/
         run: |
           pnpm install
           pnpm run build
