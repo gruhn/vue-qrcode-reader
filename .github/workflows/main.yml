@@ -33,6 +33,7 @@ jobs:
           branch: gh-pages
           folder: docs/.vitepress/dist
           clean-exclude: pr-preview
+          force: false
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
