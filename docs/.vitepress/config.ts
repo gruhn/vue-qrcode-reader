@@ -101,7 +101,7 @@ export default withPwa(
     },
     pwa: {
       mode: 'development',
-      base: '/',
+      base: `/${process.env.VITEPRESS_BASE ?? ''}`,
       scope: '/',
       registerType: 'autoUpdate',
       // injectRegister: 'inline',
