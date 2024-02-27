@@ -12,7 +12,7 @@ Clone the repository and run
 pnpm install
 ```
 
-We use a locally served version of the [demo page](https://vue-qrcode-reader.netlify.app/) during development.
+We use a locally served version of the [demo page](https://gruhn.github.io/vue-qrcode-reader/) during development.
 To get that started run
 
 ```

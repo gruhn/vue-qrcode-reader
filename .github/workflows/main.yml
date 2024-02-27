@@ -21,15 +21,19 @@ jobs:
           node-version: 18
           cache: pnpm
       - name: Install & Build
+        env: 
+          VITEPRESS_BASE: /vue-qrcode-reader/
         run: |
           pnpm install
           pnpm run build
-      #     pnpm run docs:build
-      # - name: Deploy Docs
-      #   uses: JamesIves/github-pages-deploy-action@4.1.4
-      #   with:
-      #     branch: gh-pages
-      #     folder: docs/.vitepress/dist
+          pnpm run docs:build
+      - name: Deploy Docs
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: docs/.vitepress/dist
+          clean-exclude: pr-preview
+          force: false
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

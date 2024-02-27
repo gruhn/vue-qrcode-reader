@@ -1,11 +1,18 @@
 import { defineConfig } from 'vitepress'
 import { withPwa } from '@vite-pwa/vitepress'
 
+const { VITEPRESS_BASE } = process.env
+
+if (VITEPRESS_BASE === undefined) {
+  throw new Error('env var VITEPRESS_BASE is undefined')
+}
+
 export default withPwa(
   defineConfig({
     description: 'A set of Vue.js components for detecting and decoding QR codes.',
     lang: 'en-US',
     lastUpdated: true,
+    base: VITEPRESS_BASE,
     themeConfig: {
       editLink: {
         pattern: 'https://github.com/gruhn/vue-qrcode-reader/edit/main/docs/:path'
@@ -101,8 +108,8 @@ export default withPwa(
     },
     pwa: {
       mode: 'development',
-      base: '/',
-      scope: '/',
+      base: VITEPRESS_BASE,
+      scope: VITEPRESS_BASE,
       registerType: 'autoUpdate',
       // injectRegister: 'inline',
       includeAssets: ['favicon.svg'],

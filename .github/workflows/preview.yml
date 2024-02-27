@@ -1,0 +1,43 @@
+# https://github.com/rossjrw/pr-preview-action
+name: deploy preview docs
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+
+concurrency: preview-${{ github.ref }}
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - run: corepack enable
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: Install & Build
+        if: github.event.action != 'closed' # You might want to skip the build if the PR has been closed
+        env: 
+          VITEPRESS_BASE: /vue-qrcode-reader/pr-preview/pr-${{ github.event.number }}/
+        run: |
+          pnpm install
+          pnpm run build
+          pnpm run docs:build
+
+      - name: Deploy
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./docs/.vitepress/dist/
