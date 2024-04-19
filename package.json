@@ -24,11 +24,11 @@
   },
   "main": "./dist/vue-qrcode-reader.js",
   "module": "./dist/vue-qrcode-reader.js",
-  "unpkg": "./dist/vue-qrcode-reader.umd.cjs",
+  "unpkg": "./dist/vue-qrcode-reader.umd.js",
   "exports": {
     ".": {
       "import": "./dist/vue-qrcode-reader.js",
-      "require": "./dist/vue-qrcode-reader.umd.cjs",
+      "require": "./dist/vue-qrcode-reader.umd.js",
       "types": "./dist/index.d.ts"
     }
   },
