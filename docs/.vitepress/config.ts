@@ -1,11 +1,10 @@
 import { defineConfig } from 'vitepress'
 import { withPwa } from '@vite-pwa/vitepress'
 
-const { VITEPRESS_BASE } = process.env
-
-if (VITEPRESS_BASE === undefined) {
-  throw new Error('env var VITEPRESS_BASE is undefined')
+if (process.env.VITEPRESS_BASE === undefined) {
+  console.warn('env var VITEPRESS_BASE is undefined. Defaulting to: /vue-qrcode-reader/')
 }
+const { VITEPRESS_BASE } = process.env ?? '/vue-qrcode-reader/'
 
 export default withPwa(
   defineConfig({
@@ -69,7 +68,7 @@ export default withPwa(
           {
             text: 'Decode by Upload',
             link: '/demos/Upload'
-          },
+          }
         ],
         '/api/': [
           {

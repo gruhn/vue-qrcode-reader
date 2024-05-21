@@ -29,6 +29,11 @@ async function runStartTask(
   constraints: MediaTrackConstraints,
   torch: boolean
 ): Promise<StartTaskResult> {
+  console.debug(
+    '[vue-qrcode-reader] starting camera with constraints: ',
+    JSON.stringify(constraints)
+  )
+
   // At least in Chrome `navigator.mediaDevices` is undefined when the page is
   // loaded using HTTP rather than HTTPS. Thus `STREAM_API_NOT_SUPPORTED` is
   // initialized with `false` although the API might actually be supported.
@@ -47,6 +52,7 @@ async function runStartTask(
   // is not available during SSR. So we lazily apply this shim at runtime.
   shimGetUserMedia()
 
+  console.debug('[vue-qrcode-reader] calling getUserMedia')
   const stream = await navigator.mediaDevices.getUserMedia({
     audio: false,
     video: constraints
@@ -69,6 +75,7 @@ async function runStartTask(
   // unless video is explictly triggered by play()
   videoEl.play()
 
+  console.debug('[vue-qrcode-reader] waiting for video element to load')
   await Promise.race([
     eventOn(videoEl, 'loadeddata'),
 
@@ -82,6 +89,7 @@ async function runStartTask(
       throw new StreamLoadTimeoutError()
     })
   ])
+  console.debug('[vue-qrcode-reader] video element loaded')
 
   // According to: https://oberhofer.co/mediastreamtrack-and-its-capabilities/#queryingcapabilities
   // On some devices, getCapabilities only returns a non-empty object after
@@ -98,6 +106,7 @@ async function runStartTask(
     isTorchOn = true
   }
 
+  console.debug('[vue-qrcode-reader] camera ready')
   return {
     type: 'start',
     data: {
@@ -174,6 +183,8 @@ async function runStopTask(
   stream: MediaStream,
   isTorchOn: boolean
 ): Promise<StopTaskResult> {
+  console.debug('[vue-qrcode-reader] stopping camera')
+
   videoEl.src = ''
   videoEl.srcObject = null
   videoEl.load()
