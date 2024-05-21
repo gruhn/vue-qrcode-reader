@@ -27,12 +27,15 @@ export const keepScanning = async (
     formats: BarcodeFormat[]
   }
 ) => {
+  console.debug('[vue-qrcode-reader] start scanning')
   barcodeDetector = new BarcodeDetector({ formats })
 
   const processFrame =
     (state: { lastScanned: number; contentBefore: string[]; lastScanHadContent: boolean }) =>
     async (timeNow: number) => {
-      if (videoElement.readyState > 1) {
+      if (videoElement.readyState === 0) {
+        console.debug('[vue-qrcode-reader] stop scanning: video element readyState is 0')
+      } else {
         const { lastScanned, contentBefore, lastScanHadContent } = state
 
         // Scanning is expensive and we don't need to scan camera frames with

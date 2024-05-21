@@ -5,17 +5,27 @@
       wide-angle, infrared, desk-view). The one picked by default is sometimes not the best choice.
       If you want fine-grained control, which camera is used, you can enumerate all installed
       cameras and then pick the one you need based on it's device ID:
-
-      <select v-model="selectedDevice">
-        <option
-          v-for="device in devices"
-          :key="device.label"
-          :value="device"
-        >
-          {{ device.label }}
-        </option>
-      </select>
     </p>
+
+    <p
+      class="error"
+      v-if="availableDevices === null"
+    >
+      No cameras on this device
+    </p>
+
+    <select
+      v-model="selectedDevice"
+      v-else
+    >
+      <option
+        v-for="device in availableDevices"
+        :key="device.deviceId"
+        :value="device"
+      >
+        {{ device.label }} (ID: {{ device.deviceId }})
+      </option>
+    </select>
 
     <p>
       Detected codes are visually highlighted in real-time. Use the following dropdown to change the
@@ -59,25 +69,19 @@
 
     <div>
       <qrcode-stream
-        :constraints="{ deviceId: selectedDevice.deviceId }"
+        :constraints="constraints"
         :track="trackFunctionSelected.value"
         :formats="selectedBarcodeFormats"
         @error="onError"
         @detect="onDetect"
-        v-if="selectedDevice !== null"
+        @camera-on="onCameraReady"
       />
-      <p
-        v-else
-        class="error"
-      >
-        No cameras on this device
-      </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { QrcodeStream } from '../../../../src'
 
 /*** detection handling ***/
@@ -92,15 +96,23 @@ function onDetect(detectedCodes) {
 /*** select camera ***/
 
 const selectedDevice = ref(null)
-const devices = ref([])
+const availableDevices = ref(null)
 
-onMounted(async () => {
-  devices.value = (await navigator.mediaDevices.enumerateDevices()).filter(
+async function onCameraReady() {
+  // NOTE: on iOS we can't invoke `enumerateDevices` before the user has given
+  // camera access permission. `QrcodeStream` internally takes care of
+  // requesting the permissions. The `camera-on` event should guarantee that this
+  // has happened.
+  availableDevices.value = (await navigator.mediaDevices.enumerateDevices()).filter(
     ({ kind }) => kind === 'videoinput'
   )
+}
 
-  if (devices.value.length > 0) {
-    selectedDevice.value = devices.value[0]
+const constraints = computed(() => {
+  if (selectedDevice.value === null) {
+    return { facingMode: 'environment' }
+  } else {
+    return { deviceId: selectedDevice.value.deviceId }
   }
 })
 
@@ -226,5 +238,6 @@ function onError(err) {
 .barcode-format-checkbox {
   margin-right: 10px;
   white-space: nowrap;
+  display: inline-block;
 }
 </style>
