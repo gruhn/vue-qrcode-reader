@@ -79,16 +79,16 @@ define(['./workbox-ab7aa862'], (function (workbox) { 'use strict';
    */
   workbox.precacheAndRoute([{
     "url": "404.html",
-    "revision": "cf3ec8cc5a235e3ade0471b445309ca8"
+    "revision": "5dd264f1477ae6302d46067860b31714"
   }, {
     "url": "api/QrcodeCapture.html",
-    "revision": "b207cffb23ca6861047c0c29486a6275"
+    "revision": "26c75844fc2c7bc5e9e8fb7455238be5"
   }, {
     "url": "api/QrcodeDropZone.html",
-    "revision": "643f749512e27b47f7442a0baf533098"
+    "revision": "fea65981337c5c59c2dba6223db8ac71"
   }, {
     "url": "api/QrcodeStream.html",
-    "revision": "1834a3327c3ff1825710f62ec5b3c50e"
+    "revision": "fbbec9f2ef2bd457f3a30f0f3d314ac2"
   }, {
     "url": "assets/api_QrcodeCapture.md.K8nQxfcl.js",
     "revision": null
@@ -108,10 +108,10 @@ define(['./workbox-ab7aa862'], (function (workbox) { 'use strict';
     "url": "assets/api_QrcodeStream.md.9pj1-1Le.lean.js",
     "revision": null
   }, {
-    "url": "assets/app.JiQiGU7Q.js",
+    "url": "assets/app.5KyQpN7e.js",
     "revision": null
   }, {
-    "url": "assets/chunks/@localSearchIndexroot.bR3PSPz_.js",
+    "url": "assets/chunks/@localSearchIndexroot.vfdG9mSG.js",
     "revision": null
   }, {
     "url": "assets/chunks/camera.3ic2P8Pl.js",
@@ -126,10 +126,10 @@ define(['./workbox-ab7aa862'], (function (workbox) { 'use strict';
     "url": "assets/chunks/safari_32x32.yJUh4Fxj.js",
     "revision": null
   }, {
-    "url": "assets/chunks/theme.EGkWRawO.js",
+    "url": "assets/chunks/theme.5DzwVrUI.js",
     "revision": null
   }, {
-    "url": "assets/chunks/VPLocalSearchBox.ObaPRhIW.js",
+    "url": "assets/chunks/VPLocalSearchBox.2MkrhxI8.js",
     "revision": null
   }, {
     "url": "assets/demos_DragDrop.md.LmTPQeej.js",
@@ -138,10 +138,10 @@ define(['./workbox-ab7aa862'], (function (workbox) { 'use strict';
     "url": "assets/demos_DragDrop.md.LmTPQeej.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_FullDemo.md.H4_0Xhbw.js",
+    "url": "assets/demos_FullDemo.md.HXnQTtY_.js",
     "revision": null
   }, {
-    "url": "assets/demos_FullDemo.md.H4_0Xhbw.lean.js",
+    "url": "assets/demos_FullDemo.md.HXnQTtY_.lean.js",
     "revision": null
   }, {
     "url": "assets/demos_Fullscreen.md.fWtnCPrq.js",
@@ -240,7 +240,7 @@ define(['./workbox-ab7aa862'], (function (workbox) { 'use strict';
     "url": "assets/inter-roman-vietnamese.paY3CzEB.woff2",
     "revision": null
   }, {
-    "url": "assets/style.INXcgHq2.css",
+    "url": "assets/style.x4FbZIEs.css",
     "revision": null
   }, {
     "url": "camera-switch.svg",
@@ -253,34 +253,34 @@ define(['./workbox-ab7aa862'], (function (workbox) { 'use strict';
     "revision": "baffbefe1bde1d10f0c089b20f0cb9ed"
   }, {
     "url": "demos/DragDrop.html",
-    "revision": "ea6be4e39506fbee03ce044621b96b84"
+    "revision": "120c005e9c683198ebcb655d0333ec74"
   }, {
     "url": "demos/FullDemo.html",
-    "revision": "a146b7cd001daf65968db17942724bf5"
+    "revision": "1e485e214c61a72e76759b221152474d"
   }, {
     "url": "demos/Fullscreen.html",
-    "revision": "87e9350bc5a7f73cd4bfdf907f5f5e42"
+    "revision": "f502e6814f00d7cd1c53016006814ddb"
   }, {
     "url": "demos/LoadingIndicator.html",
-    "revision": "36ae1b4a3baf9f989c695d7837225e5a"
+    "revision": "68b3b0295e7599d90342fbe8505d78b8"
   }, {
     "url": "demos/ScanSameQrcodeMoreThanOnce.html",
-    "revision": "1e3821b270e19e02156b6845253ce072"
+    "revision": "80196062e773876d3fc269ce8891f9f7"
   }, {
     "url": "demos/Simple.html",
-    "revision": "725c7b3a5a28e994aa7730e173005d01"
+    "revision": "e5310f6cb30aa4ea7d35f8441e8f3f02"
   }, {
     "url": "demos/SwitchCamera.html",
-    "revision": "e0134ba06d59460f55877af1edd0b6da"
+    "revision": "f98e51e1311bfad1ddee826758657837"
   }, {
     "url": "demos/Torch.html",
-    "revision": "3d1100a2c849cbfdf2c54c7026ce8d45"
+    "revision": "5fac6cbcf0cfa9faec20a0e76b82e9a5"
   }, {
     "url": "demos/Upload.html",
-    "revision": "189049b47cc72b04bbd121d66aa18f76"
+    "revision": "7f33b8e0bb4494bd7d1b899547ad08fd"
   }, {
     "url": "demos/Validate.html",
-    "revision": "8c8c52e1e12c2357e2dc78a081b5e47a"
+    "revision": "23c7a0bb5a1853a4974e1638e32be409"
   }, {
     "url": "flash-off.svg",
     "revision": "8b05f5dcd6712992a544b34520ec7262"
@@ -295,7 +295,7 @@ define(['./workbox-ab7aa862'], (function (workbox) { 'use strict';
     "revision": "432c44f09de0b4e0f9e236fad9b8c7f9"
   }, {
     "url": "index.html",
-    "revision": "7069b35d5dc7e61178e05b2e72c0328d"
+    "revision": "2d69a76f8bde2e183bb3ad23ee9edc79"
   }, {
     "url": "logo.png",
     "revision": "5f0c1d6358641bc48207acb9fa0b6182"
