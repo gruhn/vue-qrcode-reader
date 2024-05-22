@@ -4,7 +4,7 @@ import { withPwa } from '@vite-pwa/vitepress'
 if (process.env.VITEPRESS_BASE === undefined) {
   console.warn('env var VITEPRESS_BASE is undefined. Defaulting to: /vue-qrcode-reader/')
 }
-const { VITEPRESS_BASE } = process.env ?? '/vue-qrcode-reader/'
+const { VITEPRESS_BASE = '/vue-qrcode-reader/' } = process.env
 
 export default withPwa(
   defineConfig({
