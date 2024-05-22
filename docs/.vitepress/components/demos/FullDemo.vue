@@ -3,29 +3,19 @@
     <p>
       Modern mobile phones often have a variety of different cameras installed (e.g. front, rear,
       wide-angle, infrared, desk-view). The one picked by default is sometimes not the best choice.
-      If you want fine-grained control, which camera is used, you can enumerate all installed
-      cameras and then pick the one you need based on it's device ID:
-    </p>
+      For more fine-grained control, you can select a camera by device constraints or by the device
+      ID:
 
-    <p
-      class="error"
-      v-if="availableDevices === null"
-    >
-      No cameras on this device
+      <select v-model="selectedConstraints">
+        <option
+          v-for="option in constraintOptions"
+          :key="option.label"
+          :value="option.constraints"
+        >
+          {{ option.label }}
+        </option>
+      </select>
     </p>
-
-    <select
-      v-model="selectedDevice"
-      v-else
-    >
-      <option
-        v-for="device in availableDevices"
-        :key="device.deviceId"
-        :value="device"
-      >
-        {{ device.label }} (ID: {{ device.deviceId }})
-      </option>
-    </select>
 
     <p>
       Detected codes are visually highlighted in real-time. Use the following dropdown to change the
@@ -69,7 +59,7 @@
 
     <div>
       <qrcode-stream
-        :constraints="constraints"
+        :constraints="selectedConstraints"
         :track="trackFunctionSelected.value"
         :formats="selectedBarcodeFormats"
         @error="onError"
@@ -95,26 +85,31 @@ function onDetect(detectedCodes) {
 
 /*** select camera ***/
 
-const selectedDevice = ref(null)
-const availableDevices = ref(null)
+const selectedConstraints = ref({ facingMode: 'environment' })
+const defaultConstraintOptions = [
+  { label: 'rear camera', constraints: { facingMode: 'environment' } },
+  { label: 'front camera', constraints: { facingMode: 'user' } }
+]
+const constraintOptions = ref(defaultConstraintOptions)
 
 async function onCameraReady() {
   // NOTE: on iOS we can't invoke `enumerateDevices` before the user has given
   // camera access permission. `QrcodeStream` internally takes care of
   // requesting the permissions. The `camera-on` event should guarantee that this
   // has happened.
-  availableDevices.value = (await navigator.mediaDevices.enumerateDevices()).filter(
-    ({ kind }) => kind === 'videoinput'
-  )
-}
+  const devices = await navigator.mediaDevices.enumerateDevices()
+  const videoDevices = devices.filter(({ kind }) => kind === 'videoinput')
 
-const constraints = computed(() => {
-  if (selectedDevice.value === null) {
-    return { facingMode: 'environment' }
-  } else {
-    return { deviceId: selectedDevice.value.deviceId }
-  }
-})
+  constraintOptions.value = [
+    ...defaultConstraintOptions,
+    ...videoDevices.map(({ deviceId, label }) => ({
+      label: `${label} (ID: ${deviceId})`,
+      constraints: { deviceId }
+    }))
+  ]
+
+  error.value = ''
+}
 
 /*** track functons ***/
 

@@ -45,3 +45,7 @@ export function assert(condition: boolean, failureMessage?: string): asserts con
     throw new Error(failureMessage ?? 'assertion failure')
   }
 }
+
+export function assertNever(_witness: never): never {
+  throw new Error('this code should be unreachable')
+}

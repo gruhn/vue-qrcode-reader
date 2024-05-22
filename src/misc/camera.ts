@@ -1,8 +1,9 @@
 import { StreamApiNotSupportedError, InsecureContextError, StreamLoadTimeoutError } from './errors'
 import { eventOn, timeout } from './callforth'
 import shimGetUserMedia from './shimGetUserMedia'
+import { assertNever } from './util'
 
-interface StartTaskResult {
+type StartTaskResult = {
   type: 'start'
   data: {
     videoEl: HTMLVideoElement
@@ -13,12 +14,17 @@ interface StartTaskResult {
   }
 }
 
-interface StopTaskResult {
+type StopTaskResult = {
   type: 'stop'
   data: {}
 }
 
-type TaskResult = StartTaskResult | StopTaskResult
+type FailedTask = {
+  type: 'failed'
+  error: Error
+}
+
+type TaskResult = StartTaskResult | StopTaskResult | FailedTask
 
 let taskQueue: Promise<TaskResult> = Promise.resolve({ type: 'stop', data: {} })
 
@@ -132,50 +138,65 @@ export async function start(
   }
 ): Promise<Partial<MediaTrackCapabilities>> {
   // update the task queue synchronously
-  taskQueue = taskQueue.then((prevTaskResult) => {
-    if (prevTaskResult.type === 'start') {
-      // previous task is a start task
-      // we'll check if we can reuse the previous result
-      const {
-        data: {
-          videoEl: prevVideoEl,
-          stream: prevStream,
-          constraints: prevConstraints,
-          isTorchOn: prevIsTorchOn
+  taskQueue = taskQueue
+    .then((prevTaskResult) => {
+      if (prevTaskResult.type === 'start') {
+        // previous task is a start task
+        // we'll check if we can reuse the previous result
+        const {
+          data: {
+            videoEl: prevVideoEl,
+            stream: prevStream,
+            constraints: prevConstraints,
+            isTorchOn: prevIsTorchOn
+          }
+        } = prevTaskResult
+        // TODO: Should we keep this object comparison
+        // this code only checks object sameness not equality
+        // deep comparison requires snapshots and value by value check
+        // which seem too much
+        if (
+          !restart &&
+          videoEl === prevVideoEl &&
+          constraints === prevConstraints &&
+          torch === prevIsTorchOn
+        ) {
+          // things didn't change, reuse the previous result
+          return prevTaskResult
         }
-      } = prevTaskResult
-      // TODO: Should we keep this object comparison
-      // this code only checks object sameness not equality
-      // deep comparison requires snapshots and value by value check
-      // which seem too much
-      if (
-        !restart &&
-        videoEl === prevVideoEl &&
-        constraints === prevConstraints &&
-        torch === prevIsTorchOn
-      ) {
-        // things didn't change, reuse the previous result
-        return prevTaskResult
+        // something changed, restart (stop then start)
+        return runStopTask(prevVideoEl, prevStream, prevIsTorchOn).then(() =>
+          runStartTask(videoEl, constraints, torch)
+        )
+      } else if (prevTaskResult.type === 'stop' || prevTaskResult.type === 'failed') {
+        // previous task is a stop/error task
+        // we can safely start
+        return runStartTask(videoEl, constraints, torch)
       }
-      // something changed, restart (stop then start)
-      return runStopTask(prevVideoEl, prevStream, prevIsTorchOn).then(() =>
-        runStartTask(videoEl, constraints, torch)
-      )
-    }
-    // previous task is a stop task
-    // we can safely start
-    return runStartTask(videoEl, constraints, torch)
-  })
+
+      assertNever(prevTaskResult)
+    })
+    .catch((error: Error) => {
+      console.debug(`[vue-qrcode-reader] starting camera failed with "${error}"`)
+      return { type: 'failed', error }
+    })
+
   // await the task queue asynchronously
   const taskResult = await taskQueue
+
   if (taskResult.type === 'stop') {
     // we just synchronously updated the task above
     // to make the latest task a start task
     // so this case shouldn't happen
     throw new Error('Something went wrong with the camera task queue (start task).')
+  } else if (taskResult.type === 'failed') {
+    throw taskResult.error
+  } else if (taskResult.type === 'start') {
+    // return the data we want
+    return taskResult.data.capabilities
   }
-  // return the data we want
-  return taskResult.data.capabilities
+
+  assertNever(taskResult)
 }
 
 async function runStopTask(
@@ -208,7 +229,7 @@ async function runStopTask(
 export async function stop() {
   // update the task queue synchronously
   taskQueue = taskQueue.then((prevTaskResult) => {
-    if (prevTaskResult.type === 'stop') {
+    if (prevTaskResult.type === 'stop' || prevTaskResult.type === 'failed') {
       // previous task is a stop task
       // no need to stop again
       return prevTaskResult
