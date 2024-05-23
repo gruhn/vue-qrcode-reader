@@ -3,30 +3,104 @@ import { eventOn, timeout } from './callforth'
 import shimGetUserMedia from './shimGetUserMedia'
 import { assertNever } from './util'
 
-type StartTaskResult = {
-  type: 'start'
-  data: {
-    videoEl: HTMLVideoElement
-    stream: MediaStream
-    capabilities: Partial<MediaTrackCapabilities>
-    constraints: MediaTrackConstraints
-    isTorchOn: boolean
+type CameraState = CameraStopped | CameraStopping | CameraError | CameraStarting | CameraStarted
+
+let state: CameraState = { kind: 'stopped' }
+
+type CameraStopped = { 
+  kind: 'stopped'
+}
+
+type CameraStopping = { 
+  kind: 'stopping'
+  task: Promise<CameraStopped>
+}
+
+type CameraError = { 
+  kind: 'error'
+  reason: Error
+}
+
+type CameraStarting = {
+  kind: 'starting'
+  task: Promise<CameraStarted>
+}
+
+type CameraStarted = {
+  kind: 'started'
+  capabilities: Partial<MediaTrackCapabilities>
+  videoEl: HTMLVideoElement,
+  stream: MediaStream
+  constraints: MediaTrackConstraints,
+  isTorchOn: boolean
+}
+
+export async function start(
+  videoEl: HTMLVideoElement,
+  constraints: MediaTrackConstraints,
+  torch: boolean
+): Promise<Partial<MediaTrackCapabilities>> {
+  if (state.kind === 'stopped' || state.kind === 'error') {
+    const task = runStartTask(videoEl, constraints, torch)
+    state = { kind: 'starting', task }
+    try { 
+      state = await task
+      return state.capabilities
+    } catch (error) {
+      state = { kind: 'error', reason: error }
+      throw error
+    }
+  } 
+  
+  if (state.kind === 'stopping' || state.kind === 'starting') {   
+    // camera still actively stopping/starting ==> await pending task and try again
+    await state.task
+    return start(videoEl, constraints, torch)
+  } 
+  
+  if (state.kind === 'started') {
+    await stop()
+    return start(videoEl, constraints, torch)
   }
+
+  // generate type error if not all cases are covered:
+  assertNever(state)
 }
 
-type StopTaskResult = {
-  type: 'stop'
-  data: {}
+export async function stop(): Promise<void> {
+  if (state.kind === 'stopped' || state.kind === 'error') {
+    console.warn(`[vue-qrcode-reader] tried to stop camera although it's already stopped`)
+    return
+  } 
+  
+  if (state.kind === 'stopping') {
+    console.warn(`[vue-qrcode-reader] tried to stop camera although it's already in the process of stopping`)
+    await state.task
+    return
+  }
+
+  if (state.kind === 'starting') {
+    // camera actively starting ==> await pending task and try again
+    await state.task
+    return stop()
+  }
+  
+  if (state.kind === 'started') {
+    const task: Promise<CameraStopped> = runStopTask(state)
+    state = { kind: 'stopping', task }
+    try {
+      state = await task
+      return
+    } catch (error) {
+      console.error(`[vue-qrcode-reader] error while trying to stop camera: "${error}"`)
+      state = { kind: 'error', reason: error }      
+      throw error
+    }
+  }
+
+  // generate type error if not all cases are covered:
+  assertNever(state)
 }
-
-type FailedTask = {
-  type: 'failed'
-  error: Error
-}
-
-type TaskResult = StartTaskResult | StopTaskResult | FailedTask
-
-let taskQueue: Promise<TaskResult> = Promise.resolve({ type: 'stop', data: {} })
 
 type CreateObjectURLCompat = (obj: MediaSource | Blob | MediaStream) => string
 
@@ -34,7 +108,7 @@ async function runStartTask(
   videoEl: HTMLVideoElement,
   constraints: MediaTrackConstraints,
   torch: boolean
-): Promise<StartTaskResult> {
+): Promise<CameraStarted> {
   console.debug(
     '[vue-qrcode-reader] starting camera with constraints: ',
     JSON.stringify(constraints)
@@ -112,98 +186,18 @@ async function runStartTask(
     isTorchOn = true
   }
 
-  console.debug('[vue-qrcode-reader] camera ready')
+  console.debug('[vue-qrcode-reader] camera started')
   return {
-    type: 'start',
-    data: {
-      videoEl,
-      stream,
-      capabilities,
-      constraints,
-      isTorchOn
-    }
-  }
-}
-
-export async function start(
-  videoEl: HTMLVideoElement,
-  {
+    kind: 'started',
+    videoEl,
+    stream,
+    capabilities,
     constraints,
-    torch,
-    restart = false
-  }: {
-    constraints: MediaTrackConstraints
-    torch: boolean
-    restart?: boolean
+    isTorchOn
   }
-): Promise<Partial<MediaTrackCapabilities>> {
-  // update the task queue synchronously
-  taskQueue = taskQueue
-    .then((prevTaskResult) => {
-      if (prevTaskResult.type === 'start') {
-        // previous task is a start task
-        // we'll check if we can reuse the previous result
-        const {
-          data: {
-            videoEl: prevVideoEl,
-            stream: prevStream,
-            constraints: prevConstraints,
-            isTorchOn: prevIsTorchOn
-          }
-        } = prevTaskResult
-        // TODO: Should we keep this object comparison
-        // this code only checks object sameness not equality
-        // deep comparison requires snapshots and value by value check
-        // which seem too much
-        if (
-          !restart &&
-          videoEl === prevVideoEl &&
-          constraints === prevConstraints &&
-          torch === prevIsTorchOn
-        ) {
-          // things didn't change, reuse the previous result
-          return prevTaskResult
-        }
-        // something changed, restart (stop then start)
-        return runStopTask(prevVideoEl, prevStream, prevIsTorchOn).then(() =>
-          runStartTask(videoEl, constraints, torch)
-        )
-      } else if (prevTaskResult.type === 'stop' || prevTaskResult.type === 'failed') {
-        // previous task is a stop/error task
-        // we can safely start
-        return runStartTask(videoEl, constraints, torch)
-      }
-
-      assertNever(prevTaskResult)
-    })
-    .catch((error: Error) => {
-      console.debug(`[vue-qrcode-reader] starting camera failed with "${error}"`)
-      return { type: 'failed', error }
-    })
-
-  // await the task queue asynchronously
-  const taskResult = await taskQueue
-
-  if (taskResult.type === 'stop') {
-    // we just synchronously updated the task above
-    // to make the latest task a start task
-    // so this case shouldn't happen
-    throw new Error('Something went wrong with the camera task queue (start task).')
-  } else if (taskResult.type === 'failed') {
-    throw taskResult.error
-  } else if (taskResult.type === 'start') {
-    // return the data we want
-    return taskResult.data.capabilities
-  }
-
-  assertNever(taskResult)
 }
 
-async function runStopTask(
-  videoEl: HTMLVideoElement,
-  stream: MediaStream,
-  isTorchOn: boolean
-): Promise<StopTaskResult> {
+async function runStopTask({ videoEl, stream, isTorchOn }: CameraStarted): Promise<CameraStopped> {
   console.debug('[vue-qrcode-reader] stopping camera')
 
   videoEl.src = ''
@@ -220,31 +214,5 @@ async function runStopTask(
     track.stop()
   }
 
-  return {
-    type: 'stop',
-    data: {}
-  }
-}
-
-export async function stop() {
-  // update the task queue synchronously
-  taskQueue = taskQueue.then((prevTaskResult) => {
-    if (prevTaskResult.type === 'stop' || prevTaskResult.type === 'failed') {
-      // previous task is a stop task
-      // no need to stop again
-      return prevTaskResult
-    }
-    const {
-      data: { videoEl, stream, isTorchOn }
-    } = prevTaskResult
-    return runStopTask(videoEl, stream, isTorchOn)
-  })
-  // await the task queue asynchronously
-  const taskResult = await taskQueue
-  if (taskResult.type === 'start') {
-    // we just synchronously updated the task above
-    // to make the latest task a stop task
-    // so this case shouldn't happen
-    throw new Error('Something went wrong with the camera task queue (stop task).')
-  }
+  return { kind: 'stopped' }
 }

@@ -203,7 +203,7 @@ watch(
         // Usually, when the component is destroyed the `onUnmounted` hook takes care of stopping the camera.
         // However, if the component is destroyed while we are in the middle of starting the camera, then
         // the `onUnmounted` hook might fire before the following promise resolves ...
-        const capabilities = await cameraController.start(videoEl, newSettings)
+        const capabilities = await cameraController.start(videoEl, newSettings.constraints, newSettings.torch)
         // ... thus we check whether the component is still alive right after the promise resolves and stop
         // the camera otherwise.
         if (!isMounted.value) {
