@@ -79,16 +79,16 @@ define(['./workbox-ab7aa862'], (function (workbox) { 'use strict';
    */
   workbox.precacheAndRoute([{
     "url": "404.html",
-    "revision": "423be37ab7f81a5ca4b6b3440ae125bf"
+    "revision": "00534a993df28a3caeb8ce9a28e591f4"
   }, {
     "url": "api/QrcodeCapture.html",
-    "revision": "7fe1163406eae655dfed24912989b491"
+    "revision": "eb92f9f12f1e672a16a95fc7c7ce9242"
   }, {
     "url": "api/QrcodeDropZone.html",
-    "revision": "744fa88f74ace9257e8f7bf9a049aa3e"
+    "revision": "8dc2d0ebece839e59e27f53c57908520"
   }, {
     "url": "api/QrcodeStream.html",
-    "revision": "e747561b7cf6dc0b4c9a26206d709868"
+    "revision": "e9081dadcb341f402f09f9f7684139f2"
   }, {
     "url": "assets/api_QrcodeCapture.md.sR1mAq-a.js",
     "revision": null
@@ -253,34 +253,34 @@ define(['./workbox-ab7aa862'], (function (workbox) { 'use strict';
     "revision": "baffbefe1bde1d10f0c089b20f0cb9ed"
   }, {
     "url": "demos/DragDrop.html",
-    "revision": "bd56d3ee872c52d5fa063a9d67d78afe"
+    "revision": "3e74140622adc585c87c14242d59f1a9"
   }, {
     "url": "demos/FullDemo.html",
-    "revision": "54fae39fa374f4550120d7df9b82d785"
+    "revision": "79e3f87e55786429ef6966044c3eecb9"
   }, {
     "url": "demos/Fullscreen.html",
-    "revision": "45886a337eda3bac0bc74337e8f7cef6"
+    "revision": "8557ba332f9650be74611629e99dd86e"
   }, {
     "url": "demos/LoadingIndicator.html",
-    "revision": "a4fe6737e009c003dbe0a94cde9cac1e"
+    "revision": "4566feb3ef30643d4dc64d54bf269368"
   }, {
     "url": "demos/ScanSameQrcodeMoreThanOnce.html",
-    "revision": "4927ac99671c1f445b85d8cf2696e473"
+    "revision": "1926cca63cfca6143779d5e0971f30bd"
   }, {
     "url": "demos/Simple.html",
-    "revision": "ff360f11946d29a1e1a451f2a17331ef"
+    "revision": "849357f1e83c39b003a96f1f1e7d06b1"
   }, {
     "url": "demos/SwitchCamera.html",
-    "revision": "478a83bd6422ad739691e1966a1c765b"
+    "revision": "e1e04cda3065b8b96039a1e1ed44b7ba"
   }, {
     "url": "demos/Torch.html",
-    "revision": "281a97ab07aa5dd1b4bc1e702e6ced65"
+    "revision": "9ac99572607cafb6c8a2d7aae8539257"
   }, {
     "url": "demos/Upload.html",
-    "revision": "d1772632ca432dc188834e3cfefa1815"
+    "revision": "d33875c67ac3811017597d75522cb399"
   }, {
     "url": "demos/Validate.html",
-    "revision": "96d1bdf0fbaefbdaf7d6f5ea223a0720"
+    "revision": "7783edede722804acc9ba780f1b09a9a"
   }, {
     "url": "flash-off.svg",
     "revision": "8b05f5dcd6712992a544b34520ec7262"
@@ -295,7 +295,7 @@ define(['./workbox-ab7aa862'], (function (workbox) { 'use strict';
     "revision": "432c44f09de0b4e0f9e236fad9b8c7f9"
   }, {
     "url": "index.html",
-    "revision": "e8aa354f66caad9d8e496b30ef80ac25"
+    "revision": "eadcdcdd8479cb4fdcfc9fb12e55bba8"
   }, {
     "url": "logo.png",
     "revision": "5f0c1d6358641bc48207acb9fa0b6182"
