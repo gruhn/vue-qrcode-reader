@@ -26,3 +26,4 @@ jobs:
         stale-pr-message: 'This pull request has been marked as stale. If there is no further activity it will be closed.'
         stale-issue-label: 'no-issue-activity'
         stale-pr-label: 'no-pr-activity'
+        exempt-issue-labels: 'dont-mark-stale'
