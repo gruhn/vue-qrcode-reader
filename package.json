@@ -18,7 +18,7 @@
     "docs:preview": "vitepress preview docs",
     "format": "prettier **/*.{vue,ts,json,md} --write --ignore-path .gitignore --ignore-path docs/.gitignore",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
-    "prepack": "pnpm run build",
+    "prepack": "pnpm run build"
   },
   "main": "./dist/vue-qrcode-reader.js",
   "module": "./dist/vue-qrcode-reader.js",
