@@ -67,7 +67,7 @@ if (!self.define) {
     });
   };
 }
-define(['./workbox-ab7aa862'], (function (workbox) { 'use strict';
+define(['./workbox-5199072c'], (function (workbox) { 'use strict';
 
   self.skipWaiting();
   workbox.clientsClaim();
@@ -79,168 +79,168 @@ define(['./workbox-ab7aa862'], (function (workbox) { 'use strict';
    */
   workbox.precacheAndRoute([{
     "url": "404.html",
-    "revision": "00534a993df28a3caeb8ce9a28e591f4"
+    "revision": "7b6481d899107c341b917ec217474895"
   }, {
     "url": "api/QrcodeCapture.html",
-    "revision": "eb92f9f12f1e672a16a95fc7c7ce9242"
+    "revision": "9f10870480eabe1521996ed93a4e5f72"
   }, {
     "url": "api/QrcodeDropZone.html",
-    "revision": "8dc2d0ebece839e59e27f53c57908520"
+    "revision": "e7ab1955ff0ce94847d03edfb6aa632e"
   }, {
     "url": "api/QrcodeStream.html",
-    "revision": "e9081dadcb341f402f09f9f7684139f2"
+    "revision": "21573588c9793f252e678eb21741556a"
   }, {
-    "url": "assets/api_QrcodeCapture.md.sR1mAq-a.js",
+    "url": "assets/api_QrcodeCapture.md.C7iqouC7.js",
     "revision": null
   }, {
-    "url": "assets/api_QrcodeCapture.md.sR1mAq-a.lean.js",
+    "url": "assets/api_QrcodeCapture.md.C7iqouC7.lean.js",
     "revision": null
   }, {
-    "url": "assets/api_QrcodeDropZone.md.D1zfaQTS.js",
+    "url": "assets/api_QrcodeDropZone.md.CZZURXxz.js",
     "revision": null
   }, {
-    "url": "assets/api_QrcodeDropZone.md.D1zfaQTS.lean.js",
+    "url": "assets/api_QrcodeDropZone.md.CZZURXxz.lean.js",
     "revision": null
   }, {
-    "url": "assets/api_QrcodeStream.md.FBB5XLYT.js",
+    "url": "assets/api_QrcodeStream.md.DnuBzp6K.js",
     "revision": null
   }, {
-    "url": "assets/api_QrcodeStream.md.FBB5XLYT.lean.js",
+    "url": "assets/api_QrcodeStream.md.DnuBzp6K.lean.js",
     "revision": null
   }, {
-    "url": "assets/app.mG-UXtyz.js",
+    "url": "assets/app.Dfu3t2eG.js",
     "revision": null
   }, {
-    "url": "assets/chunks/@localSearchIndexroot.uExXiyF-.js",
+    "url": "assets/chunks/@localSearchIndexroot.DBcb1Hh6.js",
     "revision": null
   }, {
-    "url": "assets/chunks/camera.C_CT0OCu.js",
+    "url": "assets/chunks/camera.C5yEuDPB.js",
     "revision": null
   }, {
-    "url": "assets/chunks/framework.x2t6Mwc1.js",
+    "url": "assets/chunks/framework.BwCxet3-.js",
     "revision": null
   }, {
-    "url": "assets/chunks/QrcodeStream.vue_vue_type_script_setup_true_lang.o6Pqnnr5.js",
+    "url": "assets/chunks/QrcodeStream.vue_vue_type_script_setup_true_lang.DEKLPwsC.js",
     "revision": null
   }, {
-    "url": "assets/chunks/safari_32x32.yJUh4Fxj.js",
+    "url": "assets/chunks/safari_32x32.Bkuv9jEj.js",
     "revision": null
   }, {
-    "url": "assets/chunks/theme.O00lm7U1.js",
+    "url": "assets/chunks/theme.DxuAWb2U.js",
     "revision": null
   }, {
-    "url": "assets/chunks/VPLocalSearchBox.S58zDlPv.js",
+    "url": "assets/chunks/VPLocalSearchBox.Dk2OJKTE.js",
     "revision": null
   }, {
-    "url": "assets/demos_DragDrop.md.nfFegZ5t.js",
+    "url": "assets/demos_DragDrop.md.fcrZg2Fe.js",
     "revision": null
   }, {
-    "url": "assets/demos_DragDrop.md.nfFegZ5t.lean.js",
+    "url": "assets/demos_DragDrop.md.fcrZg2Fe.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_FullDemo.md.-B0HWJY-.js",
+    "url": "assets/demos_FullDemo.md.jmkwVxvJ.js",
     "revision": null
   }, {
-    "url": "assets/demos_FullDemo.md.-B0HWJY-.lean.js",
+    "url": "assets/demos_FullDemo.md.jmkwVxvJ.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_Fullscreen.md.FTQ89c31.js",
+    "url": "assets/demos_Fullscreen.md.sCAwa0lj.js",
     "revision": null
   }, {
-    "url": "assets/demos_Fullscreen.md.FTQ89c31.lean.js",
+    "url": "assets/demos_Fullscreen.md.sCAwa0lj.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_LoadingIndicator.md.E9FPZ-Hz.js",
+    "url": "assets/demos_LoadingIndicator.md.BqFycQZ_.js",
     "revision": null
   }, {
-    "url": "assets/demos_LoadingIndicator.md.E9FPZ-Hz.lean.js",
+    "url": "assets/demos_LoadingIndicator.md.BqFycQZ_.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_ScanSameQrcodeMoreThanOnce.md.o9vGiY18.js",
+    "url": "assets/demos_ScanSameQrcodeMoreThanOnce.md.D7rzlybC.js",
     "revision": null
   }, {
-    "url": "assets/demos_ScanSameQrcodeMoreThanOnce.md.o9vGiY18.lean.js",
+    "url": "assets/demos_ScanSameQrcodeMoreThanOnce.md.D7rzlybC.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_Simple.md.k6Yj_n1R.js",
+    "url": "assets/demos_Simple.md.BCBYY3fY.js",
     "revision": null
   }, {
-    "url": "assets/demos_Simple.md.k6Yj_n1R.lean.js",
+    "url": "assets/demos_Simple.md.BCBYY3fY.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_SwitchCamera.md.CgA9h4Ej.js",
+    "url": "assets/demos_SwitchCamera.md.QGG2W18j.js",
     "revision": null
   }, {
-    "url": "assets/demos_SwitchCamera.md.CgA9h4Ej.lean.js",
+    "url": "assets/demos_SwitchCamera.md.QGG2W18j.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_Torch.md.DOZq7-7A.js",
+    "url": "assets/demos_Torch.md.R6bRlqfK.js",
     "revision": null
   }, {
-    "url": "assets/demos_Torch.md.DOZq7-7A.lean.js",
+    "url": "assets/demos_Torch.md.R6bRlqfK.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_Upload.md.gDoyH4YK.js",
+    "url": "assets/demos_Upload.md.BO0OFwB_.js",
     "revision": null
   }, {
-    "url": "assets/demos_Upload.md.gDoyH4YK.lean.js",
+    "url": "assets/demos_Upload.md.BO0OFwB_.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_Validate.md.8A_dxuye.js",
+    "url": "assets/demos_Validate.md.DC1csbFk.js",
     "revision": null
   }, {
-    "url": "assets/demos_Validate.md.8A_dxuye.lean.js",
+    "url": "assets/demos_Validate.md.DC1csbFk.lean.js",
     "revision": null
   }, {
-    "url": "assets/index.md.Dn-jsskv.js",
+    "url": "assets/index.md.HnahRfcr.js",
     "revision": null
   }, {
-    "url": "assets/index.md.Dn-jsskv.lean.js",
+    "url": "assets/index.md.HnahRfcr.lean.js",
     "revision": null
   }, {
-    "url": "assets/inter-italic-cyrillic-ext.OVycGSDq.woff2",
+    "url": "assets/inter-italic-cyrillic-ext.5XJwZIOp.woff2",
     "revision": null
   }, {
-    "url": "assets/inter-italic-cyrillic.-nLMcIwj.woff2",
+    "url": "assets/inter-italic-cyrillic.D6csxwjC.woff2",
     "revision": null
   }, {
-    "url": "assets/inter-italic-greek-ext.hznxWNZO.woff2",
+    "url": "assets/inter-italic-greek-ext.CHOfFY1k.woff2",
     "revision": null
   }, {
-    "url": "assets/inter-italic-greek.PSfer2Kc.woff2",
+    "url": "assets/inter-italic-greek.9J96vYpw.woff2",
     "revision": null
   }, {
-    "url": "assets/inter-italic-latin-ext.RnFly65-.woff2",
+    "url": "assets/inter-italic-latin-ext.BGcWXLrn.woff2",
     "revision": null
   }, {
-    "url": "assets/inter-italic-latin.27E69YJn.woff2",
+    "url": "assets/inter-italic-latin.DbsTr1gm.woff2",
     "revision": null
   }, {
-    "url": "assets/inter-italic-vietnamese.xzQHe1q1.woff2",
+    "url": "assets/inter-italic-vietnamese.DHNAd7Wr.woff2",
     "revision": null
   }, {
-    "url": "assets/inter-roman-cyrillic-ext.8T9wMG5w.woff2",
+    "url": "assets/inter-roman-cyrillic-ext.DxP3Awbn.woff2",
     "revision": null
   }, {
-    "url": "assets/inter-roman-cyrillic.jIZ9REo5.woff2",
+    "url": "assets/inter-roman-cyrillic.CMhn1ESj.woff2",
     "revision": null
   }, {
-    "url": "assets/inter-roman-greek-ext.9JiNzaSO.woff2",
+    "url": "assets/inter-roman-greek-ext.D0mI3NpI.woff2",
     "revision": null
   }, {
-    "url": "assets/inter-roman-greek.Cb5wWeGA.woff2",
+    "url": "assets/inter-roman-greek.JvnBZ4YD.woff2",
     "revision": null
   }, {
-    "url": "assets/inter-roman-latin-ext.GZWE-KO4.woff2",
+    "url": "assets/inter-roman-latin-ext.ZlYT4o7i.woff2",
     "revision": null
   }, {
-    "url": "assets/inter-roman-latin.bvIUbFQP.woff2",
+    "url": "assets/inter-roman-latin.Bu8hRsVA.woff2",
     "revision": null
   }, {
-    "url": "assets/inter-roman-vietnamese.paY3CzEB.woff2",
+    "url": "assets/inter-roman-vietnamese.ClpjcLMQ.woff2",
     "revision": null
   }, {
-    "url": "assets/style.MbpX481q.css",
+    "url": "assets/style.CPAitQMZ.css",
     "revision": null
   }, {
     "url": "camera-switch.svg",
@@ -253,34 +253,34 @@ define(['./workbox-ab7aa862'], (function (workbox) { 'use strict';
     "revision": "baffbefe1bde1d10f0c089b20f0cb9ed"
   }, {
     "url": "demos/DragDrop.html",
-    "revision": "3e74140622adc585c87c14242d59f1a9"
+    "revision": "ca4d05534049cf34b9c35328f1ab0fe7"
   }, {
     "url": "demos/FullDemo.html",
-    "revision": "79e3f87e55786429ef6966044c3eecb9"
+    "revision": "30245539ecbd635eec2f8ca6a5855519"
   }, {
     "url": "demos/Fullscreen.html",
-    "revision": "8557ba332f9650be74611629e99dd86e"
+    "revision": "2b3f478174bbde73bb2ccddfc8e4f924"
   }, {
     "url": "demos/LoadingIndicator.html",
-    "revision": "4566feb3ef30643d4dc64d54bf269368"
+    "revision": "d2f3a85fdb951be9b1e496f54eb9e17e"
   }, {
     "url": "demos/ScanSameQrcodeMoreThanOnce.html",
-    "revision": "1926cca63cfca6143779d5e0971f30bd"
+    "revision": "91c5318e8e52d4c70587ccc4bfcd81aa"
   }, {
     "url": "demos/Simple.html",
-    "revision": "849357f1e83c39b003a96f1f1e7d06b1"
+    "revision": "cf5f7105156180dbd770ae9a8afa9988"
   }, {
     "url": "demos/SwitchCamera.html",
-    "revision": "e1e04cda3065b8b96039a1e1ed44b7ba"
+    "revision": "e08e3f4b75fb425be3f714bf79f458e1"
   }, {
     "url": "demos/Torch.html",
-    "revision": "9ac99572607cafb6c8a2d7aae8539257"
+    "revision": "c68b37334fc15120fd245794f6fbae33"
   }, {
     "url": "demos/Upload.html",
-    "revision": "d33875c67ac3811017597d75522cb399"
+    "revision": "38bc583d6ecb14545017bb256459eb9c"
   }, {
     "url": "demos/Validate.html",
-    "revision": "7783edede722804acc9ba780f1b09a9a"
+    "revision": "789a1345c19c5f71faada7079227e908"
   }, {
     "url": "flash-off.svg",
     "revision": "8b05f5dcd6712992a544b34520ec7262"
@@ -295,7 +295,7 @@ define(['./workbox-ab7aa862'], (function (workbox) { 'use strict';
     "revision": "432c44f09de0b4e0f9e236fad9b8c7f9"
   }, {
     "url": "index.html",
-    "revision": "eadcdcdd8479cb4fdcfc9fb12e55bba8"
+    "revision": "f09cf2e01fe391e283471767fb75ede0"
   }, {
     "url": "logo.png",
     "revision": "5f0c1d6358641bc48207acb9fa0b6182"
