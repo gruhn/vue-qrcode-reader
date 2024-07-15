@@ -1,5 +1,0 @@
-#!/bin/sh
-# shellcheck source=./_/husky.sh
-. "$(dirname "$(readlink -f "$0")")/_/husky.sh"
-
-pnpm lint-staged
