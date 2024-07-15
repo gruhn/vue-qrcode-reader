@@ -1,31 +1,62 @@
 import { StreamApiNotSupportedError, InsecureContextError, StreamLoadTimeoutError } from './errors'
 import { eventOn, timeout } from './callforth'
 import shimGetUserMedia from './shimGetUserMedia'
-import { assertNever } from './util'
+import { assert, assertNever } from './util'
 
 type CameraState = CameraStopped | CameraStopping | CameraError | CameraStarting | CameraStarted
 
+/**
+ * The only stateful variable encapsulated by this module. 
+ * Since this is module variable and not, say, a class attribute, 
+ * `state` is a singleton across a whole page/application.
+ * One consequence is that mounting multiple `QrcodeStream` components
+ * does not make sense. 
+ */ 
 let state: CameraState = { kind: 'stopped' }
 
+/**
+ * The initial state of the camera. Also occurs when the 
+ * camera stream is paused.
+ */
 type CameraStopped = { 
   kind: 'stopped'
 }
 
+/**
+ * Stopping the camera is an async action, so there is an intermediate
+ * state where the camera is about to be stopped but not completely stopped yet.
+ * It's important to make that state explicit because we need special handling 
+ * for cases where a new camera is started WHILE an old camera is still stopping.
+ */ 
 type CameraStopping = { 
   kind: 'stopping'
   task: Promise<CameraStopped>
 }
 
+/**
+ * Occurs mostly when an error is thrown while starting the camera. 
+ * For example, when the user denied camera access permission.
+ */
 type CameraError = { 
   kind: 'error'
   reason: Error
 }
 
+/**
+ * Starting the camera is an async action, so there is an intermediate
+ * state where the camera is about to be started but not completely started yet.
+ * It's important to make that state explicit because we need special handling 
+ * for cases where a new camera is started WHILE another camera is still in 
+ * the process of starting.
+ */ 
 type CameraStarting = {
   kind: 'starting'
   task: Promise<CameraStarted>
 }
 
+/**
+ * The state where the camera has fully loaded and is running.
+ */
 type CameraStarted = {
   kind: 'started'
   capabilities: Partial<MediaTrackCapabilities>
@@ -40,6 +71,8 @@ export async function start(
   constraints: MediaTrackConstraints,
   torch: boolean
 ): Promise<Partial<MediaTrackCapabilities>> {
+  // If camera is stopped or previously ran into an error, 
+  // then the camera is idle right now. Thus, try starting camera.
   if (state.kind === 'stopped' || state.kind === 'error') {
     const task = runStartTask(videoEl, constraints, torch)
     state = { kind: 'starting', task }
@@ -47,23 +80,25 @@ export async function start(
       state = await task
       return state.capabilities
     } catch (error) {
+      assert(error instanceof Error, 'caught error that is not an instance of Error')
       state = { kind: 'error', reason: error }
       throw error
     }
   } 
   
+  // if camera is actively stopping/starting ==> await pending task and try again
   if (state.kind === 'stopping' || state.kind === 'starting') {   
-    // camera still actively stopping/starting ==> await pending task and try again
     await state.task
     return start(videoEl, constraints, torch)
   } 
   
+  // if camera is already running ==> stop is and start with new constraints
   if (state.kind === 'started') {
     await stop()
     return start(videoEl, constraints, torch)
   }
 
-  // generate type error if not all cases are covered:
+  // raise type error if not all cases are covered:
   assertNever(state)
 }
 
@@ -92,6 +127,7 @@ export async function stop(): Promise<void> {
       state = await task
       return
     } catch (error) {
+      assert(error instanceof Error, 'caught error that is not an instance of Error')
       console.error(`[vue-qrcode-reader] error while trying to stop camera: "${error}"`)
       state = { kind: 'error', reason: error }      
       throw error
