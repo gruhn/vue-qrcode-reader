@@ -4,7 +4,7 @@ Don't hesitate to open an issue if you have trouble.
 ### Setup Dev Environment
 
 Canonically this package uses Node 18 and `pnpm` as a package manager.
-If you are a [Nix](https://nixos.org/) user, there is a `shell.nix` file in the project root.
+If you are a [Nix](https://nixos.org/) user, there is a `flake.nix` file in the project root.
 
 Clone the repository and run
 

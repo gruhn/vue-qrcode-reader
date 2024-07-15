@@ -90,8 +90,8 @@ async function runStartTask(
     // streams and never emit the `loadeddata` event. Looks like this is
     // related to a WebKit issue (see #298). No workarounds at the moment.
     // To at least detect this situation, we throw an error if the event
-    // has not been emitted after a 3 second timeout.
-    timeout(3000).then(() => {
+    // has not been emitted after a 6 second timeout.
+    timeout(6_000).then(() => {
       throw new StreamLoadTimeoutError()
     })
   ])
