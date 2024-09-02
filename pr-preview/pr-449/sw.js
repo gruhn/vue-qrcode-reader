@@ -79,16 +79,16 @@ define(['./workbox-5199072c'], (function (workbox) { 'use strict';
    */
   workbox.precacheAndRoute([{
     "url": "404.html",
-    "revision": "0d85dd8b0275491d1b4fb89a04cc8892"
+    "revision": "43008b4425f7e92bd26876d63ba6c2b8"
   }, {
     "url": "api/QrcodeCapture.html",
-    "revision": "b027b9f377de6add75aab32f2a0fdb2f"
+    "revision": "86fcc28ed937dbf17c402d9f0ab54c5e"
   }, {
     "url": "api/QrcodeDropZone.html",
-    "revision": "6ca17feae2a2b2dc578190e304ad5580"
+    "revision": "9062e80175cddeabc3be1b298b6d2af3"
   }, {
     "url": "api/QrcodeStream.html",
-    "revision": "bd5d8ba757fcf7d26ba3d08cd8d52493"
+    "revision": "8448e204e55143f16ff5f5e5cad9c0be"
   }, {
     "url": "assets/api_QrcodeCapture.md.BVomH-fp.js",
     "revision": null
@@ -114,13 +114,13 @@ define(['./workbox-5199072c'], (function (workbox) { 'use strict';
     "url": "assets/chunks/@localSearchIndexroot.BQqEPrZR.js",
     "revision": null
   }, {
-    "url": "assets/chunks/camera.BJQyjlnn.js",
+    "url": "assets/chunks/camera.DhcMeik-.js",
     "revision": null
   }, {
     "url": "assets/chunks/framework.BtL3uYYi.js",
     "revision": null
   }, {
-    "url": "assets/chunks/QrcodeStream.vue_vue_type_script_setup_true_lang.CUHYp3xr.js",
+    "url": "assets/chunks/QrcodeStream.vue_vue_type_script_setup_true_lang.GbEf4hK0.js",
     "revision": null
   }, {
     "url": "assets/chunks/safari_32x32.Bkuv9jEj.js",
@@ -132,34 +132,34 @@ define(['./workbox-5199072c'], (function (workbox) { 'use strict';
     "url": "assets/chunks/VPLocalSearchBox.BPLfKR6Q.js",
     "revision": null
   }, {
-    "url": "assets/demos_DragDrop.md.12E-B_I3.js",
+    "url": "assets/demos_DragDrop.md.cTRAHQaD.js",
     "revision": null
   }, {
-    "url": "assets/demos_DragDrop.md.12E-B_I3.lean.js",
+    "url": "assets/demos_DragDrop.md.cTRAHQaD.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_FullDemo.md.EA-azuP_.js",
+    "url": "assets/demos_FullDemo.md.CRrzANCR.js",
     "revision": null
   }, {
-    "url": "assets/demos_FullDemo.md.EA-azuP_.lean.js",
+    "url": "assets/demos_FullDemo.md.CRrzANCR.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_Fullscreen.md.CMW7y2Ip.js",
+    "url": "assets/demos_Fullscreen.md.h2cqoaSc.js",
     "revision": null
   }, {
-    "url": "assets/demos_Fullscreen.md.CMW7y2Ip.lean.js",
+    "url": "assets/demos_Fullscreen.md.h2cqoaSc.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_LoadingIndicator.md.BVZFqNj1.js",
+    "url": "assets/demos_LoadingIndicator.md.CPwUJoov.js",
     "revision": null
   }, {
-    "url": "assets/demos_LoadingIndicator.md.BVZFqNj1.lean.js",
+    "url": "assets/demos_LoadingIndicator.md.CPwUJoov.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_ScanSameQrcodeMoreThanOnce.md.M3YU2Vzr.js",
+    "url": "assets/demos_ScanSameQrcodeMoreThanOnce.md.kZa9Btsu.js",
     "revision": null
   }, {
-    "url": "assets/demos_ScanSameQrcodeMoreThanOnce.md.M3YU2Vzr.lean.js",
+    "url": "assets/demos_ScanSameQrcodeMoreThanOnce.md.kZa9Btsu.lean.js",
     "revision": null
   }, {
     "url": "assets/demos_Simple.md.CWiqK3J_.js",
@@ -168,28 +168,28 @@ define(['./workbox-5199072c'], (function (workbox) { 'use strict';
     "url": "assets/demos_Simple.md.CWiqK3J_.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_SwitchCamera.md.B-obcuEB.js",
+    "url": "assets/demos_SwitchCamera.md.CydEbheE.js",
     "revision": null
   }, {
-    "url": "assets/demos_SwitchCamera.md.B-obcuEB.lean.js",
+    "url": "assets/demos_SwitchCamera.md.CydEbheE.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_Torch.md.AnpZuZA8.js",
+    "url": "assets/demos_Torch.md.bksnySAD.js",
     "revision": null
   }, {
-    "url": "assets/demos_Torch.md.AnpZuZA8.lean.js",
+    "url": "assets/demos_Torch.md.bksnySAD.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_Upload.md.Ds3GTY8o.js",
+    "url": "assets/demos_Upload.md.CnQDh4cA.js",
     "revision": null
   }, {
-    "url": "assets/demos_Upload.md.Ds3GTY8o.lean.js",
+    "url": "assets/demos_Upload.md.CnQDh4cA.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_Validate.md.Ba0B0yOc.js",
+    "url": "assets/demos_Validate.md.DtHqSbkl.js",
     "revision": null
   }, {
-    "url": "assets/demos_Validate.md.Ba0B0yOc.lean.js",
+    "url": "assets/demos_Validate.md.DtHqSbkl.lean.js",
     "revision": null
   }, {
     "url": "assets/index.md.DnOK2cmZ.js",
@@ -253,34 +253,34 @@ define(['./workbox-5199072c'], (function (workbox) { 'use strict';
     "revision": "baffbefe1bde1d10f0c089b20f0cb9ed"
   }, {
     "url": "demos/DragDrop.html",
-    "revision": "54ad4ea7a7bcba4538fdd84736ff761e"
+    "revision": "576a8c1bbc084eaa0bd917b48e60f312"
   }, {
     "url": "demos/FullDemo.html",
-    "revision": "22ad2d394e5e6001bf69f80d7c9a35db"
+    "revision": "d6a512f5351f0bb18dd19e2d37696abf"
   }, {
     "url": "demos/Fullscreen.html",
-    "revision": "b610a549bbe27efdadb7fd854166412b"
+    "revision": "0bbc5a1f60ce010203544e0dfcb7abea"
   }, {
     "url": "demos/LoadingIndicator.html",
-    "revision": "316dcf6ef232d95a7ca0903c04f23da6"
+    "revision": "d784e0f71eabb6e1a892226b1bc6f9ca"
   }, {
     "url": "demos/ScanSameQrcodeMoreThanOnce.html",
-    "revision": "c18dcc31f749e2032301386eed108466"
+    "revision": "072016fe3316b06cab2c2cd887d2afb0"
   }, {
     "url": "demos/Simple.html",
-    "revision": "3067aea3c4f4f4fc4c3d297e770ecd51"
+    "revision": "791e0184990b76ae88ce936f50d452db"
   }, {
     "url": "demos/SwitchCamera.html",
-    "revision": "83295d03a34eb3e87620e83c35ea6aa8"
+    "revision": "3d5b75e4d96a874a7c2d53e23066fcfe"
   }, {
     "url": "demos/Torch.html",
-    "revision": "01564732ec52b81e5a37612c6b3bdc49"
+    "revision": "5697401390a683ef670d63a7df7cc073"
   }, {
     "url": "demos/Upload.html",
-    "revision": "65baf704deb5f4f21ffa72b30b6a9e05"
+    "revision": "c90cd27826a9a841e71f633ca5f69bf6"
   }, {
     "url": "demos/Validate.html",
-    "revision": "b09f32e3eb9fbb66ac485c3d530dd8dd"
+    "revision": "f2be4195a70db767586110d3024e8b32"
   }, {
     "url": "flash-off.svg",
     "revision": "8b05f5dcd6712992a544b34520ec7262"
@@ -295,7 +295,7 @@ define(['./workbox-5199072c'], (function (workbox) { 'use strict';
     "revision": "432c44f09de0b4e0f9e236fad9b8c7f9"
   }, {
     "url": "index.html",
-    "revision": "adbc629e07dea3bff557278f49f78ddb"
+    "revision": "4e42fd44c6bf24e28d24b06d6d9419d9"
   }, {
     "url": "logo.png",
     "revision": "5f0c1d6358641bc48207acb9fa0b6182"
