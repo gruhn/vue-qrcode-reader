@@ -1,14 +1,18 @@
 <template>
-  <div @drop.prevent.stop="onDrop" @dragenter.prevent.stop="onDragOver(true)"
-    @dragleave.prevent.stop="onDragOver(false)" @dragover.prevent.stop>
+  <div
+    @drop.prevent.stop="onDrop"
+    @dragenter.prevent.stop="onDragOver(true)"
+    @dragleave.prevent.stop="onDragOver(false)"
+    @dragover.prevent.stop
+  >
     <slot></slot>
   </div>
 </template>
 
 <script setup lang="ts">
-import { type BarcodeFormat } from 'barcode-detector';
-import { type PropType } from 'vue';
-import { processFile, processUrl } from '../misc/scanner';
+import { type BarcodeFormat } from 'barcode-detector'
+import { type PropType } from 'vue'
+import { processFile, processUrl } from '../misc/scanner'
 
 const props = defineProps({
   formats: {

@@ -9,11 +9,26 @@
       overlay.
     -->
 
-    <video ref="videoRef" :style="videoElStyle" autoplay muted playsinline></video>
+    <video
+      ref="videoRef"
+      :style="videoElStyle"
+      autoplay
+      muted
+      playsinline
+    ></video>
 
-    <canvas id="qrcode-stream-pause-frame" ref="pauseFrameRef" v-show="!shouldScan" :style="cameraStyle"></canvas>
+    <canvas
+      id="qrcode-stream-pause-frame"
+      ref="pauseFrameRef"
+      v-show="!shouldScan"
+      :style="cameraStyle"
+    ></canvas>
 
-    <canvas id="qrcode-stream-tracking-layer" ref="trackingLayerRef" :style="overlayStyle"></canvas>
+    <canvas
+      id="qrcode-stream-tracking-layer"
+      ref="trackingLayerRef"
+      :style="overlayStyle"
+    ></canvas>
 
     <div :style="overlayStyle">
       <slot></slot>
