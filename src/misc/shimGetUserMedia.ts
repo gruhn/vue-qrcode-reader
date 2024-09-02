@@ -8,9 +8,9 @@ import { shimGetUserMedia as safariShim } from 'webrtc-adapter/dist/safari/safar
 import { detectBrowser } from 'webrtc-adapter/dist/utils'
 
 import { StreamApiNotSupportedError } from './errors'
-import { indempotent } from './util'
+import { idempotent } from './util'
 
-export default indempotent(() => {
+export default idempotent(() => {
   const browserDetails = detectBrowser(window)
 
   switch (browserDetails.browser) {

@@ -25,6 +25,9 @@
 # Icon must end with two \r
 Icon
 
+# VitePress
+.vitepress/cache
+.vitepress/dist
 
 # Thumbnails
 ._*
