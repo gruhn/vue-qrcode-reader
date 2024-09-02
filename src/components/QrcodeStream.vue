@@ -9,26 +9,11 @@
       overlay.
     -->
 
-    <video
-      ref="videoRef"
-      :style="videoElStyle"
-      autoplay
-      muted
-      playsinline
-    ></video>
+    <video ref="videoRef" :style="videoElStyle" autoplay muted playsinline></video>
 
-    <canvas
-      id="qrcode-stream-pause-frame"
-      ref="pauseFrameRef"
-      v-show="!shouldScan"
-      :style="cameraStyle"
-    ></canvas>
+    <canvas id="qrcode-stream-pause-frame" ref="pauseFrameRef" v-show="!shouldScan" :style="cameraStyle"></canvas>
 
-    <canvas
-      id="qrcode-stream-tracking-layer"
-      ref="trackingLayerRef"
-      :style="overlayStyle"
-    ></canvas>
+    <canvas id="qrcode-stream-tracking-layer" ref="trackingLayerRef" :style="overlayStyle"></canvas>
 
     <div :style="overlayStyle">
       <slot></slot>
@@ -37,21 +22,21 @@
 </template>
 
 <script setup lang="ts">
-import type { DetectedBarcode, BarcodeFormat } from 'barcode-detector/pure'
+import type { BarcodeFormat, DetectedBarcode } from 'barcode-detector'
 import {
-  onUnmounted,
   computed,
   onMounted,
+  onUnmounted,
   ref,
   watch,
-  type PropType,
-  type CSSProperties
+  type CSSProperties,
+  type PropType
 } from 'vue'
 
-import { keepScanning, setScanningFormats } from '../misc/scanner'
 import * as cameraController from '../misc/camera'
-import type { Point } from '../types/types'
+import { keepScanning, setScanningFormats } from '../misc/scanner'
 import { assert } from '../misc/util'
+import type { Point } from '../types/types'
 
 const props = defineProps({
   // in this file: don't use `props.constraints` directly. Use `constraintsCached`.

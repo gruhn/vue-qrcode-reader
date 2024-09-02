@@ -1,18 +1,11 @@
 <template>
-  <input
-    @change="onChangeInput"
-    type="file"
-    name="image"
-    accept="image/*"
-    capture="environment"
-    multiple
-  />
+  <input @change="onChangeInput" type="file" name="image" accept="image/*" capture="environment" multiple />
 </template>
 
 <script setup lang="ts">
-import { type PropType } from 'vue'
-import { processFile } from '../misc/scanner'
-import { type BarcodeFormat } from 'barcode-detector/pure'
+import { type BarcodeFormat } from 'barcode-detector';
+import { type PropType } from 'vue';
+import { processFile } from '../misc/scanner';
 
 const props = defineProps({
   formats: {
