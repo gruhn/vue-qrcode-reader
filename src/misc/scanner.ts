@@ -21,24 +21,44 @@ declare global {
 let barcodeDetector: BarcodeDetector
 
 /**
- * Seamlessly updates the set of used barcode formats during scanning.
+ * Constructs a `BarcodeDetector` instance, given a list of targeted barcode formats.
+ * Preferably, we want to use the native `BarcodeDetector` implementation if supported. 
+ * Otherwise, we fallback to the polyfill implementation.
+ *
+ * Note, that we can't just monkey patch the polyfill on load, i.e. 
+ *
+ *     window.BarcodeDetector ??= BarcodeDetector 
+ *
+ * for two reasons. Firstly, this is not SSR compatible, because `window` is not available 
+ * during SSR. Secondly, even if the native implementation is availabe, we still might 
+ * want to use the polyfill. For example, if the native implementation only supports the 
+ * format `"qr_code"` but the user wants to scan `["qr_code", "aztec"]` (see #450).
  */
-export function setScanningFormats(formats: BarcodeFormat[]) {
-  // Only use the `BarcodeDetector` polyfill if the API is not supported natively. 
-  // 
-  // Note, that we can't just monkey patch the API on load, i.e. 
-  // 
-  //     globalThis.BarcodeDetector ??= BarcodeDetector
-  // 
-  // because that is not SSR compatible. If the polyfill is applied during SSR, then 
-  // it's actually missing at runtime. Thus, we have to check the API support at runtime:
+async function createBarcodeDetector(formats: BarcodeFormat[]): Promise<BarcodeDetector> {
   if (window.BarcodeDetector === undefined) {
-    console.debug('[vue-qrcode-reader] BarcodeDetector not available: will use polyfill.')
-    barcodeDetector = new BarcodeDetector({ formats })
-  } else {
-    console.debug('[vue-qrcode-reader] BarcodeDetector available: will use native API.')
-    barcodeDetector = new window.BarcodeDetector({ formats })
+    console.debug('[vue-qrcode-reader] Native BarcodeDetector not supported. Will use polyfill.')
+    return new BarcodeDetector({ formats })
   }
+
+  const allSupportedFormats = await window.BarcodeDetector.getSupportedFormats()
+  const unsupportedFormats = formats.filter(format => !allSupportedFormats.includes(format))
+
+  if (unsupportedFormats.length > 0) {
+    console.debug(`[vue-qrcode-reader] Native BarcodeDetector does not support formats ${JSON.stringify(unsupportedFormats)}. Will use polyfill.`)
+    return new BarcodeDetector({ formats })
+  }
+
+  console.debug('[vue-qrcode-reader] Will use native BarcodeDetector.')
+  return new window.BarcodeDetector({ formats })
+}
+
+/**
+ * Update the set of targeted barcode formats. In particular, this function
+ * can be called during scanning and the camera stream doesn't have to be 
+ * interrupted.
+ */
+export async function setScanningFormats(formats: BarcodeFormat[]) {
+  barcodeDetector = await createBarcodeDetector(formats)
 }
 
 type ScanHandler = (_: DetectedBarcode[]) => void
@@ -62,7 +82,7 @@ export const keepScanning = async (
   }
 ) => {
   console.debug('[vue-qrcode-reader] start scanning')
-  setScanningFormats(formats)
+  await setScanningFormats(formats)
 
   const processFrame =
     (state: { lastScanned: number; contentBefore: string[]; lastScanHadContent: boolean }) =>

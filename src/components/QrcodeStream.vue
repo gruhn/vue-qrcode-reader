@@ -231,10 +231,10 @@ watch(
   { deep: true }
 )
 
-// Set formats will create a new BarcodeDetector instance with the given formats.
-watch(formatsCached, (formats) => {
+// `setScanningFormats` will create a new BarcodeDetector instance with the given formats.
+watch(formatsCached, async formats => {
   if (isMounted.value) {
-    setScanningFormats(formats)
+    await setScanningFormats(formats)
   }
 })
 
