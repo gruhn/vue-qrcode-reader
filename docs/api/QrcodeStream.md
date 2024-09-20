@@ -120,7 +120,7 @@ The component will prefer to use the native implementation if available and othe
 Note that even if the native implementation is availabe,  
 the component still might use the polyfill.
 For example, if the native implementation only supports the 
-format `'qr_come'` but the you select the formats `['qr_code', 'aztec']`.
+format `'qr_code'` but the you select the formats `['qr_code', 'aztec']`.
 
 ### `camera-on` <Badge text="since v5.0.0" type="info" />
 

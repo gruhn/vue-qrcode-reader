@@ -23,7 +23,7 @@ let barcodeDetector: BarcodeDetector
 /**
  * Constructs a `BarcodeDetector` instance, given a list of targeted barcode formats.
  * Preferably, we want to use the native `BarcodeDetector` implementation if supported. 
- * Otherwise, we fallback to the polyfill implementation.
+ * Otherwise, we fall back to the polyfill implementation.
  *
  * Note, that we can't just monkey patch the polyfill on load, i.e. 
  *
