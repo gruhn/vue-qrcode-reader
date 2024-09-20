@@ -98,11 +98,29 @@ However changing the value of `paused` resets this internal cache.
 - **Default:** `['qr_code']`
 
 The `formats` prop defines which barcode formats are detected.
-[Supported Formats](https://github.com/Sec-ant/barcode-detector?tab=readme-ov-file#barcode-detector).
+By default, only QR codes are selected, 
+so if you want to scan other barcode formats, 
+you have to modify this prop.
+See: [supported formats](https://github.com/Sec-ant/barcode-detector?tab=readme-ov-file#barcode-detector).
 
 ```html
 <qrcode-stream :formats="['qr_code', 'code_128']"></qrcode-stream>
 ```
+
+::: warning
+Don't select more barcode formats than needed. 
+Scanning becomes more expensive the more formats you select.
+:::
+
+Under the hood, we use the standard 
+[`BarcodeDetector`](https://developer.mozilla.org/en-US/docs/Web/API/BarcodeDetector) 
+browser API.
+Support varies across devices, operating systems and browsers.
+The component will prefer to use the native implementation if available and otherwise falls back to a polyfill implementation.
+Note that even if the native implementation is availabe,  
+the component still might use the polyfill.
+For example, if the native implementation only supports the 
+format `'qr_code'` but the you select the formats `['qr_code', 'aztec']`.
 
 ### `camera-on` <Badge text="since v5.0.0" type="info" />
 
