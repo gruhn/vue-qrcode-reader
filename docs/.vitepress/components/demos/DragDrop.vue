@@ -1,5 +1,24 @@
 <template>
   <div>
+    <p>
+      By default only QR-codes are detected but a variety of other barcode formats are also
+      supported. You can select one or multiple but the more you select the more expensive scanning
+      becomes: <br />
+
+      <span
+        v-for="option in Object.keys(barcodeFormats)"
+        :key="option"
+        class="barcode-format-checkbox"
+      >
+        <input
+          type="checkbox"
+          v-model="barcodeFormats[option]"
+          :id="option"
+        />
+        <label :for="option">{{ option }}</label>
+      </span>
+    </p>
+
     <p class="decode-result">
       Last result: <b>{{ result }}</b>
     </p>
@@ -15,6 +34,7 @@
       @detect="onDetect"
       @dragover="onDragOver"
       @error="logErrors"
+      :formats="selectedBarcodeFormats"
     >
       <div
         class="drop-area"
@@ -29,6 +49,8 @@
 <script>
 import { QrcodeDropZone } from '../../../../src'
 
+/*** barcode formats ***/
+
 export default {
   components: { QrcodeDropZone },
 
@@ -36,8 +58,39 @@ export default {
     return {
       result: null,
       error: null,
-      dragover: false
+      dragover: false,
+      barcodeFormats: {
+        aztec: false,
+        code_128: false,
+        code_39: false,
+        code_93: false,
+        codabar: false,
+        databar: false,
+        databar_expanded: false,
+        data_matrix: false,
+        dx_film_edge: false,
+        ean_13: false,
+        ean_8: false,
+        itf: false,
+        maxi_code: false,
+        micro_qr_code: false,
+        pdf417: false,
+        qr_code: true,
+        rm_qr_code: false,
+        upc_a: false,
+        upc_e: false,
+        linear_codes: false,
+        matrix_codes: false
+      }
     }
+  },
+
+  computed: {
+    selectedBarcodeFormats() {
+      return Object
+        .keys(this.barcodeFormats)
+        .filter(format => this.barcodeFormats[format])
+    }   
   },
 
   methods: {
