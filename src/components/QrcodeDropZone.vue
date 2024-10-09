@@ -46,7 +46,7 @@ const onDrop = ({ dataTransfer }: DragEvent) => {
   const droppedUrl = dataTransfer.getData('text/uri-list')
 
   droppedFiles.forEach((file: File) => {
-    onDetect(processFile(file))
+    onDetect(processFile(file, props.formats))
   })
 
   if (droppedUrl !== '') {
