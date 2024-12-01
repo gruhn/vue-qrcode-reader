@@ -86,6 +86,11 @@ methods: {
   <img src="https://raw.githubusercontent.com/gruhn/vue-qrcode-reader/master/.github/preview2.gif" width="280" alt="preview screencast 2" />
 </p>
 
+### Related Projects
+
+* [Barcode Detector Polyfill](https://github.com/Sec-ant/barcode-detector)
+* [Svelte Port](https://github.com/ollema/svelte-qrcode-reader)
+
 # Installation :package:
 
 ## With NPM
