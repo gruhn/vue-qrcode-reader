@@ -67,7 +67,7 @@ if (!self.define) {
     });
   };
 }
-define(['./workbox-5199072c'], (function (workbox) { 'use strict';
+define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
 
   self.skipWaiting();
   workbox.clientsClaim();
@@ -79,16 +79,16 @@ define(['./workbox-5199072c'], (function (workbox) { 'use strict';
    */
   workbox.precacheAndRoute([{
     "url": "404.html",
-    "revision": "627b4dd5ed84702ce8dbb04878afcbed"
+    "revision": "902acb22ff154a967e4e7c04fec08f95"
   }, {
     "url": "api/QrcodeCapture.html",
-    "revision": "eea2f188e2702073b292aae1b8cd249c"
+    "revision": "14514fa8f49a64a8768ccf6c3a18e32d"
   }, {
     "url": "api/QrcodeDropZone.html",
-    "revision": "2d2b837ce798264da472910f1ca48536"
+    "revision": "ca0a96705cf567d7db3a66a9211312f5"
   }, {
     "url": "api/QrcodeStream.html",
-    "revision": "b2bc398f17c9343593592272b7f0be51"
+    "revision": "58b82dfaf77cab24d8d0f2a65055a4ba"
   }, {
     "url": "assets/api_QrcodeCapture.md.GlYdj7pr.js",
     "revision": null
@@ -108,7 +108,7 @@ define(['./workbox-5199072c'], (function (workbox) { 'use strict';
     "url": "assets/api_QrcodeStream.md.P3i2WWbk.lean.js",
     "revision": null
   }, {
-    "url": "assets/app.D6H4Yzh_.js",
+    "url": "assets/app.UcnzsrvH.js",
     "revision": null
   }, {
     "url": "assets/chunks/@localSearchIndexroot.C9dE4YuA.js",
@@ -126,10 +126,10 @@ define(['./workbox-5199072c'], (function (workbox) { 'use strict';
     "url": "assets/chunks/safari_32x32.Bkuv9jEj.js",
     "revision": null
   }, {
-    "url": "assets/chunks/theme.gGNbi9J7.js",
+    "url": "assets/chunks/theme.BWsV1as1.js",
     "revision": null
   }, {
-    "url": "assets/chunks/VPLocalSearchBox.Bnn1F-7n.js",
+    "url": "assets/chunks/VPLocalSearchBox.AoG0eZXm.js",
     "revision": null
   }, {
     "url": "assets/demos_DragDrop.md.D5p3TnMP.js",
@@ -240,7 +240,7 @@ define(['./workbox-5199072c'], (function (workbox) { 'use strict';
     "url": "assets/inter-roman-vietnamese.ClpjcLMQ.woff2",
     "revision": null
   }, {
-    "url": "assets/style.Dw3OU07M.css",
+    "url": "assets/style.BD7js0Ka.css",
     "revision": null
   }, {
     "url": "camera-switch.svg",
@@ -253,34 +253,34 @@ define(['./workbox-5199072c'], (function (workbox) { 'use strict';
     "revision": "baffbefe1bde1d10f0c089b20f0cb9ed"
   }, {
     "url": "demos/DragDrop.html",
-    "revision": "c633d610c6d7a088851cf82627e80ec9"
+    "revision": "8cb162565e1fc1fbdca0aa32e3233659"
   }, {
     "url": "demos/FullDemo.html",
-    "revision": "ef68656646da2a9d97ce48852e571c29"
+    "revision": "a792dcb15cf81792d102d83d2978b3ef"
   }, {
     "url": "demos/Fullscreen.html",
-    "revision": "d598640c3ddccbca387f09018f2cae6d"
+    "revision": "e30c5823ef0a5e8f801ad495e4b833c6"
   }, {
     "url": "demos/LoadingIndicator.html",
-    "revision": "880824761e69e3f676921a5ce71d2c90"
+    "revision": "6834967e0b4b320f1f3fa6e20846155e"
   }, {
     "url": "demos/ScanSameQrcodeMoreThanOnce.html",
-    "revision": "e46d356fa9e30dd5406332610a87c9c9"
+    "revision": "14911d8f5192c21f9be1185d9ded24d8"
   }, {
     "url": "demos/Simple.html",
-    "revision": "6acac584623405392bfb9265c759d91d"
+    "revision": "b05febdb2456b749ae1e28486129f08b"
   }, {
     "url": "demos/SwitchCamera.html",
-    "revision": "eee1fa574f8e4ffbaa93a126bd96541c"
+    "revision": "2981a80ce1a7ba8b9be8f14e33b018ce"
   }, {
     "url": "demos/Torch.html",
-    "revision": "bae324f6355d60814a6115a5c0c1f1de"
+    "revision": "ef127668d7d580f3f62add7ee7de9572"
   }, {
     "url": "demos/Upload.html",
-    "revision": "d92438ec8005d7c474ebd39b0a191f75"
+    "revision": "86786d91619c849bee82123142c5364e"
   }, {
     "url": "demos/Validate.html",
-    "revision": "e60a5088e591eaa887819beb071d9856"
+    "revision": "ae2250049a9ad8fbcdf37e07cb602bd8"
   }, {
     "url": "flash-off.svg",
     "revision": "8b05f5dcd6712992a544b34520ec7262"
@@ -295,7 +295,7 @@ define(['./workbox-5199072c'], (function (workbox) { 'use strict';
     "revision": "432c44f09de0b4e0f9e236fad9b8c7f9"
   }, {
     "url": "index.html",
-    "revision": "fb9efd26df99497cd34d1b5a6e342edd"
+    "revision": "dc60ea31772a70f798fb5c24a65df4c8"
   }, {
     "url": "logo.png",
     "revision": "5f0c1d6358641bc48207acb9fa0b6182"
