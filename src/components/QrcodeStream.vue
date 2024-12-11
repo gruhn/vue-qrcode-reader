@@ -1,8 +1,8 @@
 <template>
   <div :style="wrapperStyle">
-    <!-- 
-      All immediate children of the wrapper div are stacked upon each other. 
-      The z-index is implicitly given by the (inverse) element order. 
+    <!--
+      All immediate children of the wrapper div are stacked upon each other.
+      The z-index is implicitly given by the (inverse) element order.
 
       The video element is at the very bottom, the pause frame canvas is above it,
       the tracking layer is yet above and finally at the very top is the slot
@@ -55,6 +55,9 @@ import { assert } from '../misc/util'
 
 const props = defineProps({
   // in this file: don't use `props.constraints` directly. Use `constraintsCached`.
+  /**
+   * Passes an object with various camera configuration options.
+   */
   constraints: {
     type: Object as PropType<MediaTrackConstraints>,
     default() {
@@ -62,24 +65,58 @@ const props = defineProps({
     }
   },
   // in this file: don't use `props.formats` directly. Use `formatsCached`.
+  /**
+   * Passes formats that will be recognized during detection.
+   */
   formats: {
     type: Array as PropType<BarcodeFormat[]>,
     default: () => ['qr_code'] as BarcodeFormat[]
   },
+  /**
+   * Setting this prop to true freezes the camera. Set to false to resume.
+   */
   paused: {
     type: Boolean,
     default: false
   },
+  /**
+   * Enables or disables camera torch during detection.
+   */
   torch: {
     type: Boolean,
     default: false
   },
+  /**
+   * Defines callback function that will be responsible for drawing detected code tracking rectangle
+   */
   track: {
-    type: Function
+    type: Function as PropType<
+      (detectedCodes: AdjustedCode[], ctx: CanvasRenderingContext2D | null) => void
+    >
   }
 })
 
-const emit = defineEmits(['detect', 'camera-on', 'camera-off', 'error'])
+const emit = defineEmits<{
+  /**
+   * Defines callback function called when code detetect.
+   */
+  (e: 'detect', detectedCodes: DetectedBarcode[]): void
+  /**
+   * Defines callback function called when camera becomes on.
+   */
+  (e: 'camera-on', capabilities: Partial<MediaTrackCapabilities>): void
+  /**
+   * Defines callback function called when camera becomes off.
+   */
+  (e: 'camera-off'): void
+  // TODO: `error` should have more precise typing.
+  //        According to https://gruhn.github.io/vue-qrcode-reader/demos/Simple.html example returned error seems to have known structure
+  //        Is it ok to write interface that statisfies whats in that example?
+  /**
+   * Defines callback function called when error occures.
+   */
+  (e: 'error', error: unknown): void
+}>()
 
 // Props like `constraints` and `formats` which carry non-primitive values might receive
 // structurally equal updates. For example, let `constraints` be the variable that is
@@ -212,7 +249,7 @@ watch(
           cameraActive.value = true
           emit('camera-on', capabilities)
         }
-      } catch (error) {
+      } catch (error: unknown) {
         emit('error', error)
       }
     } else {
@@ -232,7 +269,7 @@ watch(
 )
 
 // `setScanningFormats` will create a new BarcodeDetector instance with the given formats.
-watch(formatsCached, async formats => {
+watch(formatsCached, async (formats) => {
   if (isMounted.value) {
     await setScanningFormats(formats)
   }
@@ -341,7 +378,7 @@ const onLocate = (detectedCodes: DetectedBarcode[]) => {
       }
     }
 
-    const adjustedCodes = detectedCodes.map((detectedCode) => {
+    const adjustedCodes: AdjustedCode[] = detectedCodes.map((detectedCode) => {
       const { boundingBox, cornerPoints } = detectedCode
 
       const { x, y } = translate(
@@ -425,4 +462,19 @@ const videoElStyle = computed<CSSProperties>(() => {
     }
   }
 })
+
+// Component specific types
+
+/**
+ * Defines interface for object returned in track propery / callback which is "enriched" barcode scan result.
+ */
+interface AdjustedCode {
+  cornerPoints: {
+    x: number
+    y: number
+  }[]
+  boundingBox: DOMRectReadOnly
+  rawValue: string
+  format: DetectedBarcode['format']
+}
 </script>

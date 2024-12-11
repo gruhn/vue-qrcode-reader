@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { type PropType } from 'vue'
 import { processFile } from '../misc/scanner'
-import { type BarcodeFormat } from 'barcode-detector/pure'
+import { type BarcodeFormat, type DetectedBarcode } from 'barcode-detector/pure'
 
 const props = defineProps({
   formats: {
@@ -21,7 +21,9 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['detect'])
+const emit = defineEmits<{
+  (e: 'detect', detectedCodes: DetectedBarcode[]): void
+}>()
 
 // methods
 const onChangeInput = (event: Event) => {
