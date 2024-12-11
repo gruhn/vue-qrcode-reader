@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { type PropType } from 'vue'
 import { processFile, processUrl } from '../misc/scanner'
-import { type BarcodeFormat } from 'barcode-detector/pure'
+import { type BarcodeFormat, type DetectedBarcode } from 'barcode-detector/pure'
 
 const props = defineProps({
   formats: {
@@ -21,7 +21,14 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['detect', 'dragover', 'error'])
+const emit = defineEmits<{
+  (e: 'detect', detectedCodes: DetectedBarcode[]): void
+  (e: 'dragover', isDraggingOver: boolean): void
+  // TODO: `error` should have more precise typing.
+  //        According to https://gruhn.github.io/vue-qrcode-reader/demos/Simple.html example returned error seems to have known strucure
+  //        Is it ok write interface that statisfies whats in that example?
+  (e: 'error', error: unknown): void
+}>()
 
 // methods
 const onDetect = async (promise: Promise<any>) => {
