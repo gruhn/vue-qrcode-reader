@@ -50,8 +50,8 @@ import {
 
 import { keepScanning, setScanningFormats } from '../misc/scanner'
 import * as cameraController from '../misc/camera'
-import type { Point } from '../types/types'
 import { assert } from '../misc/util'
+import type { EmmitedError } from '@/misc/errors'
 
 const props = defineProps({
   // in this file: don't use `props.constraints` directly. Use `constraintsCached`.
@@ -115,7 +115,7 @@ const emit = defineEmits<{
   /**
    * Defines callback function called when error occures.
    */
-  (e: 'error', error: unknown): void
+  (e: 'error', error: EmmitedError): void
 }>()
 
 // Props like `constraints` and `formats` which carry non-primitive values might receive
@@ -250,7 +250,7 @@ watch(
           emit('camera-on', capabilities)
         }
       } catch (error: unknown) {
-        emit('error', error)
+        emit('error', error as EmmitedError)
       }
     } else {
       // stop camera
