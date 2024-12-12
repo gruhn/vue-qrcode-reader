@@ -91,7 +91,7 @@ const props = defineProps({
    */
   track: {
     type: Function as PropType<
-      (detectedCodes: AdjustedCode[], ctx: CanvasRenderingContext2D | null) => void
+      (detectedCodes: DetectedBarcode[], ctx: CanvasRenderingContext2D | null) => void
     >
   }
 })
@@ -364,21 +364,21 @@ const onLocate = (detectedCodes: DetectedBarcode[]) => {
     const xOffset = (displayWidth - uncutWidth) / 2
     const yOffset = (displayHeight - uncutHeight) / 2
 
-    const scale = ({ x, y }: Point) => {
+    const scale = ({ x, y }: Point2D) => {
       return {
         x: Math.floor(x * xScalar),
         y: Math.floor(y * yScalar)
       }
     }
 
-    const translate = ({ x, y }: Point) => {
+    const translate = ({ x, y }: Point2D) => {
       return {
         x: Math.floor(x + xOffset),
         y: Math.floor(y + yOffset)
       }
     }
 
-    const adjustedCodes: AdjustedCode[] = detectedCodes.map((detectedCode) => {
+    const adjustedCodes: DetectedBarcode[] = detectedCodes.map((detectedCode) => {
       const { boundingBox, cornerPoints } = detectedCode
 
       const { x, y } = translate(
@@ -394,7 +394,12 @@ const onLocate = (detectedCodes: DetectedBarcode[]) => {
 
       return {
         ...detectedCode,
-        cornerPoints: cornerPoints.map((point) => translate(scale(point))),
+        cornerPoints: cornerPoints.map((point) => translate(scale(point))) as [
+          Point2D,
+          Point2D,
+          Point2D,
+          Point2D
+        ],
         boundingBox: DOMRectReadOnly.fromRect({ x, y, width, height })
       }
     })
@@ -462,19 +467,4 @@ const videoElStyle = computed<CSSProperties>(() => {
     }
   }
 })
-
-// Component specific types
-
-/**
- * Defines interface for object returned in track propery / callback which is "enriched" barcode scan result.
- */
-interface AdjustedCode {
-  cornerPoints: {
-    x: number
-    y: number
-  }[]
-  boundingBox: DOMRectReadOnly
-  rawValue: string
-  format: DetectedBarcode['format']
-}
 </script>
