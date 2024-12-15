@@ -109,9 +109,6 @@ const emit = defineEmits<{
    * Defines callback function called when camera becomes off.
    */
   (e: 'camera-off'): void
-  // TODO: `error` should have more precise typing.
-  //        According to https://gruhn.github.io/vue-qrcode-reader/demos/Simple.html example returned error seems to have known structure
-  //        Is it ok to write interface that statisfies whats in that example?
   /**
    * Defines callback function called when error occures.
    */

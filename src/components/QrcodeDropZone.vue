@@ -25,9 +25,6 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'detect', detectedCodes: DetectedBarcode[]): void
   (e: 'dragover', isDraggingOver: boolean): void
-  // TODO: `error` should have more precise typing.
-  //        According to https://gruhn.github.io/vue-qrcode-reader/demos/Simple.html example returned error seems to have known strucure
-  //        Is it ok write interface that statisfies whats in that example?
   (e: 'error', error: EmmitedError): void
 }>()
 
