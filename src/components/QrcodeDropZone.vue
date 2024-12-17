@@ -12,7 +12,8 @@
 <script setup lang="ts">
 import { type PropType } from 'vue'
 import { processFile, processUrl } from '../misc/scanner'
-import { type BarcodeFormat } from 'barcode-detector/pure'
+import { type BarcodeFormat, type DetectedBarcode } from 'barcode-detector/pure'
+import type { EmmitedError } from '@/misc/errors'
 
 const props = defineProps({
   formats: {
@@ -21,7 +22,11 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['detect', 'dragover', 'error'])
+const emit = defineEmits<{
+  (e: 'detect', detectedCodes: DetectedBarcode[]): void
+  (e: 'dragover', isDraggingOver: boolean): void
+  (e: 'error', error: EmmitedError): void
+}>()
 
 // methods
 const onDetect = async (promise: Promise<any>) => {
@@ -29,7 +34,7 @@ const onDetect = async (promise: Promise<any>) => {
     const detectedCodes = await promise
     emit('detect', detectedCodes)
   } catch (error) {
-    emit('error', error)
+    emit('error', error as EmmitedError)
   }
 }
 

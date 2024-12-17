@@ -1,8 +1,8 @@
 <template>
   <div :style="wrapperStyle">
-    <!-- 
-      All immediate children of the wrapper div are stacked upon each other. 
-      The z-index is implicitly given by the (inverse) element order. 
+    <!--
+      All immediate children of the wrapper div are stacked upon each other.
+      The z-index is implicitly given by the (inverse) element order.
 
       The video element is at the very bottom, the pause frame canvas is above it,
       the tracking layer is yet above and finally at the very top is the slot
@@ -50,11 +50,14 @@ import {
 
 import { keepScanning, setScanningFormats } from '../misc/scanner'
 import * as cameraController from '../misc/camera'
-import type { Point } from '../types/types'
 import { assert } from '../misc/util'
+import type { EmmitedError } from '@/misc/errors'
 
 const props = defineProps({
   // in this file: don't use `props.constraints` directly. Use `constraintsCached`.
+  /**
+   * Passes an object with various camera configuration options.
+   */
   constraints: {
     type: Object as PropType<MediaTrackConstraints>,
     default() {
@@ -62,24 +65,55 @@ const props = defineProps({
     }
   },
   // in this file: don't use `props.formats` directly. Use `formatsCached`.
+  /**
+   * Passes formats that will be recognized during detection.
+   */
   formats: {
     type: Array as PropType<BarcodeFormat[]>,
     default: () => ['qr_code'] as BarcodeFormat[]
   },
+  /**
+   * Setting this prop to true freezes the camera. Set to false to resume.
+   */
   paused: {
     type: Boolean,
     default: false
   },
+  /**
+   * Enables or disables camera torch during detection.
+   */
   torch: {
     type: Boolean,
     default: false
   },
+  /**
+   * Defines callback function that will be responsible for drawing detected code tracking rectangle
+   */
   track: {
-    type: Function
+    type: Function as PropType<
+      (detectedCodes: DetectedBarcode[], ctx: CanvasRenderingContext2D | null) => void
+    >
   }
 })
 
-const emit = defineEmits(['detect', 'camera-on', 'camera-off', 'error'])
+const emit = defineEmits<{
+  /**
+   * Defines callback function called when code detetect.
+   */
+  (e: 'detect', detectedCodes: DetectedBarcode[]): void
+  /**
+   * Defines callback function called when camera becomes on.
+   */
+  (e: 'camera-on', capabilities: Partial<MediaTrackCapabilities>): void
+  /**
+   * Defines callback function called when camera becomes off.
+   */
+  (e: 'camera-off'): void
+  /**
+   * Defines callback function called when error occures.
+   */
+  (e: 'error', error: EmmitedError): void
+}>()
 
 // Props like `constraints` and `formats` which carry non-primitive values might receive
 // structurally equal updates. For example, let `constraints` be the variable that is
@@ -212,8 +246,8 @@ watch(
           cameraActive.value = true
           emit('camera-on', capabilities)
         }
-      } catch (error) {
-        emit('error', error)
+      } catch (error: unknown) {
+        emit('error', error as EmmitedError)
       }
     } else {
       // stop camera
@@ -232,7 +266,7 @@ watch(
 )
 
 // `setScanningFormats` will create a new BarcodeDetector instance with the given formats.
-watch(formatsCached, async formats => {
+watch(formatsCached, async (formats) => {
   if (isMounted.value) {
     await setScanningFormats(formats)
   }
@@ -327,21 +361,21 @@ const onLocate = (detectedCodes: DetectedBarcode[]) => {
     const xOffset = (displayWidth - uncutWidth) / 2
     const yOffset = (displayHeight - uncutHeight) / 2
 
-    const scale = ({ x, y }: Point) => {
+    const scale = ({ x, y }: Point2D) => {
       return {
         x: Math.floor(x * xScalar),
         y: Math.floor(y * yScalar)
       }
     }
 
-    const translate = ({ x, y }: Point) => {
+    const translate = ({ x, y }: Point2D) => {
       return {
         x: Math.floor(x + xOffset),
         y: Math.floor(y + yOffset)
       }
     }
 
-    const adjustedCodes = detectedCodes.map((detectedCode) => {
+    const adjustedCodes: DetectedBarcode[] = detectedCodes.map((detectedCode) => {
       const { boundingBox, cornerPoints } = detectedCode
 
       const { x, y } = translate(
@@ -357,7 +391,12 @@ const onLocate = (detectedCodes: DetectedBarcode[]) => {
 
       return {
         ...detectedCode,
-        cornerPoints: cornerPoints.map((point) => translate(scale(point))),
+        cornerPoints: cornerPoints.map((point) => translate(scale(point))) as [
+          Point2D,
+          Point2D,
+          Point2D,
+          Point2D
+        ],
         boundingBox: DOMRectReadOnly.fromRect({ x, y, width, height })
       }
     })

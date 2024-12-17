@@ -33,3 +33,5 @@ export class StreamLoadTimeoutError extends Error {
     this.name = 'StreamLoadTimeoutError'
   }
 }
+
+export type EmmitedError = DropImageFetchError | StreamApiNotSupportedError | InsecureContextError | StreamLoadTimeoutError | Error
