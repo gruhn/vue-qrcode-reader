@@ -79,16 +79,16 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
    */
   workbox.precacheAndRoute([{
     "url": "404.html",
-    "revision": "902acb22ff154a967e4e7c04fec08f95"
+    "revision": "560993b877c4c9a6ae56ebaf08b282f4"
   }, {
     "url": "api/QrcodeCapture.html",
-    "revision": "14514fa8f49a64a8768ccf6c3a18e32d"
+    "revision": "cf611f519ea19228b39b6f98cb02869c"
   }, {
     "url": "api/QrcodeDropZone.html",
-    "revision": "ca0a96705cf567d7db3a66a9211312f5"
+    "revision": "00ad56cd26003771cc3cd0aa824d2718"
   }, {
     "url": "api/QrcodeStream.html",
-    "revision": "58b82dfaf77cab24d8d0f2a65055a4ba"
+    "revision": "bb0c31814cb089bcd5cf874b59c30d26"
   }, {
     "url": "assets/api_QrcodeCapture.md.GlYdj7pr.js",
     "revision": null
@@ -108,7 +108,7 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "url": "assets/api_QrcodeStream.md.P3i2WWbk.lean.js",
     "revision": null
   }, {
-    "url": "assets/app.UcnzsrvH.js",
+    "url": "assets/app.CMq4myxa.js",
     "revision": null
   }, {
     "url": "assets/chunks/@localSearchIndexroot.C9dE4YuA.js",
@@ -126,10 +126,10 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "url": "assets/chunks/safari_32x32.Bkuv9jEj.js",
     "revision": null
   }, {
-    "url": "assets/chunks/theme.BWsV1as1.js",
+    "url": "assets/chunks/theme.C8UVLHxp.js",
     "revision": null
   }, {
-    "url": "assets/chunks/VPLocalSearchBox.AoG0eZXm.js",
+    "url": "assets/chunks/VPLocalSearchBox.Czqvq3Gp.js",
     "revision": null
   }, {
     "url": "assets/demos_DragDrop.md.D5p3TnMP.js",
@@ -240,7 +240,7 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "url": "assets/inter-roman-vietnamese.ClpjcLMQ.woff2",
     "revision": null
   }, {
-    "url": "assets/style.BD7js0Ka.css",
+    "url": "assets/style.DBNrZm1J.css",
     "revision": null
   }, {
     "url": "camera-switch.svg",
@@ -253,34 +253,34 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "revision": "baffbefe1bde1d10f0c089b20f0cb9ed"
   }, {
     "url": "demos/DragDrop.html",
-    "revision": "8cb162565e1fc1fbdca0aa32e3233659"
+    "revision": "f9b7fd0ccc99b8878ec885abd853bedb"
   }, {
     "url": "demos/FullDemo.html",
-    "revision": "a792dcb15cf81792d102d83d2978b3ef"
+    "revision": "7fb7f80935d036a202176c2096dea32c"
   }, {
     "url": "demos/Fullscreen.html",
-    "revision": "e30c5823ef0a5e8f801ad495e4b833c6"
+    "revision": "b358166c6ee6a29393876ecb8694d324"
   }, {
     "url": "demos/LoadingIndicator.html",
-    "revision": "6834967e0b4b320f1f3fa6e20846155e"
+    "revision": "a4aa41313a25304d40b88a968c6f6238"
   }, {
     "url": "demos/ScanSameQrcodeMoreThanOnce.html",
-    "revision": "14911d8f5192c21f9be1185d9ded24d8"
+    "revision": "d5baacee80066b01843e172e631a31f3"
   }, {
     "url": "demos/Simple.html",
-    "revision": "b05febdb2456b749ae1e28486129f08b"
+    "revision": "152a61e099f5120f7ad086ebc1cb79fb"
   }, {
     "url": "demos/SwitchCamera.html",
-    "revision": "2981a80ce1a7ba8b9be8f14e33b018ce"
+    "revision": "0966b6373c766dfefce046f8de2afe03"
   }, {
     "url": "demos/Torch.html",
-    "revision": "ef127668d7d580f3f62add7ee7de9572"
+    "revision": "9daabcbdf9f5e89cdc82e20cc48187e1"
   }, {
     "url": "demos/Upload.html",
-    "revision": "86786d91619c849bee82123142c5364e"
+    "revision": "93e8a7f423b01b03205052ccb6231e0f"
   }, {
     "url": "demos/Validate.html",
-    "revision": "ae2250049a9ad8fbcdf37e07cb602bd8"
+    "revision": "ba780e27c75148b749568def850ecf89"
   }, {
     "url": "flash-off.svg",
     "revision": "8b05f5dcd6712992a544b34520ec7262"
@@ -295,7 +295,7 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "revision": "432c44f09de0b4e0f9e236fad9b8c7f9"
   }, {
     "url": "index.html",
-    "revision": "dc60ea31772a70f798fb5c24a65df4c8"
+    "revision": "f6a54fe8bf550c371f79da1b3c4745d5"
   }, {
     "url": "logo.png",
     "revision": "5f0c1d6358641bc48207acb9fa0b6182"
