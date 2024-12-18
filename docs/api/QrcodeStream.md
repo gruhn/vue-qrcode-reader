@@ -223,7 +223,7 @@ When you unpause the camera is restarted so the `camera-on` event is emitted aga
 
 ### `track`
 
-- **Input Type:** `Function`
+- **Input Type:** `(codes: DetectedBarcode[], ctx: CanvasRenderingContext2D) => void`
 - **Default:** `undefined`
 
 You can visually highlight detected QR codes in real-time.
@@ -232,12 +232,13 @@ When a QR code is detected, its location is painted to the canvas.
 
 To enable this feature, pass a function to `track` that defines how this should look like.
 This function is called to produce each frame.
-It receives the location object as the first argument and a `CanvasRenderingContext2D` instance as the second argument.
+It receives an array of detected barcodes as the first argument and a `CanvasRenderingContext2D` instance as the second argument.
 
 For example check out [this demo](../demos/FullDemo.md).
 
-Note that this scanning frequency has to be increased.
-So if you want to go easy on your target device you might not want to enable tracking.
+Note that the scanning frequency is increased when you provide a track function,
+which might hurt performance perceptibly.
+So if you want to go easy on your target device you might want to keep tracking disabled.
 
 ::: danger
 Avoid access to reactive properties in this function (like stuff in `data`, `computed` or your Vuex store). The function is called several times a second and might cause memory leaks. To be safe don't access `this` at all.

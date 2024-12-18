@@ -14,11 +14,12 @@ import { type PropType } from 'vue'
 import { processFile } from '../misc/scanner'
 import { type BarcodeFormat, type DetectedBarcode } from 'barcode-detector/pure'
 
-const props = defineProps({
-  formats: {
-    type: Array as PropType<BarcodeFormat[]>,
-    default: () => ['qr_code'] as BarcodeFormat[]
-  }
+export interface QrcodeCaptureProps {
+  formats?: BarcodeFormat[]
+}
+
+const props = withDefaults(defineProps<QrcodeCaptureProps>(), {
+  formats: () => ['qr_code']
 })
 
 const emit = defineEmits<{

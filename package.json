@@ -58,7 +58,7 @@
     "vite-plugin-dts": "3.6.4",
     "vitepress": "1.0.0-rc.32",
     "vue": "3.3.13",
-    "vue-tsc": "1.8.25",
+    "vue-tsc": "2.1.10",
     "workbox-window": "7.0.0"
   },
   "bugs": "https://github.com/gruhn/vue-qrcode-reader/issues",
