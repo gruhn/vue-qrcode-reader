@@ -1,8 +1,9 @@
 import type { App, Plugin } from 'vue'
 
-import QrcodeStream from './components/QrcodeStream.vue'
-import QrcodeCapture from './components/QrcodeCapture.vue'
-import QrcodeDropZone from './components/QrcodeDropZone.vue'
+import QrcodeStream, { type QrcodeStreamProps } from './components/QrcodeStream.vue'
+import QrcodeCapture, { type QrcodeCaptureProps } from './components/QrcodeCapture.vue'
+import QrcodeDropZone, { type QrcodeDropZoneProps } from './components/QrcodeDropZone.vue'
+import { type EmittedError } from './misc/errors'
 
 // Install the components
 export function install(app: App) {
@@ -11,11 +12,23 @@ export function install(app: App) {
   app.component('qrcode-drop-zone', QrcodeDropZone)
 }
 
-// Expose the components
-export { QrcodeStream, QrcodeCapture, QrcodeDropZone }
+// Expose the components:
+export { 
+  QrcodeStream, 
+  QrcodeCapture, 
+  QrcodeDropZone,
+  type QrcodeStreamProps,
+  type QrcodeCaptureProps,
+  type QrcodeDropZoneProps,
+  type EmittedError,
+}
 
 // Expose some exports from "barcode-detector"
-export { setZXingModuleOverrides, type BarcodeFormat } from 'barcode-detector/pure'
+export { 
+  setZXingModuleOverrides, 
+  type BarcodeFormat,
+  type DetectedBarcode
+} from 'barcode-detector/pure'
 
 // Plugin definition
 const plugin: Plugin = { install }

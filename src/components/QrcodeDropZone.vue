@@ -13,19 +13,20 @@
 import { type PropType } from 'vue'
 import { processFile, processUrl } from '../misc/scanner'
 import { type BarcodeFormat, type DetectedBarcode } from 'barcode-detector/pure'
-import type { EmmitedError } from '@/misc/errors'
+import type { EmittedError } from '@/misc/errors'
 
-const props = defineProps({
-  formats: {
-    type: Array as PropType<BarcodeFormat[]>,
-    default: () => ['qr_code'] as BarcodeFormat[]
-  }
+export interface QrcodeDropZoneProps {
+  formats?: BarcodeFormat[]
+}
+
+const props = withDefaults(defineProps<QrcodeDropZoneProps>(), {
+  formats: () => ['qr_code']
 })
 
 const emit = defineEmits<{
   (e: 'detect', detectedCodes: DetectedBarcode[]): void
   (e: 'dragover', isDraggingOver: boolean): void
-  (e: 'error', error: EmmitedError): void
+  (e: 'error', error: EmittedError): void
 }>()
 
 // methods
@@ -34,7 +35,7 @@ const onDetect = async (promise: Promise<any>) => {
     const detectedCodes = await promise
     emit('detect', detectedCodes)
   } catch (error) {
-    emit('error', error as EmmitedError)
+    emit('error', error as EmittedError)
   }
 }
 

@@ -25,6 +25,7 @@ jobs:
           VITEPRESS_BASE: /vue-qrcode-reader/
         run: |
           pnpm install
+          pnpm run type-check
           pnpm run build
           pnpm run docs:build
       - name: Deploy Docs
