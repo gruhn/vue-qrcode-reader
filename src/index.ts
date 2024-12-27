@@ -3,6 +3,7 @@ import type { App, Plugin } from 'vue'
 import QrcodeStream, { type QrcodeStreamProps } from './components/QrcodeStream.vue'
 import QrcodeCapture, { type QrcodeCaptureProps } from './components/QrcodeCapture.vue'
 import QrcodeDropZone, { type QrcodeDropZoneProps } from './components/QrcodeDropZone.vue'
+import { type EmittedError } from './misc/errors'
 
 // Install the components
 export function install(app: App) {
@@ -19,6 +20,7 @@ export {
   type QrcodeStreamProps,
   type QrcodeCaptureProps,
   type QrcodeDropZoneProps,
+  type EmittedError,
 }
 
 // Expose some exports from "barcode-detector"
