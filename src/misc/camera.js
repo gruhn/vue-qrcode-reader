@@ -1,6 +1,7 @@
 import { StreamApiNotSupportedError, InsecureContextError } from "./errors.js";
 import { eventOn, timeout } from "callforth";
 import shimGetUserMedia from "./shimGetUserMedia";
+import { CameraFilter } from "./cameraFilter";
 
 class Camera {
   constructor(videoEl, stream) {
@@ -22,6 +23,11 @@ class Camera {
     // Firefox does not yet support getCapabilities as of August 2020
     return track?.getCapabilities?.() ?? {};
   }
+
+  getDevices() {
+    const cameraFilter = new CameraFilter();
+    return  cameraFilter.getDevices();
+  }
 }
 
 // Modern phones often have multipe front/rear cameras.
@@ -29,31 +35,8 @@ class Camera {
 // by default. Those are not optimal for scanning QR codes but standard
 // media constraints don't allow us to specify which camera we want exactly.
 const narrowDownFacingMode = async camera => {
-  // Filter some devices, known to be bad choices.
-  const deviceBlackList = [
-    "OBS Virtual Camera",
-    "OBS-Camera",
-    "Desk View Camera",
-    "Schreibtischansicht-Kamera",
-    "Caméra Desk View",
-    "Fotocamera di Panoramica Scrivania",
-    "Rückseitige Ultra-Weitwinkelkamera",
-    "Rückseitige Telefotokamera",
-    "Rückseitige Dual-Weitwinkelkamera",
-    "Rückseitige Triple-Kamera",
-    "Back Dual Wide Camera",
-    "Back Triple Camera",
-    "Back Ultra Wide Camera",
-    "Zadní ultra širokoúhlý fotoaparát",
-    "Stolní kamera",
-    "Ultrabrede camera aan voorzijde",
-    "Front Ultra Wide Camera",
-  ];
-
-  const devices = (await navigator.mediaDevices.enumerateDevices())
-    .filter(({ kind }) => kind === "videoinput")
-    .filter(({ label }) => !deviceBlackList.includes(label))
-    .filter(({ label }) => !label.includes("infrared"));
+  const cameraFilter = new CameraFilter();
+  const devices = (await cameraFilter.getDevices());
 
   if (devices.length > 2) {
     // Explicitly picking the first entry in the list of all videoinput
@@ -70,7 +53,8 @@ const narrowDownFacingMode = async camera => {
       case "front":
         return { deviceId: { exact: frontCamera.deviceId } };
       default:
-        return undefined;
+        const selected = devices.filter((device)=> device.deviceId === camera);
+        return { deviceId: { exact: selected[0].deviceId } };
     }
   } else {
     switch (camera) {
