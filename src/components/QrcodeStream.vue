@@ -30,7 +30,7 @@
 
 <script>
 import { keepScanning } from "../misc/scanner.js";
-import Camera from "../misc/camera.js";
+import Camera, { getAvailableCameras } from '../misc/camera.js'
 import CommonAPI from "../mixins/CommonAPI.vue";
 
 export default {
@@ -133,9 +133,41 @@ export default {
   },
 
   methods: {
+    async setCameraById(deviceId) {
+      this.cameraInstance?.stop();
+      this.cameraInstance = await Camera(this.$refs.video, {
+        camera: null,
+        deviceId,
+        torch: this.torch
+      });
+
+      localStorage.setItem("scanner-device-id", deviceId);
+    },
+    async listAvailableCameras() {
+      return await getAvailableCameras();
+    },
+    async reloadCamera() {
+      if (this.cameraInstance) {
+        this.cameraInstance.stop();
+      }
+
+
+      this.cameraInstance = await Camera(this.$refs.video, {
+        camera: this.camera,
+        torch: this.torch,
+      });
+
+
+      if (this.shouldScan) {
+        this.startScanning();
+      }
+
+      console.log("Camera reloaded successfully.");
+    },
     init() {
       const promise = (async () => {
         this.beforeResetCamera();
+
 
         if (this.camera === "off") {
           this.cameraInstance = null;
@@ -144,11 +176,20 @@ export default {
             capabilities: {}
           };
         } else {
-          this.cameraInstance = await Camera(this.$refs.video, {
-            camera: this.camera,
-            torch: this.torch
-          });
-
+          const preferredDeviceId = localStorage.getItem('scanner-device-id');
+          if (preferredDeviceId) {
+            this.cameraInstance = await Camera(this.$refs.video, {
+              camera: null,
+              preferredDeviceId,
+              torch: this.torch,
+            });
+          } else {
+            this.cameraInstance = await Camera(this.$refs.video, {
+              camera: this.camera,
+              torch: this.torch
+            });
+          }
+          localStorage.setItem('scanner-device-id', this.cameraInstance.stream.getVideoTracks()[0].deviceId);
           const capabilities = this.cameraInstance.getCapabilities();
 
           // if the component is destroyed before `cameraInstance` resolves a
@@ -311,6 +352,7 @@ export default {
   display: block;
   object-fit: cover;
 }
+
 /* When a camera stream is loaded, we assign the stream to the `video`
  * element via `video.srcObject`. At this point the element used to be
  * hidden with `v-show="false"` aka. `display: none`. We do that because
