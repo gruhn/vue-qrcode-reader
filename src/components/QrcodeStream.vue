@@ -42,10 +42,6 @@ export default {
     camera: {
       type: String,
       default: "auto",
-
-      validator(camera) {
-        return ["auto", "rear", "front", "off"].includes(camera);
-      }
     },
 
     torch: {
@@ -150,6 +146,10 @@ export default {
           });
 
           const capabilities = this.cameraInstance.getCapabilities();
+
+          this.cameraInstance.getDevices().then((deviceList) => {
+            this.$emit('deviceList', deviceList);
+          });
 
           // if the component is destroyed before `cameraInstance` resolves a
           // `beforeDestroy` hook has no chance to clear the remaining camera
