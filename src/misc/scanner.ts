@@ -1,6 +1,7 @@
 import { type DetectedBarcode, type BarcodeFormat, BarcodeDetector, type BarcodeDetectorOptions } from 'barcode-detector/pure'
 import { eventOn } from './callforth'
 import { DropImageFetchError } from './errors'
+import { isMac } from './util'
 
 declare global {
   interface Window { 
@@ -48,6 +49,12 @@ async function createBarcodeDetector(formats: BarcodeFormat[]): Promise<BarcodeD
     return new BarcodeDetector({ formats })
   }
 
+  if (isMac() && formats.includes('pdf417')) {
+    // See: #459
+    console.debug(`[vue-qrcode-reader] Native BarcodeDetector is buggy for PDF417 codes on MacOS. Will use polyfill.`)
+    return new BarcodeDetector({ formats })
+  }
+  
   console.debug('[vue-qrcode-reader] Will use native BarcodeDetector.')
   return new window.BarcodeDetector({ formats })
 }
