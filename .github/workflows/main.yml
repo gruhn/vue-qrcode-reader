@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - debug-corepack-ci
 
 jobs:
   release:
@@ -36,15 +35,15 @@ jobs:
           pnpm run type-check
           pnpm run build
           pnpm run docs:build
-      # - name: Deploy Docs
-      #   uses: JamesIves/github-pages-deploy-action@4.1.4
-      #   with:
-      #     branch: gh-pages
-      #     folder: docs/.vitepress/dist
-      #     clean-exclude: pr-preview
-      #     force: false
-      # - name: Release
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      #   run: npx semantic-release
+      - name: Deploy Docs
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: docs/.vitepress/dist
+          clean-exclude: pr-preview
+          force: false
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release
