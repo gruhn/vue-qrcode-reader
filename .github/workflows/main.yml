@@ -14,7 +14,14 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - run: corepack enable
+      # fix corepack issue: https://github.com/nodejs/corepack/issues/627
+      - name: Use Latest Corepack
+        run: |
+          echo "Before: corepack version => $(corepack --version || echo 'not installed')"
+          npm install -g corepack@latest
+          echo "After : corepack version => $(corepack --version)"
+          corepack enable
+          pnpm --version
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
