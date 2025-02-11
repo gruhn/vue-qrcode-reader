@@ -17,9 +17,9 @@ jobs:
           fetch-depth: 0
       - name: Setup corepack
         run: |
-          corepack enable
           # fix corepack issue: https://github.com/nodejs/corepack/issues/627
           npm install -g corepack@latest
+          corepack enable
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
