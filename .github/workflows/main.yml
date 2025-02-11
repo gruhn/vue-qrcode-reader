@@ -15,16 +15,16 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Setup corepack
+        run: |
+          corepack enable
+          # fix corepack issue: https://github.com/nodejs/corepack/issues/627
+          npm install -g corepack@latest
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
           node-version: 18
           cache: pnpm
-      - name: Setup corepack
-        run: |
-          # fix corepack issue: https://github.com/nodejs/corepack/issues/627
-          pnpm install -g corepack@latest
-          corepack enable
       - name: Install & Build
         env: 
           VITEPRESS_BASE: /vue-qrcode-reader/
