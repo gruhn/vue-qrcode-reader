@@ -1,5 +1,6 @@
 <template>
   <input
+    ref="fileInput"
     @change="onChangeInput"
     type="file"
     name="image"
@@ -14,6 +15,8 @@ import { type PropType } from 'vue'
 import { processFile } from '../misc/scanner'
 import { type BarcodeFormat, type DetectedBarcode } from 'barcode-detector/pure'
 
+const fileInput = ref<HTMLInputElement | null>(null);
+
 export interface QrcodeCaptureProps {
   formats?: BarcodeFormat[]
 }
@@ -26,6 +29,10 @@ const emit = defineEmits<{
   (e: 'detect', detectedCodes: DetectedBarcode[]): void
 }>()
 
+// Expose the input so the parent component can directly access it
+defineExpose({
+  fileInput
+});
 // methods
 const onChangeInput = (event: Event) => {
   if (!(event.target instanceof HTMLInputElement) || !event.target.files) return
