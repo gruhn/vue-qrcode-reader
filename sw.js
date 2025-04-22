@@ -79,16 +79,16 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
    */
   workbox.precacheAndRoute([{
     "url": "404.html",
-    "revision": "8451d18068bbfc8609d6a0bbdc90d518"
+    "revision": "024c8eafcdff9d4a821b685fc98f585d"
   }, {
     "url": "api/QrcodeCapture.html",
-    "revision": "24987391d208e10cb2b9bc51e66dd06b"
+    "revision": "214293d888a698945d10b22e4f081660"
   }, {
     "url": "api/QrcodeDropZone.html",
-    "revision": "a3d28a87439ea1382b121185b6a520d1"
+    "revision": "136045c1318544aed8b8139eac0c5777"
   }, {
     "url": "api/QrcodeStream.html",
-    "revision": "683e929cb5ea1577f5bcae73d20319dc"
+    "revision": "74fdbbb510b2f0167dfcdc04b4aa62ad"
   }, {
     "url": "assets/api_QrcodeCapture.md.B5QU-yV0.js",
     "revision": null
@@ -108,7 +108,7 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "url": "assets/api_QrcodeStream.md.9CJzVv4z.lean.js",
     "revision": null
   }, {
-    "url": "assets/app.C-t4_Krm.js",
+    "url": "assets/app.DrDQBkPV.js",
     "revision": null
   }, {
     "url": "assets/chunks/@localSearchIndexroot.BiSJWzvQ.js",
@@ -126,10 +126,10 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "url": "assets/chunks/safari_32x32.Bkuv9jEj.js",
     "revision": null
   }, {
-    "url": "assets/chunks/theme.Cp5JS13f.js",
+    "url": "assets/chunks/theme.CCGeTHY_.js",
     "revision": null
   }, {
-    "url": "assets/chunks/VPLocalSearchBox.Cbgp__J8.js",
+    "url": "assets/chunks/VPLocalSearchBox.BB3pLoWE.js",
     "revision": null
   }, {
     "url": "assets/demos_DragDrop.md.BeSxP_-m.js",
@@ -240,7 +240,7 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "url": "assets/inter-roman-vietnamese.ClpjcLMQ.woff2",
     "revision": null
   }, {
-    "url": "assets/style.C_caKhZ4.css",
+    "url": "assets/style.C4S79uzL.css",
     "revision": null
   }, {
     "url": "camera-switch.svg",
@@ -253,34 +253,34 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "revision": "baffbefe1bde1d10f0c089b20f0cb9ed"
   }, {
     "url": "demos/DragDrop.html",
-    "revision": "5af3ebe99f9aa4eba2f479e5c8c3ca6d"
+    "revision": "b07c40bace22074a634d08ea50f77789"
   }, {
     "url": "demos/FullDemo.html",
-    "revision": "1aceaeef91a1c192ac95deb8152eeb8f"
+    "revision": "002f6694dca9b1b656554779f16220c9"
   }, {
     "url": "demos/Fullscreen.html",
-    "revision": "4cadfbe6a9a70adaae0007fdd231eb0f"
+    "revision": "4ee206e8b072010e484eaaf8c3ff86ed"
   }, {
     "url": "demos/LoadingIndicator.html",
-    "revision": "43739f53a1c8679bf7649581423d4562"
+    "revision": "9363cfd0eedc18c3e399969e076b66bf"
   }, {
     "url": "demos/ScanSameQrcodeMoreThanOnce.html",
-    "revision": "87d852dbc37a46d4ee7607394989f9f8"
+    "revision": "d1decdaf3a595d57b01e38d12c669e88"
   }, {
     "url": "demos/Simple.html",
-    "revision": "c097dfa57d5efdd2c59a3e272b37486d"
+    "revision": "857c6ff133d0e5d00788ad5857720e36"
   }, {
     "url": "demos/SwitchCamera.html",
-    "revision": "4418a24399964f3d01849e8784f9c808"
+    "revision": "5228dc03415a22a65324f7ed4236984f"
   }, {
     "url": "demos/Torch.html",
-    "revision": "9edddc3bcdbbd75a6085c4ba52217f57"
+    "revision": "072fb4e1e3c644b4642189006039ee2f"
   }, {
     "url": "demos/Upload.html",
-    "revision": "0ba5c96d84fde2da53eadb9551cf8449"
+    "revision": "696bdc8da9bab2bf1e898cfd9cbd74bd"
   }, {
     "url": "demos/Validate.html",
-    "revision": "f0183dd2cff9b3d59f33c495b50facac"
+    "revision": "e58b40626c90841f8f71532d10943ac3"
   }, {
     "url": "flash-off.svg",
     "revision": "8b05f5dcd6712992a544b34520ec7262"
@@ -295,7 +295,7 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "revision": "432c44f09de0b4e0f9e236fad9b8c7f9"
   }, {
     "url": "index.html",
-    "revision": "b830520dbe4e57d1adaa732d10265a7a"
+    "revision": "aefb539ff6a50838b70c3211ec96cf90"
   }, {
     "url": "logo.png",
     "revision": "5f0c1d6358641bc48207acb9fa0b6182"
@@ -322,7 +322,7 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "revision": "5e0a4893ebdd02af95cf73c7b7759ddd"
   }, {
     "url": "manifest.webmanifest",
-    "revision": "102717d43422a64c9903adda0fdce9f5"
+    "revision": "e40b1de2aafd101d16ea152bd4d3e544"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html")));
