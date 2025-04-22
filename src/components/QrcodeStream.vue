@@ -91,7 +91,7 @@ export interface QrcodeStreamProps {
 
 const props = withDefaults(defineProps<QrcodeStreamProps>(), {
   // in this file: don't use `props.constraints` directly. Use `constraintsCached`.
-  constraints: () => ({ facingMode: 'environment' }),
+  constraints: () => ({ facingMode: 'environment' } as MediaTrackConstraints),
   // in this file: don't use `props.formats` directly. Use `formatsCached`.
   formats: () => ['qr_code'],
   paused: false,
