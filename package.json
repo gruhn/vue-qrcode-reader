@@ -29,10 +29,10 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "barcode-detector": "^2.2.4",
+    "barcode-detector": "2.2.4",
     "callforth": "^0.3.1",
     "core-js": "^3.6.5",
-    "vue": "^2.6.11",
+    "vue": "2.7.16",
     "webrtc-adapter": "7.7.0"
   },
   "devDependencies": {
