@@ -272,9 +272,9 @@ watch(
 )
 
 // `setScanningFormats` will create a new BarcodeDetector instance with the given formats.
-watch(formatsCached, async (formats) => {
+watch(formatsCached, (formats) => {
   if (isMounted.value) {
-    await setScanningFormats(formats)
+    setScanningFormats(formats)
   }
 })
 

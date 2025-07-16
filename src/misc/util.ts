@@ -49,10 +49,3 @@ export function assert(condition: boolean, failureMessage?: string): asserts con
 export function assertNever(_witness: never): never {
   throw new Error('this code should be unreachable')
 }
-
-/**
- * Returns true iff the users operating system is desktop MacOS.
- */
-export function isMac(): boolean {
-  return navigator.platform.toUpperCase().includes('MAC')
-}
