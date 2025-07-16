@@ -1,13 +1,6 @@
 import { type DetectedBarcode, type BarcodeFormat, BarcodeDetector, type BarcodeDetectorOptions } from 'barcode-detector/pure'
 import { eventOn } from './callforth'
 import { DropImageFetchError } from './errors'
-import { isMac } from './util'
-
-declare global {
-  interface Window { 
-    BarcodeDetector?: typeof BarcodeDetector
-  }
-}
 
 /**
  * Singleton `BarcodeDetector` instance used by `QrcodeStream`. This is firtly to avoid
@@ -18,54 +11,22 @@ declare global {
  * This instance is not used by `QrcodeCapture` and `QrcodeDropZone`, because it may not
  * have the right `formats` configured. For these components we create one-off `BarcodeDetector` 
  * instances because it does not happen so frequently anyway (see: `processFile`/`processUrl`).
+ * 
+ * NOTE: We always use the `BarcodeDetector` polyfill. Previously, we used the native API if
+ * available. However, there are various issues with the native API. The polyfill is just more
+ * reliable across browsers and supports more barcode formats. E.g. `barcodeDetector.detect(...)`
+ * does not support `Blob`/`File` inputs on MacOS, despite being part of the spec. Also see #459
+ * and #470.
  */
 let barcodeDetector: BarcodeDetector
-
-/**
- * Constructs a `BarcodeDetector` instance, given a list of targeted barcode formats.
- * Preferably, we want to use the native `BarcodeDetector` implementation if supported. 
- * Otherwise, we fall back to the polyfill implementation.
- *
- * Note, that we can't just monkey patch the polyfill on load, i.e. 
- *
- *     window.BarcodeDetector ??= BarcodeDetector 
- *
- * for two reasons. Firstly, this is not SSR compatible, because `window` is not available 
- * during SSR. Secondly, even if the native implementation is availabe, we still might 
- * want to use the polyfill. For example, if the native implementation only supports the 
- * format `"qr_code"` but the user wants to scan `["qr_code", "aztec"]` (see #450).
- */
-async function createBarcodeDetector(formats: BarcodeFormat[]): Promise<BarcodeDetector> {
-  if (window.BarcodeDetector === undefined) {
-    console.debug('[vue-qrcode-reader] Native BarcodeDetector not supported. Will use polyfill.')
-    return new BarcodeDetector({ formats })
-  }
-
-  const allSupportedFormats = await window.BarcodeDetector.getSupportedFormats()
-  const unsupportedFormats = formats.filter(format => !allSupportedFormats.includes(format))
-
-  if (unsupportedFormats.length > 0) {
-    console.debug(`[vue-qrcode-reader] Native BarcodeDetector does not support formats ${JSON.stringify(unsupportedFormats)}. Will use polyfill.`)
-    return new BarcodeDetector({ formats })
-  }
-
-  if (isMac() && formats.includes('pdf417')) {
-    // See: #459
-    console.debug(`[vue-qrcode-reader] Native BarcodeDetector is buggy for PDF417 codes on MacOS. Will use polyfill.`)
-    return new BarcodeDetector({ formats })
-  }
-  
-  console.debug('[vue-qrcode-reader] Will use native BarcodeDetector.')
-  return new window.BarcodeDetector({ formats })
-}
 
 /**
  * Update the set of targeted barcode formats. In particular, this function
  * can be called during scanning and the camera stream doesn't have to be 
  * interrupted.
  */
-export async function setScanningFormats(formats: BarcodeFormat[]) {
-  barcodeDetector = await createBarcodeDetector(formats)
+export function setScanningFormats(formats: BarcodeFormat[]) {
+  barcodeDetector = new BarcodeDetector({ formats })
 }
 
 type ScanHandler = (_: DetectedBarcode[]) => void
@@ -89,7 +50,7 @@ export const keepScanning = async (
   }
 ) => {
   console.debug('[vue-qrcode-reader] start scanning')
-  await setScanningFormats(formats)
+  setScanningFormats(formats)
 
   const processFrame =
     (state: { lastScanned: number; contentBefore: string[]; lastScanHadContent: boolean }) =>
@@ -201,7 +162,7 @@ export const processFile = async (
   file: File,
   formats: BarcodeFormat[] = ['qr_code']
 ): Promise<DetectedBarcode[]> => {
-  // To scan files/urls we use one-off `BarcodeDetector` instnaces, 
+  // To scan files/urls we use one-off `BarcodeDetector` instances, 
   // since we don't scan as often as camera frames. Note, that we 
   // always use the polyfill. This is because (at the time of writing)
   // some browser/OS combinations don't support `Blob`/`File` inputs
@@ -215,7 +176,7 @@ export const processUrl = async (
   url: string,
   formats: BarcodeFormat[] = ['qr_code']
 ): Promise<DetectedBarcode[]> => {
-  // To scan files/urls we use one-off `BarcodeDetector` instnaces, 
+  // To scan files/urls we use one-off `BarcodeDetector` instances, 
   // since we don't scan as often as camera frames. Note, that we 
   // always use the polyfill. This is because (at the time of writing)
   // some browser/OS combinations don't support `Blob`/`File` inputs
