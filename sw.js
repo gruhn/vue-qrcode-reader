@@ -79,16 +79,16 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
    */
   workbox.precacheAndRoute([{
     "url": "404.html",
-    "revision": "024c8eafcdff9d4a821b685fc98f585d"
+    "revision": "2c84ab7824d369be73d7cc119a6ce07a"
   }, {
     "url": "api/QrcodeCapture.html",
-    "revision": "214293d888a698945d10b22e4f081660"
+    "revision": "238b7a3f225655171329910904aa7226"
   }, {
     "url": "api/QrcodeDropZone.html",
-    "revision": "136045c1318544aed8b8139eac0c5777"
+    "revision": "aeee77ed386370399591c7f3790dfe9e"
   }, {
     "url": "api/QrcodeStream.html",
-    "revision": "74fdbbb510b2f0167dfcdc04b4aa62ad"
+    "revision": "f5368cb75cc483718f520e72a7b1cd90"
   }, {
     "url": "assets/api_QrcodeCapture.md.B5QU-yV0.js",
     "revision": null
@@ -108,58 +108,58 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "url": "assets/api_QrcodeStream.md.9CJzVv4z.lean.js",
     "revision": null
   }, {
-    "url": "assets/app.DrDQBkPV.js",
+    "url": "assets/app.BmUUpjO_.js",
     "revision": null
   }, {
     "url": "assets/chunks/@localSearchIndexroot.BiSJWzvQ.js",
     "revision": null
   }, {
-    "url": "assets/chunks/camera.BspWwQrx.js",
+    "url": "assets/chunks/camera.G18_pu39.js",
     "revision": null
   }, {
     "url": "assets/chunks/framework.BZTtPEZj.js",
     "revision": null
   }, {
-    "url": "assets/chunks/QrcodeStream.vue_vue_type_script_setup_true_lang.BVo2982v.js",
+    "url": "assets/chunks/QrcodeStream.vue_vue_type_script_setup_true_lang.CHykGdh_.js",
     "revision": null
   }, {
     "url": "assets/chunks/safari_32x32.Bkuv9jEj.js",
     "revision": null
   }, {
-    "url": "assets/chunks/theme.CCGeTHY_.js",
+    "url": "assets/chunks/theme.Dca_P1w6.js",
     "revision": null
   }, {
-    "url": "assets/chunks/VPLocalSearchBox.BB3pLoWE.js",
+    "url": "assets/chunks/VPLocalSearchBox.CdDc-K49.js",
     "revision": null
   }, {
-    "url": "assets/demos_DragDrop.md.BeSxP_-m.js",
+    "url": "assets/demos_DragDrop.md.BtW0kG8T.js",
     "revision": null
   }, {
-    "url": "assets/demos_DragDrop.md.BeSxP_-m.lean.js",
+    "url": "assets/demos_DragDrop.md.BtW0kG8T.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_FullDemo.md.Cctjv2BI.js",
+    "url": "assets/demos_FullDemo.md.DKjhHndD.js",
     "revision": null
   }, {
-    "url": "assets/demos_FullDemo.md.Cctjv2BI.lean.js",
+    "url": "assets/demos_FullDemo.md.DKjhHndD.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_Fullscreen.md.C1xTnkM0.js",
+    "url": "assets/demos_Fullscreen.md.DED6G_j1.js",
     "revision": null
   }, {
-    "url": "assets/demos_Fullscreen.md.C1xTnkM0.lean.js",
+    "url": "assets/demos_Fullscreen.md.DED6G_j1.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_LoadingIndicator.md.BLLOQX4O.js",
+    "url": "assets/demos_LoadingIndicator.md.CO1FFjPb.js",
     "revision": null
   }, {
-    "url": "assets/demos_LoadingIndicator.md.BLLOQX4O.lean.js",
+    "url": "assets/demos_LoadingIndicator.md.CO1FFjPb.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_ScanSameQrcodeMoreThanOnce.md.B-MHaV-v.js",
+    "url": "assets/demos_ScanSameQrcodeMoreThanOnce.md.BLMMumUu.js",
     "revision": null
   }, {
-    "url": "assets/demos_ScanSameQrcodeMoreThanOnce.md.B-MHaV-v.lean.js",
+    "url": "assets/demos_ScanSameQrcodeMoreThanOnce.md.BLMMumUu.lean.js",
     "revision": null
   }, {
     "url": "assets/demos_Simple.md.pOZZvrwC.js",
@@ -168,28 +168,28 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "url": "assets/demos_Simple.md.pOZZvrwC.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_SwitchCamera.md.Dm5dR29u.js",
+    "url": "assets/demos_SwitchCamera.md.CSsbqGtI.js",
     "revision": null
   }, {
-    "url": "assets/demos_SwitchCamera.md.Dm5dR29u.lean.js",
+    "url": "assets/demos_SwitchCamera.md.CSsbqGtI.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_Torch.md.BUjYbjIi.js",
+    "url": "assets/demos_Torch.md.Cvr7XDCv.js",
     "revision": null
   }, {
-    "url": "assets/demos_Torch.md.BUjYbjIi.lean.js",
+    "url": "assets/demos_Torch.md.Cvr7XDCv.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_Upload.md.BHFdOaAb.js",
+    "url": "assets/demos_Upload.md.GtJLLTJq.js",
     "revision": null
   }, {
-    "url": "assets/demos_Upload.md.BHFdOaAb.lean.js",
+    "url": "assets/demos_Upload.md.GtJLLTJq.lean.js",
     "revision": null
   }, {
-    "url": "assets/demos_Validate.md.HKsbkGtN.js",
+    "url": "assets/demos_Validate.md.e3yinIpP.js",
     "revision": null
   }, {
-    "url": "assets/demos_Validate.md.HKsbkGtN.lean.js",
+    "url": "assets/demos_Validate.md.e3yinIpP.lean.js",
     "revision": null
   }, {
     "url": "assets/index.md.BaqeBjf0.js",
@@ -240,7 +240,7 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "url": "assets/inter-roman-vietnamese.ClpjcLMQ.woff2",
     "revision": null
   }, {
-    "url": "assets/style.C4S79uzL.css",
+    "url": "assets/style.CAqy5f8a.css",
     "revision": null
   }, {
     "url": "camera-switch.svg",
@@ -253,34 +253,34 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "revision": "baffbefe1bde1d10f0c089b20f0cb9ed"
   }, {
     "url": "demos/DragDrop.html",
-    "revision": "b07c40bace22074a634d08ea50f77789"
+    "revision": "2fb465faf3e614d8117dfb111becbb26"
   }, {
     "url": "demos/FullDemo.html",
-    "revision": "002f6694dca9b1b656554779f16220c9"
+    "revision": "6d3dc44b06ac43997195eb88bcc8b1cf"
   }, {
     "url": "demos/Fullscreen.html",
-    "revision": "4ee206e8b072010e484eaaf8c3ff86ed"
+    "revision": "dd9f9b57e79f5458f1973694d253dc8e"
   }, {
     "url": "demos/LoadingIndicator.html",
-    "revision": "9363cfd0eedc18c3e399969e076b66bf"
+    "revision": "21b3335a3329d730945b9497aa740d1c"
   }, {
     "url": "demos/ScanSameQrcodeMoreThanOnce.html",
-    "revision": "d1decdaf3a595d57b01e38d12c669e88"
+    "revision": "e3abd4fc75bda94f0404ec7ccc2f5a21"
   }, {
     "url": "demos/Simple.html",
-    "revision": "857c6ff133d0e5d00788ad5857720e36"
+    "revision": "d2000ab67d0083bf36a6a30108ea5948"
   }, {
     "url": "demos/SwitchCamera.html",
-    "revision": "5228dc03415a22a65324f7ed4236984f"
+    "revision": "6f9744a15787e9de2bf9a3566a1cd99c"
   }, {
     "url": "demos/Torch.html",
-    "revision": "072fb4e1e3c644b4642189006039ee2f"
+    "revision": "a9f6a2e1a17b7e67b0a572200d3f4d90"
   }, {
     "url": "demos/Upload.html",
-    "revision": "696bdc8da9bab2bf1e898cfd9cbd74bd"
+    "revision": "3ce69085195f42354557c7a76defe598"
   }, {
     "url": "demos/Validate.html",
-    "revision": "e58b40626c90841f8f71532d10943ac3"
+    "revision": "4a9eef3876a15320e1debe2057d207d3"
   }, {
     "url": "flash-off.svg",
     "revision": "8b05f5dcd6712992a544b34520ec7262"
@@ -295,7 +295,7 @@ define(['./workbox-86c9b217'], (function (workbox) { 'use strict';
     "revision": "432c44f09de0b4e0f9e236fad9b8c7f9"
   }, {
     "url": "index.html",
-    "revision": "aefb539ff6a50838b70c3211ec96cf90"
+    "revision": "d3be8f8b78251459499fcdf84e7dfbed"
   }, {
     "url": "logo.png",
     "revision": "5f0c1d6358641bc48207acb9fa0b6182"
