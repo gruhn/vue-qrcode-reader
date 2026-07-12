@@ -87,10 +87,8 @@ export default {
 
   computed: {
     selectedBarcodeFormats() {
-      return Object
-        .keys(this.barcodeFormats)
-        .filter(format => this.barcodeFormats[format])
-    }   
+      return Object.keys(this.barcodeFormats).filter((format) => this.barcodeFormats[format])
+    }
   },
 
   methods: {

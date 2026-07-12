@@ -13,18 +13,18 @@ export function install(app: App) {
 }
 
 // Expose the components:
-export { 
-  QrcodeStream, 
-  QrcodeCapture, 
+export {
+  QrcodeStream,
+  QrcodeCapture,
   QrcodeDropZone,
   type QrcodeStreamProps,
   type QrcodeCaptureProps,
   type QrcodeDropZoneProps,
-  type EmittedError,
+  type EmittedError
 }
 
 // Expose some exports from "barcode-detector"
-export { 
+export {
   prepareZXingModule,
   type BarcodeFormat,
   type DetectedBarcode

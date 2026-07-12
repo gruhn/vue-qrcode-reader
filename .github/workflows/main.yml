@@ -11,30 +11,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      # fix corepack issue: https://github.com/nodejs/corepack/issues/627
-      - name: Use Latest Corepack
-        run: |
-          echo "Before: corepack version => $(corepack --version || echo 'not installed')"
-          npm install -g corepack@latest
-          echo "After : corepack version => $(corepack --version)"
-          corepack enable
-          pnpm --version
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: pnpm
+          cache: npm
       - name: Install & Build
         env: 
           VITEPRESS_BASE: /vue-qrcode-reader/
         run: |
-          pnpm install
-          pnpm run type-check
-          pnpm run build
-          pnpm run docs:build
+          npm ci
+          npm run type-check
+          npm run build
+          npm run docs:build
       - name: Deploy Docs
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:

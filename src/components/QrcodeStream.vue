@@ -75,15 +75,15 @@ export interface QrcodeStreamProps {
   torch?: boolean
 
   /**
-   * A function responsible for visually highlighting detected QR codes in real-time. 
+   * A function responsible for visually highlighting detected QR codes in real-time.
    * A transparent canvas overlays the camera stream. When a barcode is detected, its location is painted to the canvas.
-   * To enable this feature, pass a function to the `track` that defines how this should look like. 
-   * The function is called to produce each frame. It receives an array of detected codes as the first argument and a 
+   * To enable this feature, pass a function to the `track` that defines how this should look like.
+   * The function is called to produce each frame. It receives an array of detected codes as the first argument and a
    * `CanvasRenderingContext2D` instance as the second argument.
-   * 
+   *
    * NOTE: The scanning frequency is increased when you provide a track function, which might hurt performance perceptibly.
    *
-   * WARN: Avoid access to reactive properties in this function (like stuff in data, computed or your Vuex store). 
+   * WARN: Avoid access to reactive properties in this function (like stuff in data, computed or your Vuex store).
    * The function is called several times a second and might cause memory leaks. To be safe don't access `this` at all.
    */
   track?: (detectedCodes: DetectedBarcode[], ctx: CanvasRenderingContext2D) => void
@@ -91,7 +91,7 @@ export interface QrcodeStreamProps {
 
 const props = withDefaults(defineProps<QrcodeStreamProps>(), {
   // in this file: don't use `props.constraints` directly. Use `constraintsCached`.
-  constraints: () => ({ facingMode: 'environment' } as MediaTrackConstraints),
+  constraints: () => ({ facingMode: 'environment' }) as MediaTrackConstraints,
   // in this file: don't use `props.formats` directly. Use `formatsCached`.
   formats: () => ['qr_code'],
   paused: false,
@@ -99,7 +99,7 @@ const props = withDefaults(defineProps<QrcodeStreamProps>(), {
   // Could also use a NO-OP function as default here but `undefined` makes
   // it clearer that no function is defined and when no tracking function is
   // defined we lower the scanning frequency:
-  track: undefined,
+  track: undefined
 })
 
 const emit = defineEmits<{

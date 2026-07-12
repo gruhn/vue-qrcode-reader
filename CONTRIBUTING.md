@@ -3,13 +3,13 @@ Don't hesitate to open an issue if you have trouble.
 
 ### Setup Dev Environment
 
-Canonically this package uses Node 18 and `pnpm` as a package manager.
+Canonically this package uses Node 18 and `npm` as a package manager.
 If you are a [Nix](https://nixos.org/) user, there is a `flake.nix` file in the project root.
 
 Clone the repository and run
 
 ```
-pnpm install
+npm install
 ```
 
 We use a locally served version of the [demo page](https://gruhn.github.io/vue-qrcode-reader/) during development.

@@ -4,15 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-**Build**: `pnpm run build` - Compiles the library using Vite
-**Type Check**: `pnpm run type-check` - Runs Vue TypeScript compiler without emitting files
-**Format**: `pnpm run format` - Formats code using Prettier (Vue, TS, JSON, MD files)
+**Build**: `npm run build` - Compiles the library using Vite
+**Type Check**: `npm run type-check` - Runs Vue TypeScript compiler without emitting files
+**Format**: `npm run format` - Formats code using Prettier (Vue, TS, JSON, MD files)
 **Documentation**: 
-- `pnpm run docs:dev` - Starts VitePress dev server for documentation
-- `pnpm run docs:build` - Builds documentation
-- `pnpm run docs:preview` - Previews built documentation
+- `npm run docs:dev` - Starts VitePress dev server for documentation
+- `npm run docs:build` - Builds documentation
+- `npm run docs:preview` - Previews built documentation
 
-**Package Manager**: Uses pnpm (v8.3.1) - always use `pnpm` instead of `npm`
+**Package Manager**: Uses npm - always use `npm`
 
 ## Architecture Overview
 

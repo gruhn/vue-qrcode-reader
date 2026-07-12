@@ -15,7 +15,7 @@
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             nodejs_18
-            nodePackages.pnpm
+            nodePackages.npm
             nodePackages.typescript-language-server
             vue-language-server
           ];
