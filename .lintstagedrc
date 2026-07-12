@@ -1,4 +1,0 @@
-{
-  "**/*.{vue,ts}": ["npx eslint --fix"],
-  "**/*.{vue,ts,json,md}": ["npx prettier --write --ignore-path .gitignore --ignore-path docs/.gitignore"]
-}
