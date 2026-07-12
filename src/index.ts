@@ -25,10 +25,10 @@ export {
 
 // Expose some exports from "barcode-detector"
 export { 
-  setZXingModuleOverrides, 
+  prepareZXingModule,
   type BarcodeFormat,
   type DetectedBarcode
-} from 'barcode-detector/pure'
+} from 'barcode-detector/ponyfill'
 
 // Plugin definition
 const plugin: Plugin = { install }

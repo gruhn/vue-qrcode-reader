@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DetectedBarcode, BarcodeFormat } from 'barcode-detector/pure'
+import type { DetectedBarcode, BarcodeFormat } from 'barcode-detector/ponyfill'
 import {
   onUnmounted,
   computed,

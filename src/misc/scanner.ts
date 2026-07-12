@@ -1,4 +1,4 @@
-import { type DetectedBarcode, type BarcodeFormat, BarcodeDetector, type BarcodeDetectorOptions } from 'barcode-detector/pure'
+import { type DetectedBarcode, type BarcodeFormat, BarcodeDetector, type BarcodeDetectorOptions } from 'barcode-detector/ponyfill'
 import { eventOn } from './callforth'
 import { DropImageFetchError } from './errors'
 

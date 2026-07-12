@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { type PropType } from 'vue'
 import { processFile } from '../misc/scanner'
-import { type BarcodeFormat, type DetectedBarcode } from 'barcode-detector/pure'
+import { type BarcodeFormat, type DetectedBarcode } from 'barcode-detector/ponyfill'
 
 export interface QrcodeCaptureProps {
   formats?: BarcodeFormat[]
